@@ -12,8 +12,8 @@
 #include "led.h"
 #include "configuration.h"
 
-struct internal_state_s {
+/*struct internal_state_s {
 	LED_HANDLE_ts leds[CONFIG_LED_MAX_OBJECTS];
 	uint32_t led_num;
 };
-static struct internal_state_s internal_state;
+static struct internal_state_s internal_state;*/
