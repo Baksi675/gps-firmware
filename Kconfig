@@ -20,6 +20,11 @@ menu "HW Modules"
 			int "Max number of GPS objects"
 			range 1 5
 			default 1
+
+		config GPS_MAX_TOKENS
+			int "Max number of tokens in a NMEA message"
+			range 1 30
+			default 1
 	endmenu
 	
 	menu "LED"
@@ -75,7 +80,16 @@ menu "SW Modules"
 	endmenu
 
 	menu "Command Interpreter"
-	
+		config CMD_MAX_CLIENTS
+			int "Max number of clients"
+			range 1 50
+			default 1
+
+		config CMD_MAX_TOKENS
+			int "Max number of tokens in a command"
+			range 1 20
+			default 1
+
 	endmenu
 
 	menu "Serial Console"
@@ -90,3 +104,7 @@ menu "SW Modules"
 	
 	endmenu
 endmenu
+
+config COMPILE_WITH_LOGGING
+	bool "Compile with logging"
+	default y
