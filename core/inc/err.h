@@ -1,0 +1,27 @@
+/**
+ * @file err.h
+ * @author Márk Bakulár (github.com/Baksi675)
+ * @brief Header file containing error codes
+ * @version 0.1
+ * @date 2026-01-22
+ * 
+ * @copyright Copyright (c) 2026
+ * 
+ */
+
+#ifndef ERR_H_
+#define ERR_H_
+
+typedef enum {
+	ERR_OK,
+	ERR_UNKNOWN,
+	ERR_INVALID_ARGUMENT,
+	ERR_INVALID_POINTER,
+	ERR_ARRAY_OUT_OF_BOUNDS,
+	ERR_UNINITIALZIED_OBJECT,
+	ERR_CATASTROPHIC_FAILURE,
+	ERR_DATA_COPY_FAILURE,
+	ERR_DATA_ACQUISITION_FAILURE,
+}ERR_te;
+
+#endif
