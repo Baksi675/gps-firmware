@@ -43,7 +43,7 @@ build/common.o: core/src/common.c | build
 build/cbuf.o: core/src/cbuf.c | build
 	$(CC) $(CFLAGS) $< -o $@
 
-builds/stm32f401re_gpio.o: drivers/src/stm32f401re_gpio.c | build
+build/stm32f401re_gpio.o: drivers/src/stm32f401re_gpio.c | build
 	$(CC) $(CFLAGS) $< -o $@
 
 ### PHONY ###
