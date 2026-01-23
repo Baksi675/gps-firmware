@@ -14,6 +14,7 @@ build/output.elf: build/startup_stm32f401re.o \
 					build/arm_cortex_m4_nvic.o \
 					build/stm32f401re_usart.o \
 					build/common.o \
+					build/cbuf.o \
 					| build
 	$(CC) $(LDFLAGS) $^ -o $@
 
@@ -36,6 +37,9 @@ build/stm32f401re_usart.o: drivers/src/stm32f401re_usart.c | build
 	$(CC) $(CFLAGS) $< -o $@
 
 build/common.o: core/src/common.c | build
+	$(CC) $(CFLAGS) $< -o $@
+
+build/cbuf.o: core/src/cbuf.c | build
 	$(CC) $(CFLAGS) $< -o $@
 
 ### PHONY ###
