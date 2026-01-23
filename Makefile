@@ -11,6 +11,9 @@ build/output.elf: build/startup_stm32f401re.o \
 					build/main.o \
 					build/led.o \
 					build/stm32f401re_rcc.o \
+					build/arm_cortex_m4_nvic.o \
+					build/stm32f401re_usart.o \
+					build/common.o \
 					| build
 	$(CC) $(LDFLAGS) $^ -o $@
 
@@ -24,6 +27,15 @@ build/led.o: core/src/led.c | build
 	$(CC) $(CFLAGS) $< -o $@
 
 build/stm32f401re_rcc.o: drivers/src/stm32f401re_rcc.c | build
+	$(CC) $(CFLAGS) $< -o $@
+
+build/arm_cortex_m4_nvic.o: drivers/src/arm_cortex_m4_nvic.c | build
+	$(CC) $(CFLAGS) $< -o $@
+
+build/stm32f401re_usart.o: drivers/src/stm32f401re_usart.c | build
+	$(CC) $(CFLAGS) $< -o $@
+
+build/common.o: core/src/common.c | build
 	$(CC) $(CFLAGS) $< -o $@
 
 ### PHONY ###
