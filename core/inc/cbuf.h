@@ -12,6 +12,7 @@
 #ifndef CBUF_H__
 #define CBUF_H__
 
+#include "err.h"
 #include <stdint.h>
 
 typedef struct {
@@ -21,8 +22,8 @@ typedef struct {
   uint8_t write_position;
 }CBUF_HANDLE_ts;
 
-void cbuf_read(CBUF_HANDLE_ts *cbuf_handle, uint8_t *output_buf);
-void cbuf_write(CBUF_HANDLE_ts *cbuf_handle, uint8_t *input_buf, uint32_t input_len);
-uint8_t cbuf_len(CBUF_HANDLE_ts *cbuf_handle);
+ERR_te cbuf_read(CBUF_HANDLE_ts *cbuf_handle, uint8_t *output_buf_o);
+ERR_te cbuf_write(CBUF_HANDLE_ts *cbuf_handle, uint8_t *input_buf, uint32_t input_len);
+ERR_te cbuf_len(CBUF_HANDLE_ts *cbuf_handle, uint8_t *len_o);
 
 #endif

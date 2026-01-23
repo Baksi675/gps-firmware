@@ -443,5 +443,15 @@ int txt_cpy(char *txt_to, const char *txt_from, uint32_t len) {
     return 0;	
 }
 
+/**
+ * @brief Determines whether a number is power of two.
+ * 
+ * @param num The input number
+ * @return int Returns true if a number is 2^n, if not it returns false.
+ */
+bool is_pow(uint32_t num) {
+    return num && !(num & (num - 1));
+}
+
 
 /** @} */

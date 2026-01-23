@@ -60,5 +60,6 @@ int str_tokenize(char *str, const char *separator, uint16_t max_tokens, char **t
 bool str_to_bool(char *str);
 int str_cpy(char *str_to, const char *str_from, uint32_t len);
 int txt_cpy(char *txt_to, const char *txt_from, uint32_t len);
+bool is_pow(uint32_t num);
 
 #endif 

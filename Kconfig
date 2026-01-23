@@ -93,7 +93,15 @@ menu "SW Modules"
 	endmenu
 
 	menu "Serial Console"
-	
+		config CONSOLE_USART_CBUF_SIZE
+			int "Size of the USART data receive circular buffer (must be 2^n)"
+			range 1 64
+			default 16
+
+		config CONSOLE_CBUF_SIZE
+			int "Size of the console circular buffer (must be 2^n)"
+			range 1 128
+			default 64
 	endmenu
 
 	menu "Logging"
