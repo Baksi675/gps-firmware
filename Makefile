@@ -15,6 +15,7 @@ build/output.elf: build/startup_stm32f401re.o \
 					build/stm32f401re_usart.o \
 					build/common.o \
 					build/cbuf.o \
+					build/stm32f401re_gpio.o \
 					| build
 	$(CC) $(LDFLAGS) $^ -o $@
 
@@ -40,6 +41,9 @@ build/common.o: core/src/common.c | build
 	$(CC) $(CFLAGS) $< -o $@
 
 build/cbuf.o: core/src/cbuf.c | build
+	$(CC) $(CFLAGS) $< -o $@
+
+builds/stm32f401re_gpio.o: drivers/src/stm32f401re_gpio.c | build
 	$(CC) $(CFLAGS) $< -o $@
 
 ### PHONY ###
