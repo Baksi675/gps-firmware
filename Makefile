@@ -10,6 +10,7 @@ LDFLAGS := -mcpu=cortex-m4 -mthumb --specs=nano.specs -nostartfiles -T stm32f401
 build/output.elf: build/startup_stm32f401re.o \
 					build/main.o \
 					build/led.o \
+					build/stm32f401re_rcc.o \
 					| build
 	$(CC) $(LDFLAGS) $^ -o $@
 
@@ -20,6 +21,9 @@ build/main.o: core/src/main.c | build
 	$(CC) $(CFLAGS) $< -o $@
 
 build/led.o: core/src/led.c | build
+	$(CC) $(CFLAGS) $< -o $@
+
+build/stm32f401re_rcc.o: drivers/src/stm32f401re_rcc.c | build
 	$(CC) $(CFLAGS) $< -o $@
 
 ### PHONY ###
