@@ -11,7 +11,6 @@
 
 #include "cbuf.h"
 #include "err.h"
-#include "log.h"
 #include <stdint.h>
 
  /** 
@@ -36,9 +35,14 @@ ERR_te cbuf_read(CBUF_HANDLE_ts *cbuf_handle, uint8_t* output_buf_o) {
 			return ERR_UNKNOWN;
 		}
 
+		if(len == 0) {
+			break;
+		}
+
 		*output_buf_o = cbuf_handle->ptr[cbuf_handle->read_position];
 		output_buf_o++;
 		cbuf_handle->read_position = (cbuf_handle->read_position + 1) & (cbuf_handle->size - 1);
+
 	}while (len != 0);
 
 	return ERR_OK;

@@ -1,6 +1,6 @@
 /**
  * @file stm32f401re.h
- * @author Márk Bakulár (github.com/Baksi675)
+ * @author github.com/Baksi675
  * @brief MCU specific header file
  * @version 0.1
  * @date 2026-01-22

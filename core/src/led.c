@@ -1,6 +1,6 @@
 /**
  * @file led.c
- * @author Márk Bakulár (github.com/Baksi675)
+ * @author github.com/Baksi675
  * @brief This module implements an LED controller.
  * @version 0.1
  * @date 2026-01-20

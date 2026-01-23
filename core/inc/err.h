@@ -1,6 +1,6 @@
 /**
  * @file err.h
- * @author Márk Bakulár (github.com/Baksi675)
+ * @author github.com/Baksi675
  * @brief Header file containing error codes
  * @version 0.1
  * @date 2026-01-22
@@ -20,10 +20,12 @@ typedef enum {
 	ERR_INVALID_CONFIGURATION,
 	ERR_ARRAY_OUT_OF_BOUNDS,
 	ERR_UNINITIALZIED_OBJECT,
+	ERR_INITIALIZATION_FAILURE,
 	ERR_CATASTROPHIC_FAILURE,
 	ERR_DATA_COPY_FAILURE,
 	ERR_DATA_ACQUISITION_FAILURE,
-	ERR_BUFFER_FULL
+	ERR_BUFFER_FULL,
+	ERR_NOT_ENOUGH_SPACE
 }ERR_te;
 
 #endif

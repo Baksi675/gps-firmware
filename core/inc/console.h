@@ -1,7 +1,7 @@
 /**
  * @file console.h
  * @author github.com/Baksi675
- * @brief Header file for the console module
+ * @brief Header file for the console subsystem.
  * @version 0.1
  * @date 2026-01-23
  * 

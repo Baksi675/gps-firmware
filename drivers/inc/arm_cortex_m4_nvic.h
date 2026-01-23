@@ -1,6 +1,6 @@
 /**
  * @file arm_cortex_m4_nvic.h
- * @author Márk Bakulár (github.com/Baksi675)
+ * @author github.com/Baksi675
  * @brief Header file for Arm Cortex M4 nested vectored interrupt controller.
  * @version 0.1
  * @date 2026-01-23

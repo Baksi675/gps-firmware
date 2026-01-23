@@ -1,6 +1,6 @@
 /**
  * @file common.c
- * @author Márk Bakulár (github.com/Baksi675)
+ * @author github.com/Baksi675
  * @brief A module that contains code common to all other modules
  * @version 0.1
  * @date 2025-09-09

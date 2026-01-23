@@ -1,6 +1,6 @@
 /**
  * @file stm32f401re_rcc.c
- * @author Márk Bakulár (github.com/Baksi675)
+ * @author github.com/Baksi675
  * @brief RCC driver implementation for STM32F401RE
  * @version 0.1
  * @date 2025-08-14

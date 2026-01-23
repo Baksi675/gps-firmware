@@ -20,6 +20,7 @@
 #include "stm32f401re_usart.h"
 #include "cmd.h"
 #include "configuration.h"
+#include "log.h"
 
 #define CONSOLE_MODE_CMD		3		// Ctrl + C
 
@@ -138,7 +139,13 @@ ERR_te console_run(void) {
 			for(uint32_t i = 0; i < data_len; i++) {
 				if(data[i] == '\r') {
 					log_set_force_disable(false);
-					uint8_t console_text_len = cbuf_len(&internal_state.console_cbuf);
+					
+					uint8_t console_text_len = 0;
+					err = cbuf_len(&internal_state.console_cbuf, &console_text_len);
+					if(err != ERR_OK) {
+						return err;
+					}
+
 					char console_text[console_text_len];
 
 					err = cbuf_read(&internal_state.console_cbuf, (uint8_t*)console_text);
@@ -172,6 +179,8 @@ ERR_te console_run(void) {
 			}
 		}
 	}
+	
+	return ERR_OK;
 }
 
 /** @} */

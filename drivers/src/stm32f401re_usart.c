@@ -1,6 +1,6 @@
 /**
  * @file stm32f401re_usart_driver.c
- * @author Márk Bakulár (github.com/Baksi675)
+ * @author github.com/Baksi675
  * @brief USART driver implementation for STM32F401RE
  * @version 0.1
  * @date 2025-09-04
