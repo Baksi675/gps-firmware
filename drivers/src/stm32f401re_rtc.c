@@ -87,7 +87,7 @@ void rtc_init(void)
  * 
  * @param date Calendar object.
  */
-void rtc_set_calendar(CALENDAR_ts *date)
+void rtc_set_calendar(CALENDAR_ts const *date)
 {
     rtc_set_write_protection(DISABLE);
 
@@ -117,7 +117,7 @@ void rtc_set_calendar(CALENDAR_ts *date)
  * 
  * @param time Time object.
  */
-void rtc_set_time(TIME_ts *time)
+void rtc_set_time(TIME_ts const *time)
 {
     rtc_set_write_protection(DISABLE);
 

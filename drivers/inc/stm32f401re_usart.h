@@ -14,7 +14,7 @@
 
 #include "stm32f401re.h"
 #include "common.h"
-#include "stm32f401re_rcc.h"
+
 
 /**
  * @brief Defines the length of a USART peripheral
@@ -134,12 +134,12 @@ typedef struct {
 }USART_HANDLE_ts;
 
 void usart_init(USART_HANDLE_ts *usart_object);
-void usart_deinit(USART_REGDEF_ts *usart_instance);
+void usart_deinit(USART_REGDEF_ts const *usart_instance);
 void usart_send(USART_REGDEF_ts *usart_instance, uint8_t *tx_buffer, uint32_t len);
-void usart_receive(USART_REGDEF_ts *usart_instance, uint8_t *rx_buffer, uint32_t len);
+void usart_receive(USART_REGDEF_ts const *usart_instance, uint8_t *rx_buffer, uint32_t len);
 void usart_set_transmission(USART_REGDEF_ts *usart_instance, EN_STATUS_te en_status);
 void usart_set_reception(USART_REGDEF_ts *usart_instance, EN_STATUS_te en_status);
-void usart_get_name(USART_REGDEF_ts *usart_instance, char *name);
+void usart_get_name(USART_REGDEF_ts const *usart_instance, char *name);
 void usart1_irq_data_recv_callback(uint8_t data);
 void usart6_irq_data_recv_callback(uint8_t data);
 

@@ -120,3 +120,7 @@ endmenu
 config COMPILE_WITH_LOGGING
 	bool "Compile with logging"
 	default y
+
+config VERSION
+	string "Firmware version"
+	default "0.1"

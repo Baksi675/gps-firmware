@@ -55,7 +55,7 @@ uint32_t rcc_get_ahb_clk(void) {
 	if(rcc_cfgr_hpre <= 7) {
 		ahb_division_factor = 1;
 	}
-	else if (rcc_cfgr_hpre <= 11 && rcc_cfgr_hpre >= 8) {
+	else if (rcc_cfgr_hpre <= 11) {
 		ahb_division_factor = 0x1 << (rcc_cfgr_hpre - 7);
 	}
 	else {

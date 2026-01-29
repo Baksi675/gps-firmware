@@ -132,9 +132,10 @@ typedef struct {
 }GPIO_HANDLE_ts;
 
 void gpio_init(GPIO_HANDLE_ts *gpio_handle);
+void gpio_deinit(GPIO_REGDEF_ts const *gpio_port);
 void gpio_write(GPIO_REGDEF_ts *gpio_port, uint8_t gpio_pin, PIN_STATUS_te pin_status); 
-PIN_STATUS_te gpio_read(GPIO_REGDEF_ts *gpio_port, uint8_t gpio_pin);
+PIN_STATUS_te gpio_read(GPIO_REGDEF_ts const *gpio_port, uint8_t gpio_pin);
 void gpio_clear_interrupt(EXTI_LINES_te exti_line);
-void gpio_get_name(GPIO_REGDEF_ts *gpio_port, char *name);
+void gpio_get_name(GPIO_REGDEF_ts const *gpio_port, char *name);
 
 #endif

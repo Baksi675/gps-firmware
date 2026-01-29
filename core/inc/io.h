@@ -37,6 +37,6 @@ ERR_te io_deinit_handle(IO_HANDLE_ts const *io_handle);
 //ERR_te io_run_handle(IO_HANDLE_ts *io_handle);		// Not needed for this module
 //ERR_te io_run_handle_all(void);						// Not needed for this module
 ERR_te io_write(IO_HANDLE_ts *io_handle, PIN_STATUS_te pin_status);		// Custom for this module
-ERR_te io_read(IO_HANDLE_ts *io_handle, PIN_STATUS_te *pin_status_o);
+ERR_te io_read(IO_HANDLE_ts const *io_handle, PIN_STATUS_te *pin_status_o);
 
 #endif

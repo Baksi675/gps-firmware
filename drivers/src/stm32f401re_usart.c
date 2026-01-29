@@ -13,8 +13,9 @@
 #include "common.h"
 #include "arm_cortex_m4_nvic.h"
 #include "stm32f401re.h"
+#include "stm32f401re_rcc.h"
 
-static void usart_set_pclk(USART_REGDEF_ts *instance, EN_STATUS_te en_status);
+static void usart_set_pclk(USART_REGDEF_ts const *instance, EN_STATUS_te en_status);
 static void usart_set_baud_rate(USART_HANDLE_ts *usart_object);
 
 /** 
@@ -105,7 +106,7 @@ void usart_init(USART_HANDLE_ts *usart_object) {
  * 
  * @param instance The USART instance to deinitialize.
  */
-void usart_deinit(USART_REGDEF_ts *instance) {
+void usart_deinit(USART_REGDEF_ts const *instance) {
 	if(instance == USART1) {
 		rcc_reset_periph_apb2(RCC_APB2RSTR_USART1RST);
 	}
@@ -150,7 +151,7 @@ void usart_send(USART_REGDEF_ts *instance, uint8_t *tx_buffer, uint32_t len) {
  * @param rx_buffer A pointer to the buffer that will store the received data.
  * @param len The length of the data to be received.
  */
-void usart_receive(USART_REGDEF_ts *instance, uint8_t *rx_buffer, uint32_t len) {
+void usart_receive(USART_REGDEF_ts const *instance, uint8_t *rx_buffer, uint32_t len) {
 	while(len != 0) {
 		while(!((instance->USART_SR >> USART_SR_RXNE) & 0x1));
 		*rx_buffer = instance->USART_DR;
@@ -187,8 +188,8 @@ void usart_set_reception(USART_REGDEF_ts *instance, EN_STATUS_te en_status) {
  * @param instance The USART peripheral.
  * @param name A pointer to a buffer which will contain the name.
  */
-void usart_get_name(USART_REGDEF_ts *instance, char *name) {
-	char usart[] = "USART";
+void usart_get_name(USART_REGDEF_ts const *instance, char *name) {
+	const char usart[] = "USART";
 	uint8_t usart_len = get_str_len(usart);
 	uint8_t pos_counter = 0;
 
@@ -224,7 +225,7 @@ void usart_get_name(USART_REGDEF_ts *instance, char *name) {
  * @param instance The USART instance.
  * @param en_status Whether to enable or disable the peripheral clock.
  */
-static void usart_set_pclk(USART_REGDEF_ts *instance, EN_STATUS_te en_status) {
+static void usart_set_pclk(USART_REGDEF_ts const *instance, EN_STATUS_te en_status) {
 	if(instance == USART1) {
 		rcc_set_pclk_apb2(RCC_APB2ENR_USART1EN, en_status);
 	}

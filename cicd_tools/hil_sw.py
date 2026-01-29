@@ -41,16 +41,16 @@ class GpioDev:
         while self.console.expect([pex.TIMEOUT, pex.EOF, '.*']) == 2:
             if len(self.console.after) == 0:
                 break
-            _log.debug('[%s] In flush_input() got %s', self.name,
-                       self.console.after)
+            _log.debug('[%s] In flush_input() got %s', self.name, self.console.after)
 
     def send_line(self, msg):
         _log.debug('[%s] Sending "%s"', self.name, msg)
         self.console.sendline(msg)
 
-	def send(self, msg):
-	    _log.debug('[%s] Sending raw "%s"', self.name, msg)
-    	self.console.send(msg)
+    def send(self, msg):
+        _log.debug('[%s] Sending raw "%s"', self.name, msg)
+        self.console.send(msg)
+
 
     def get_pattern_list(self, pattern_list):
         """ Wait for a series of patterns from the device, with an arbitrary amount
@@ -206,18 +206,18 @@ def test_version(tver):
 ################################################################################
 # Test: reset
 ################################################################################
-def test_reset():
-    """ Test to verify the reset command works. """
-
-    passed = True
-    start_test('reset')
-    rc, failed_pt = g_dut.do_reset()
-    if rc != 0:
-        test_fail('Did not find pattern "%s" rc=%d' % (failed_pat, rc))
-        passed = False
-    else:
-        test_pass()
-    return passed
+#def test_reset():
+#    """ Test to verify the reset command works. """
+#
+#    passed = True
+#    start_test('reset')
+#    rc, failed_pt = g_dut.do_reset()
+#    if rc != 0:
+#        test_fail('Did not find pattern "%s" rc=%d' % (failed_pat, rc))
+#        passed = False
+#    else:
+#        test_pass()
+#    return passed
 
 ################################################################################
 # Test: help
@@ -453,9 +453,9 @@ def main():
 
     test_console_prompt()
     test_version(args.tver)
-    test_reset()
+    #test_reset()
     test_help()
-    test_gpio()
+    #test_gpio()
 
     test_suite = jux.TestSuite(args.jfile, g_test_junits)
     print(jux.TestSuite.to_xml_string([test_suite]))

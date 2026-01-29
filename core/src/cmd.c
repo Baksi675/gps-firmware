@@ -9,13 +9,14 @@
  * 
  */
 
+#include <stdbool.h>
+
 #include "cmd.h"
 #include "common.h"
 #include "err.h"
 #include "log.h"
 #include "configuration.h"
 #include "modules.h"
-#include <stdbool.h>
 
 struct internal_state_s {
 	MODULES_te subsys;
@@ -151,7 +152,26 @@ ERR_te cmd_execute(char *console_text) {
 		}
 	}
 
-	// 2. Handle help command
+	// 2. Handle version command
+	if(str_cmp("version", tokens[0]) == true) {
+		if(num_tokens > 1) {
+			LOG_ERROR(
+				internal_state.subsys, 
+				internal_state.log_level, 
+				"cmd_execute: invalid arguments"
+			);
+			return ERR_INVALID_ARGUMENT;
+		}
+		LOG_INFO(
+			internal_state.subsys, 
+			internal_state.log_level, 
+			"Version=%s", CONFIG_VERSION
+		);
+
+		return ERR_OK;
+	}
+
+	// 3. Handle help command
 	if(str_cmp("help", tokens[0]) == true) {
 		if(num_tokens == 1) {
 			LOG_INFO(
@@ -162,12 +182,17 @@ ERR_te cmd_execute(char *console_text) {
 			LOG_INFO(
 				internal_state.subsys, 
 				internal_state.log_level, 
-				"1. help: Shows help information for modules, usage: help <module>"
+				"1. version: Prints firmware version, usage: version"
 			);
 			LOG_INFO(
 				internal_state.subsys, 
 				internal_state.log_level, 
-				"2. log: Shows or sets the log level of modules, usage: log <module|*> <level>"
+				"2. help: Shows help information for modules, usage: help <module>"
+			);
+			LOG_INFO(
+				internal_state.subsys, 
+				internal_state.log_level, 
+				"3. log: Shows or sets the log level of modules, usage: log <module|*> <level>"
 			);
 
 			for(uint8_t i = 0; i < CONFIG_CMD_MAX_CLIENTS; i++) {
@@ -234,7 +259,7 @@ ERR_te cmd_execute(char *console_text) {
 		return ERR_INVALID_ARGUMENT;
 	}
 
-	// Handle client commands
+	// 4. Handle client commands
 	for(uint8_t i = 0; i < CONFIG_CMD_MAX_CLIENTS; i++) {
 		if(internal_state.cmd_client_info_arr[i] == NULL) {
 			continue;

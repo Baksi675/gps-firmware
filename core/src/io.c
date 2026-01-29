@@ -341,7 +341,7 @@ ERR_te io_write(IO_HANDLE_ts *io_handle, PIN_STATUS_te pin_status) {
  * @param[out] pin_status_o The pin status of the io object.
  * @return ERR_te Error generated during execution.
  */
-ERR_te io_read(IO_HANDLE_ts *io_handle, PIN_STATUS_te *pin_status_o) {
+ERR_te io_read(IO_HANDLE_ts const *io_handle, PIN_STATUS_te *pin_status_o) {
 	if(internal_state.initialized && internal_state.started) {
 		*pin_status_o = gpio_read(
 			io_handle->gpio_handle.port,

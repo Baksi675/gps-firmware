@@ -15,9 +15,9 @@
 #include "stm32f401re_rcc.h"
 #include "arm_cortex_m4_nvic.h"
 
-static void gpio_set_pclk(GPIO_REGDEF_ts *gpio_port, EN_STATUS_te en_status);
-static PORT_CODES_ts get_syscfg_code(GPIO_REGDEF_ts* port);
-static uint8_t get_exti_position(GPIO_HANDLE_ts *gpio_handle);
+static void gpio_set_pclk(GPIO_REGDEF_ts const *gpio_port, EN_STATUS_te en_status);
+static PORT_CODES_ts get_syscfg_code(GPIO_REGDEF_ts const *port);
+static uint8_t get_exti_position(GPIO_HANDLE_ts const *gpio_handle);
 
 /** 
  * @defgroup GPIO_Public_APIs GPIO Public APIs
@@ -46,16 +46,14 @@ void gpio_init(GPIO_HANDLE_ts *gpio_handle) {
 	gpio_handle->port->GPIO_PUPDR |= gpio_handle->pull_mode << gpio_handle->pin * 2;
 
 	// Configure GPIO alternate functionality
-	if(gpio_handle->mode == GPIO_MODE_ALTERNATE_FUNCTION) {
-		if(gpio_handle->pin < 8) {
-			gpio_handle->port->GPIO_AFR[0] &= ~(0b1111 << gpio_handle->pin * 4);
-			gpio_handle->port->GPIO_AFR[0] |= (gpio_handle->alternate_function << (gpio_handle->pin * 4));
-		}
-		else {
-			gpio_handle->port->GPIO_AFR[1] &= ~(0b1111 << gpio_handle->pin * 4);
-			gpio_handle->port->GPIO_AFR[1] |= (gpio_handle->alternate_function << ((gpio_handle->pin * 4) - 32));
-		}
-	}
+	uint32_t afr_index = gpio_handle->pin >> 3;          // pin / 8
+	uint32_t afr_shift = (gpio_handle->pin & 0x7) * 4;   // (pin % 8) * 4
+
+	gpio_handle->port->GPIO_AFR[afr_index] &=
+		~(0xFu << afr_shift);
+
+	gpio_handle->port->GPIO_AFR[afr_index] |=
+		((uint32_t)gpio_handle->alternate_function << afr_shift);
 
 	// Configure GPIO mode
 	if(gpio_handle->mode != GPIO_MODE_INTERRUPT) {
@@ -72,12 +70,12 @@ void gpio_init(GPIO_HANDLE_ts *gpio_handle) {
 			SYSCFG->SYSCFG_EXTICR1 |= (get_syscfg_code(gpio_handle->port)) << gpio_handle->pin * 4;
 		}
 		// Set the pins 4-7 to the correct port
-		else if(gpio_handle->pin > 3 && gpio_handle->pin < 8) {
+		else if(gpio_handle->pin < 8) {
 			SYSCFG->SYSCFG_EXTICR2 &= ~(0b1111 << (gpio_handle->pin - 4) * 4);
 			SYSCFG->SYSCFG_EXTICR2 |= (get_syscfg_code(gpio_handle->port)) << (gpio_handle->pin - 4) * 4;
 		}
 		// Set the pins 8-11 to the correct port
-		else if(gpio_handle->pin > 7 && gpio_handle->pin < 12) {
+		else if(gpio_handle->pin < 12) {
 			SYSCFG->SYSCFG_EXTICR3 &= ~(0b1111 << (gpio_handle->pin - 8) * 4);
 			SYSCFG->SYSCFG_EXTICR3 |= (get_syscfg_code(gpio_handle->port)) << (gpio_handle->pin - 8) * 4;
 		}
@@ -115,7 +113,7 @@ void gpio_init(GPIO_HANDLE_ts *gpio_handle) {
  * 
  * @param gpio_port The GPIO port to deinitialize.
  */
-void gpio_deinit(GPIO_REGDEF_ts *gpio_port) {
+void gpio_deinit(GPIO_REGDEF_ts const *gpio_port) {
 	if(gpio_port == GPIOA) {
 		rcc_reset_periph_ahb1(RCC_AHB1RSTR_GPIOARST);
 		
@@ -164,7 +162,7 @@ void gpio_write(GPIO_REGDEF_ts *gpio_port, uint8_t gpio_pin, PIN_STATUS_te pin_s
   * @param gpio_pin The GPIO pin to read the status of
   * @return PIN_STATUS_te 
   */
-PIN_STATUS_te gpio_read(GPIO_REGDEF_ts *gpio_port, uint8_t gpio_pin) {
+PIN_STATUS_te gpio_read(GPIO_REGDEF_ts const *gpio_port, uint8_t gpio_pin) {
 	PIN_STATUS_te status = (gpio_port->GPIO_IDR >> gpio_pin) & 0x1;
 	return status;
 }
@@ -178,8 +176,8 @@ void gpio_clear_interrupt(EXTI_LINES_te exti_line) {
 	EXTI->EXTI_PR = 0x1 << exti_line;
 }
 
-void gpio_get_name(GPIO_REGDEF_ts *gpio_port, char *name) {
-	char gpio[] = "GPIO";
+void gpio_get_name(GPIO_REGDEF_ts const *gpio_port, char *name) {
+	const char gpio[] = "GPIO";
 	uint8_t gpio_len = get_str_len(gpio);
 	uint8_t pos_counter = 0;
 
@@ -224,7 +222,7 @@ void gpio_get_name(GPIO_REGDEF_ts *gpio_port, char *name) {
  @param gpio_port The GPIO port instance
  @param en_status Whether to enable or disable the port clock
 */
-static void gpio_set_pclk(GPIO_REGDEF_ts *gpio_port, EN_STATUS_te en_status) {
+static void gpio_set_pclk(GPIO_REGDEF_ts const *gpio_port, EN_STATUS_te en_status) {
 	if(gpio_port == GPIOA) {
 		rcc_set_pclk_ahb1(RCC_AHB1ENR_GPIOAEN, en_status);
 	}
@@ -250,7 +248,7 @@ static void gpio_set_pclk(GPIO_REGDEF_ts *gpio_port, EN_STATUS_te en_status) {
 
  @param gpio_port The GPIO port instance
 */
-static PORT_CODES_ts get_syscfg_code(GPIO_REGDEF_ts *gpio_port) {
+static PORT_CODES_ts get_syscfg_code(GPIO_REGDEF_ts const *gpio_port) {
 	if(gpio_port == GPIOA) {
 		return PA;
 	}
@@ -274,7 +272,7 @@ static PORT_CODES_ts get_syscfg_code(GPIO_REGDEF_ts *gpio_port) {
 
  @param gpio_handle Pointer to the GPIO object.
 */
-static uint8_t get_exti_position(GPIO_HANDLE_ts *gpio_handle) {
+static uint8_t get_exti_position(GPIO_HANDLE_ts const *gpio_handle) {
 	if(gpio_handle->pin == 0) {
 		return EXTI0_IRQn;
 	}
