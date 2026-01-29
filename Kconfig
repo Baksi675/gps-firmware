@@ -27,10 +27,14 @@ menu "HW Modules"
 			default 1
 	endmenu
 	
-	menu "LED"
-		config LED_MAX_OBJECTS
-			int "Max number of LED objects"
-			range 1 20
+	menu "IO"
+		config IO_MAX_OBJECTS
+			int "Max number of IO objects"
+			range 1 10
+			default 1
+		config IO_MAX_NAME_LEN
+			int "Max IO name length"
+			range 1 32
 			default 1
 	endmenu
 endmenu

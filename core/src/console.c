@@ -111,7 +111,7 @@ ERR_te console_run(void) {
 		if(*data == CONSOLE_MODE_CMD && internal_state.console_mode == false) {
 			internal_state.console_mode = true;
 			log_set_force_disable(false);
-			usart_send(internal_state.usart_instance, (uint8_t*)"\r\n$", 3);
+			usart_send(internal_state.usart_instance, (uint8_t*)"$", 1);
 		}
 		else if(*data == CONSOLE_MODE_CMD && internal_state.console_mode == true) {
 			internal_state.console_mode = false;

@@ -18,7 +18,7 @@
  * @brief Function pointer prototype to the command handler function.
  * 
  */
-typedef void (*CMD_HANDLER_tf)(uint32_t argc, char** argv);
+typedef ERR_te (*CMD_HANDLER_tf)(uint32_t argc, char** argv);
 
 /**
  * @brief Command info struct.

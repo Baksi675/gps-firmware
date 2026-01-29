@@ -10,6 +10,7 @@
  */
 
 #include "stm32f401re_rcc.h"
+#include "stm32f401re.h"
 
 /** 
  * @defgroup RCC_Public_APIs RCC Public APIs
@@ -185,6 +186,15 @@ void rcc_reset_periph_apb1(RCC_APB1RSTR_te periph_position) {
 void rcc_reset_periph_apb2(RCC_APB2RSTR_te periph_position) {
 	RCC->RCC_APB2RSTR |= (0x1 << periph_position);
 	RCC->RCC_APB2RSTR &= ~(0x1 << periph_position);
+}
+
+/**
+ * @brief Resets the backup domain.
+ * 
+ */
+void rcc_reset_bkpd(void) {
+	RCC->RCC_BDCR |= (0x1 << RCC_BDCR_BDRST);
+	RCC->RCC_BDCR &= ~(0x1 << RCC_BDCR_BDRST);
 }
 
 /** @} */

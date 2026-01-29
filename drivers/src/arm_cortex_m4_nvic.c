@@ -30,7 +30,7 @@ void nvic_set_interrupt(IRQn_te interrupt_line, EN_STATUS_te en_status) {
 		if(interrupt_line < 32) {
 			NVIC_ISER->NVIC_ISER_[0] |= 0x1 << interrupt_line;
 		}
-		else if(interrupt_line > 31 && interrupt_line < 64) {
+		else if(interrupt_line < 64) {
 			NVIC_ISER->NVIC_ISER_[1] |= 0x1 << (interrupt_line % 32);
 		}
 		else if(interrupt_line > 63 && interrupt_line < 96) {
@@ -59,7 +59,7 @@ void nvic_set_interrupt(IRQn_te interrupt_line, EN_STATUS_te en_status) {
 		if(interrupt_line < 32) {
 			NVIC_ICER->NVIC_ICER_[0] |= 0x1 << interrupt_line;
 		}
-		else if(interrupt_line > 31 && interrupt_line < 64) {
+		else if(interrupt_line < 64) {
 			NVIC_ICER->NVIC_ICER_[1] |= 0x1 << (interrupt_line % 32);
 		}
 		else if(interrupt_line > 63 && interrupt_line < 96) {

@@ -70,7 +70,7 @@ typedef struct {
 
 void rtc_init();
 void rtc_set_calendar(CALENDAR_ts *date);
-void rtc_get_calendar(CALENDAR_ts *date);
+//void rtc_get_calendar(CALENDAR_ts *date);		// Not used
 void rtc_set_time(TIME_ts *time);
 void rtc_get_time(TIME_ts *time);
 

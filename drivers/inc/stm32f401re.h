@@ -154,14 +154,16 @@ typedef struct {
 	uint32_t volatile RTC_ALRMBR;
 	uint32_t volatile RTC_WPR;
 	uint32_t volatile RTC_SSR;
+	uint32_t RESERVED0;
 	uint32_t volatile RTC_TSTR;
+	uint32_t RESERVED1;
 	uint32_t volatile RTC_TSSSR;
 	uint32_t volatile RTC_CALR;
 	uint32_t volatile RTC_TAFCR;
 	uint32_t volatile RTC_ALRMASSR;
 	uint32_t volatile RTC_ALRMBSSR;
-	uint32_t volatile RTC_BKP0R;
-	uint32_t volatile RTC_BKP19R;
+	uint32_t RESERVED2;
+	uint32_t volatile RTC_BKPxR[20];
 }RTC_REGDEF_ts;
 
 /**
@@ -252,8 +254,10 @@ typedef enum
 {
     RCC_BDCR_LSEON   = 0,
     RCC_BDCR_LSERDY  = 1,
+	RCC_BDCR_LSEBYP  = 2,
     RCC_BDCR_RTCSEL  = 8,
-    RCC_BDCR_RTCEN   = 15
+    RCC_BDCR_RTCEN   = 15,
+	RCC_BDCR_BDRST  = 16
 }RCC_BDCR_te;
 
 /**

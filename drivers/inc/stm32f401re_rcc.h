@@ -25,5 +25,6 @@ void rcc_set_pclk_apb2(RCC_APB2ENR_te periph_position, EN_STATUS_te en_status);
 void rcc_reset_periph_ahb1(RCC_AHB1RSTR_te periph_position);
 void rcc_reset_periph_apb1(RCC_APB1RSTR_te periph_position);
 void rcc_reset_periph_apb2(RCC_APB2RSTR_te periph_position);
+void rcc_reset_bkpd(void);
 
 #endif

@@ -14,14 +14,16 @@
 #include "err.h"
 #include "log.h"
 #include "configuration.h"
+#include "modules.h"
+#include <stdbool.h>
 
 struct internal_state_s {
-	LOG_SUBSYS_te log_subsys;
+	MODULES_te subsys;
 	LOG_LEVEL_te log_level;
 	CMD_CLIENT_INFO_ts *cmd_client_info_arr[CONFIG_CMD_MAX_CLIENTS];
 };
 static struct internal_state_s internal_state = { 
-	.log_subsys = LOG_SUBSYS_CMD,
+	.subsys = MODULES_CMD,
 	.log_level = LOG_LEVEL_INFO
  };
 
@@ -65,6 +67,12 @@ ERR_te cmd_execute(char *console_text) {
 	str_tokenize(console_text, " ", CONFIG_CMD_MAX_TOKENS, tokens, &num_tokens);
 
 	if(num_tokens == 0) {
+		LOG_ERROR(
+			internal_state.subsys, 
+			internal_state.log_level, 
+			"cmd_execute: invalid arguments"
+		);
+
 		return ERR_INVALID_ARGUMENT;
 	}
 
@@ -72,6 +80,12 @@ ERR_te cmd_execute(char *console_text) {
 	if(str_cmp("*", tokens[0]) == true) {
 		if(num_tokens < 2) {
 			// No wildcard command given after wildcard character
+			LOG_ERROR(
+				internal_state.subsys, 
+				internal_state.log_level, 
+				"cmd_execute: invalid arguments"
+			);
+
 			return ERR_INVALID_ARGUMENT;
 		}
 		// Handle wildcard log 
@@ -86,19 +100,21 @@ ERR_te cmd_execute(char *console_text) {
 
 					LOG_LEVEL_te log_level = *client_info->log_level_ptr;
 
-					char *log_level_name[LOG_LEVEL_NAME_LEN];
+					char *log_level_name[16];
 					
 					err = log_get_level_name(log_level, (char*)log_level_name);
 					if(err != ERR_OK) {
 						return err;
 					}
-#if CONFIG_COMPILE_WITH_LOGGING
-					err = log_print(internal_state.log_subsys, internal_state.log_level, LOG_LEVEL_INFO, 
-						"%s LOG LEVEL: %s\r\n", client_info->name, log_level_name);
-					if(err != ERR_OK) {
-						return err;
-					}
-#endif
+
+					LOG_INFO(
+						internal_state.subsys, 
+						internal_state.log_level, 
+						"%s log level: %s", 
+						client_info->name, 
+						log_level_name
+					);
+
 					return ERR_OK;
 				}
 			}
@@ -121,7 +137,13 @@ ERR_te cmd_execute(char *console_text) {
 					*client_info->log_level_ptr = log_level;
 				}
 			}
-			else if(num_tokens > 3) {
+			else {
+				LOG_ERROR(
+					internal_state.subsys, 
+					internal_state.log_level, 
+					"cmd_execute: invalid arguments"
+				);
+
 				return ERR_INVALID_ARGUMENT;
 			}
 
@@ -131,30 +153,85 @@ ERR_te cmd_execute(char *console_text) {
 
 	// 2. Handle help command
 	if(str_cmp("help", tokens[0]) == true) {
-		for(uint8_t i = 0; i < CONFIG_CMD_MAX_CLIENTS; i++) {
-			if(internal_state.cmd_client_info_arr[i] == NULL) {
-				continue;
+		if(num_tokens == 1) {
+			LOG_INFO(
+				internal_state.subsys, 
+				internal_state.log_level, 
+				"Listing general commands:"
+			);
+			LOG_INFO(
+				internal_state.subsys, 
+				internal_state.log_level, 
+				"1. help: Shows help information for modules, usage: help <module>"
+			);
+			LOG_INFO(
+				internal_state.subsys, 
+				internal_state.log_level, 
+				"2. log: Shows or sets the log level of modules, usage: log <module|*> <level>"
+			);
+
+			for(uint8_t i = 0; i < CONFIG_CMD_MAX_CLIENTS; i++) {
+				if(internal_state.cmd_client_info_arr[i] == NULL) {
+					continue;
+				}
+
+				client_info = internal_state.cmd_client_info_arr[i];
+
+				LOG_INFO(
+					internal_state.subsys, 
+					internal_state.log_level, 
+					"Listing %s commands:",
+					client_info->name
+				);
+
+				for(uint8_t j = 0; j < client_info->num_cmds; j++) {
+					LOG_INFO(
+						internal_state.subsys, 
+						internal_state.log_level,
+						"%d. %s: %s", j + 1, 
+						client_info->cmds_ptr[j].name, 
+						client_info->cmds_ptr[j].help
+					);
+				}
 			}
+			return ERR_OK;
+		}
+		else if(num_tokens == 2) {
+			for(uint8_t i = 0; i < CONFIG_CMD_MAX_CLIENTS; i++) {
+				if(internal_state.cmd_client_info_arr[i] == NULL) {
+					continue;
+				}
 
-			client_info = internal_state.cmd_client_info_arr[i];
+				client_info = internal_state.cmd_client_info_arr[i];	
 
-#if CONFIG_COMPILE_WITH_LOGGING
-			err = log_print(internal_state.log_subsys, internal_state.log_level, LOG_LEVEL_INFO
-				,"LISTING %s COMMANDS:", client_info->name);
-			if(err != ERR_OK) {
-				return err;
-			}
-#endif
+				if(str_cmp(client_info->name, tokens[1]) == true) {
+					LOG_INFO(
+						internal_state.subsys, 
+						internal_state.log_level, 
+						"Listing %s commands:",
+						client_info->name
+					);
 
-			for(uint8_t j = 0; j < client_info->num_cmds; j++) {
-				err = log_print(internal_state.log_subsys, internal_state.log_level, LOG_LEVEL_INFO
-					,"%d. %s: %s", j + 1, client_info->cmds_ptr[j].name, client_info->cmds_ptr[j].help);
-				if(err != ERR_OK) {
-					return err;
+					for(uint8_t j = 0; j < client_info->num_cmds; j++) {
+						LOG_INFO(
+							internal_state.subsys, 
+							internal_state.log_level,
+							"%d. %s: %s", j + 1, 
+							client_info->cmds_ptr[j].name, 
+							client_info->cmds_ptr[j].help
+						);
+					}
+
+					return ERR_OK;
 				}
 			}
 		}
-		return ERR_OK;
+		LOG_ERROR(
+			internal_state.subsys, 
+			internal_state.log_level, 
+			"cmd_execute: invalid arguments"
+		);
+		return ERR_INVALID_ARGUMENT;
 	}
 
 	// Handle client commands
@@ -170,18 +247,20 @@ ERR_te cmd_execute(char *console_text) {
 				if(num_tokens == 2) {
 					LOG_LEVEL_te log_level = *client_info->log_level_ptr;
 
-					char *log_level_name[LOG_LEVEL_NAME_LEN];
+					char *log_level_name[16];
 					err = log_get_level_name(log_level, (char*)log_level_name);
 					if(err != ERR_OK) {
 						return err;
 					}
-#if CONFIG_COMPILE_WITH_LOGGING
-					err = log_print(internal_state.log_subsys, internal_state.log_level, LOG_LEVEL_INFO, 
-						"%s LOG LEVEL: %s\r\n", client_info->name, log_level_name);
-					if(err != ERR_OK) {
-						return err;
-					}
-#endif
+
+					LOG_INFO(
+						internal_state.subsys,
+						internal_state.log_level,  
+						"%s log level: %s",
+						client_info->name, 
+						log_level_name
+					);
+
 					return ERR_OK;
 				}
 				else if(num_tokens == 3) {
@@ -198,6 +277,12 @@ ERR_te cmd_execute(char *console_text) {
 					return ERR_OK;
 				}
 				else if(num_tokens > 3) {
+					LOG_ERROR(
+						internal_state.subsys, 
+						internal_state.log_level,  
+						"cmd_execute: invalid arguments"
+					);
+
 					return ERR_INVALID_ARGUMENT;
 				}
 			}
@@ -206,11 +291,26 @@ ERR_te cmd_execute(char *console_text) {
 					client_info->cmds_ptr[j].handler(num_tokens, tokens);
 					return ERR_OK;
 				}
+
+				if(j == client_info->num_cmds - 1) {
+					LOG_ERROR(
+						internal_state.subsys, 
+						internal_state.log_level,  
+						"cmd_execute: invalid arguments"
+					);
+
+					return ERR_INVALID_ARGUMENT;
+				}
 			}
 		}
 	}
+	LOG_ERROR(
+		internal_state.subsys,
+		internal_state.log_level, 
+		"cmd_execute: invalid arguments"
+	);
 
-	return ERR_OK;
+	return ERR_INVALID_ARGUMENT;
 }
 
 /** @} */

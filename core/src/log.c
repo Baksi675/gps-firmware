@@ -10,13 +10,17 @@
  * 
  */
 
+#include <stdarg.h>
+
 #include "log.h"
 #include "common.h"
 #include "err.h"
 #include "stm32f401re_gpio.h"
 #include "stm32f401re_usart.h"
 #include "stm32f401re_rtc.h"
-#include "stdarg.h"
+#include "modules.h"
+
+extern const char *modules_names[];
 
 struct internal_state_s {
 	USART_REGDEF_ts *usart_instance;
@@ -24,7 +28,7 @@ struct internal_state_s {
 };
 static struct internal_state_s internal_state = { 0 };
 
-inline static ERR_te log_print_subsys(LOG_SUBSYS_te subsys);
+inline static ERR_te log_print_prologue(MODULES_te subsys, LOG_LEVEL_te log_level);
 
 /** 
  * @defgroup LOG_Public_APIs LOG Public APIs
@@ -89,18 +93,12 @@ ERR_te log_deinit() {
  * @param ... Values given to the format specifiers.
  * @return ERR_te Error generated during execution.
  */
-ERR_te log_print(LOG_SUBSYS_te subsys, LOG_LEVEL_te subsys_log_level, LOG_LEVEL_te log_level, char *msg, ...) {
-	ERR_te err;
-	
+ERR_te log_print(MODULES_te subsys, LOG_LEVEL_te subsys_log_level, LOG_LEVEL_te log_level, char *msg, ...) {
 	if (log_level >= subsys_log_level && internal_state.force_disable == false) {
-
 		va_list args;
 		va_start(args, msg);
 
-		err = log_print_subsys(subsys);
-		if(err != ERR_OK) {
-			return err;
-		}
+		log_print_prologue(subsys, log_level);
 		
 		while (*msg != '\0') {
 			if (*msg == '%') {
@@ -141,6 +139,8 @@ ERR_te log_print(LOG_SUBSYS_te subsys, LOG_LEVEL_te subsys_log_level, LOG_LEVEL_
 		}
 
 		va_end(args);
+
+		usart_send(internal_state.usart_instance, (uint8_t*)"\r\n", 2);
 	}
 
 	return ERR_OK;
@@ -154,35 +154,39 @@ ERR_te log_print(LOG_SUBSYS_te subsys, LOG_LEVEL_te subsys_log_level, LOG_LEVEL_
  * @return ERR_te Error code generated during execution.
  */
 ERR_te log_get_level_name(LOG_LEVEL_te log_level, char *str) {
+	char const *name;
+
 	switch(log_level) {
 		case LOG_LEVEL_NONE:
-			str[0] = 'N'; str[1] = 'O'; str[2] = 'N'; str[3] = 'E'; str[4] = '\0';
+			name = "none";
 			break;
 
 		case LOG_LEVEL_INFO:
-			str[0] = 'I'; str[1] = 'N'; str[2] = 'F'; str[3] = 'O'; str[4] = '\0';
+			name = "info";
 			break;
 
 		case LOG_LEVEL_DEBUG:
-			str[0] = 'D'; str[1] = 'E'; str[2] = 'B'; str[3] = 'U'; str[4] = 'G'; str[5] = '\0';
+			name = "debug";
 			break;
 
 		case LOG_LEVEL_WARNING:
-			str[0] = 'W'; str[1] = 'A'; str[2] = 'R'; str[3] = 'N'; str[4] = 'I'; str[5] = 'N'; str[6] = 'G'; str[7] = '\0';
+			name = "warning";
 			break;
 
 		case LOG_LEVEL_ERROR:
-			str[0] = 'E'; str[1] = 'R'; str[2] = 'R'; str[3] = 'O'; str[4] = 'R'; str[5] = '\0';
+			name = "error";
 			break;
 
 		case LOG_LEVEL_CRITICAL:
-			str[0] = 'C'; str[1] = 'R'; str[2] = 'I'; str[3] = 'T'; str[4] = 'I'; str[5] = 'C'; str[6] = 'A'; str[7] = 'L'; str[8] = '\0';
+			name = "critical";
 			break;
 
 		default:
 			return ERR_UNKNOWN;
 			break;
 	}
+
+	str_cpy(str, name, get_str_len(name) + 1);
 
 	return ERR_OK;
 }
@@ -193,27 +197,28 @@ ERR_te log_get_level_name(LOG_LEVEL_te log_level, char *str) {
  * @param str The log level string.
  * @return LOG_LEVEL_te The log level in enum format.
  */
-ERR_te log_level_to_int(char *str, LOG_LEVEL_te *log_level) {
-	if(str[0] == 'n' && str[1] == 'o' && str[2] == 'n' && str[3] == 'e') {
+ERR_te log_level_to_int(char const *str, LOG_LEVEL_te *log_level) {
+	if(str_cmp(str, "none") == true) {
 		*log_level = LOG_LEVEL_NONE;
 	}
-	else if(str[0] == 'i' && str[1] == 'n' && str[2] == 'f' && str[3] == 'o') {
+	else if(str_cmp(str, "info") == true) {
 		*log_level = LOG_LEVEL_INFO;
 	}
-	else if(str[0] == 'd' && str[1] == 'e' && str[2] == 'b' && str[3] == 'u' && str[4] == 'g') {
+	else if(str_cmp(str, "debug") == true) {
 		*log_level = LOG_LEVEL_DEBUG;
 	}
-	else if(str[0] == 'w' && str[1] == 'a' && str[2] == 'r' && str[3] == 'n' && str[4] == 'i' && str[5] == 'n' && str[6] == 'g') {
+	else if(str_cmp(str, "warning") == true) {
 		*log_level = LOG_LEVEL_WARNING;
 	}
-	else if(str[0] == 'e' && str[1] == 'r' && str[2] == 'r' && str[3] == 'o' && str[4] == 'r') {
+	else if(str_cmp(str, "error") == true) {
 		*log_level = LOG_LEVEL_ERROR;
 	}
-	else if(str[0] == 'c' && str[1] == 'r' && str[2] == 'i' && str[3] == 't' && str[4] == 'i' && str[5] == 'c' && str[6] == 'a' && str[7] == 'l') {
+	else if(str_cmp(str, "critical") == true) {
 		*log_level = LOG_LEVEL_CRITICAL;
 	}
-
-	*log_level = LOG_LEVEL_NONE;
+	else {
+		*log_level = LOG_LEVEL_NONE;
+	}
 
 	return ERR_OK;
 }
@@ -242,7 +247,7 @@ ERR_te log_set_force_disable(bool bool_status) {
   * 
   * @param subsys The subsystem to print the name of.
   */
-inline static ERR_te log_print_subsys(LOG_SUBSYS_te subsys) {
+inline static ERR_te log_print_prologue(MODULES_te subsys, LOG_LEVEL_te log_level) {
     TIME_ts rtc_time = { 0 };
 	rtc_get_time(&rtc_time);
 
@@ -276,26 +281,33 @@ inline static ERR_te log_print_subsys(LOG_SUBSYS_te subsys) {
 	str_set(time_format, minutes, 2, 4);
 	str_set(time_format, hours, 2, 1);
 
-	usart_send(internal_state.usart_instance, (uint8_t*)"\r\n", 2);
 	usart_send(internal_state.usart_instance, (uint8_t*)time_format, 10);
 
-	switch(subsys) {
-		case LOG_SUBSYS_SSD1309:
-			usart_send(internal_state.usart_instance, (uint8_t*)"SSD1309-> ", 10);
-            break;
+	char log_level_str[16];
+	uint8_t log_level_len = 0;
+	log_level_str[0] = '(';
+	log_get_level_name(log_level, log_level_str + 1);
+	log_level_len = get_str_len(log_level_str);
+	log_level_str[log_level_len] = ')';
+	log_level_str[log_level_len + 1] = '\0';
 
-		case LOG_SUBSYS_GTU7:
-			usart_send(internal_state.usart_instance, (uint8_t*)"GTU7-> ", 7);
-            break;
+	usart_send(
+		internal_state.usart_instance,
+		(uint8_t*)log_level_str, 
+		get_str_len(log_level_str) + 1
+	);
 
-		case LOG_SUBSYS_CMD:
-			usart_send(internal_state.usart_instance, (uint8_t*)"CMD-> ", 6);
-			break;
+	usart_send(
+		internal_state.usart_instance, 
+		(uint8_t*)modules_names[subsys], 
+		get_str_len((char*)modules_names[subsys])
+	);
 
-        default:
-			return ERR_UNKNOWN;
-            break;
-    }
+	usart_send(
+		internal_state.usart_instance, 
+		(uint8_t*)"-> ", 
+		3
+	);
 
 	return ERR_OK;
 }

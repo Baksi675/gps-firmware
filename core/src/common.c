@@ -24,7 +24,7 @@
   * @param str The string to return the length of.
   * @return uint32_t The length of the string without a null terminator.
   */
-uint32_t get_str_len(char *str) {
+uint32_t get_str_len(char const *str) {
 	uint32_t len = 0;
 
 	while(*str++) {
@@ -42,7 +42,6 @@ uint32_t get_str_len(char *str) {
  */
 void int_to_str(int num, char *str) {
     char *start = str;
-    uint8_t digit;
     bool is_negative = false;
 
     if (num < 0) {
@@ -54,7 +53,7 @@ void int_to_str(int num, char *str) {
     }
 
     while (num > 0) {
-        digit = num % 10;
+       	uint8_t digit = num % 10;
         num = num / 10;
 
         *str++ = (char)(digit + '0');
@@ -129,7 +128,6 @@ void double_to_str(double num, char *str, int8_t frac_digits) {
 	uint8_t total_len = 0;
 	double addend;
 	uint8_t missing_zeroes = 0;
-	int32_t comp_to_frac;
 	bool negative_0_to_1 = false;
 
 	if(num > -1 && num < 0) {					
@@ -150,7 +148,7 @@ void double_to_str(double num, char *str, int8_t frac_digits) {
 	}
 
 	for(uint8_t i = 1; i <= frac_digits; i++) {
-		comp_to_frac = (get_pow(10, frac_digits - i));
+		int32_t comp_to_frac = (get_pow(10, frac_digits - i));
 
 		if(frac_part < comp_to_frac) {
 			missing_zeroes++;
@@ -227,7 +225,7 @@ void hex_byte_to_str(uint8_t byte, char *str) {
  * @param host_str_len The length of the string used to modify.
  * @param pos The position in the target string where the modification should take place from.
  */
-void str_set(char *target_str, char *host_str, uint32_t host_str_len, uint32_t pos) {
+void str_set(char *target_str, char const *host_str, uint32_t host_str_len, uint32_t pos) {
 	uint32_t pos_counter = 0;
 	bool pos_reached = false;
 	uint32_t bytes_replaced = 0;
@@ -237,7 +235,7 @@ void str_set(char *target_str, char *host_str, uint32_t host_str_len, uint32_t p
 			pos_reached = true;
 		}
 
-		if(pos_reached && bytes_replaced != host_str_len) {
+		if(pos_reached) {
 			*target_str = host_str[bytes_replaced];
 			bytes_replaced++;
 
@@ -322,21 +320,25 @@ bool str_cmp(const char *str1, const char *str2) {
  */
 uint8_t ascii_hex_to_byte(char high, char low) {
     uint8_t value = 0;
+    uint8_t nibble;
 
-    // Convert high nibble
     if (high >= '0' && high <= '9')
-        value = (high - '0') << 4;
+        nibble = (uint8_t)(high - '0');
     else
-        value = (high - 'A' + 10) << 4;
+        nibble = (uint8_t)(high - 'A' + 10);
 
-    // Convert low nibble
+    value = (uint8_t)(nibble << 4);
+
     if (low >= '0' && low <= '9')
-        value |= (low - '0');
+        nibble = (uint8_t)(low - '0');
     else
-        value |= (low - 'A' + 10);
+        nibble = (uint8_t)(low - 'A' + 10);
+
+    value |= nibble;
 
     return value;
 }
+
 
 /**
  * @brief Converts the input text to a set of tokens.
@@ -386,7 +388,7 @@ int str_tokenize(char *str, const char *separator, uint16_t max_tokens, char **t
  * @param str The bool in string format.
  * @return bool The converted bool.
  */
-bool str_to_bool(char *str) {
+bool str_to_bool(char const *str) {
 	if(str_cmp(str, "true") == true) {
 		return true;
 	}
@@ -395,7 +397,7 @@ bool str_to_bool(char *str) {
 	}
 
 	// Error
-	return -1;
+	return false;
 }
 
 /**

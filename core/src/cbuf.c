@@ -26,14 +26,10 @@
  * @return ERR_te Error code produced during execution
  */
 ERR_te cbuf_read(CBUF_HANDLE_ts *cbuf_handle, uint8_t* output_buf_o) {
-	ERR_te err;
 	uint8_t len = 0;
 
-	do {
-		err = cbuf_len(cbuf_handle, &len);
-		if(err != ERR_OK) {
-			return ERR_UNKNOWN;
-		}
+	while(1) {
+		cbuf_len(cbuf_handle, &len);
 
 		if(len == 0) {
 			break;
@@ -42,8 +38,7 @@ ERR_te cbuf_read(CBUF_HANDLE_ts *cbuf_handle, uint8_t* output_buf_o) {
 		*output_buf_o = cbuf_handle->ptr[cbuf_handle->read_position];
 		output_buf_o++;
 		cbuf_handle->read_position = (cbuf_handle->read_position + 1) & (cbuf_handle->size - 1);
-
-	}while (len != 0);
+	}
 
 	return ERR_OK;
 }
@@ -56,14 +51,10 @@ ERR_te cbuf_read(CBUF_HANDLE_ts *cbuf_handle, uint8_t* output_buf_o) {
  * @param input_len The length of the data to write from the input buffer.
  */
 ERR_te cbuf_write(CBUF_HANDLE_ts *cbuf_handle, uint8_t* input_buf, uint32_t input_len) {
-	ERR_te err;
 	uint8_t len;
 	
 	while(input_len != 0) {
-		err = cbuf_len(cbuf_handle, &len);
-		if(err != ERR_OK) {
-			return ERR_UNKNOWN;
-		}
+		cbuf_len(cbuf_handle, &len);
 
 		if(len == cbuf_handle->size - 1) {
 			return ERR_BUFFER_FULL;
@@ -84,7 +75,7 @@ ERR_te cbuf_write(CBUF_HANDLE_ts *cbuf_handle, uint8_t* input_buf, uint32_t inpu
  * @param cbuf_handle A pointer to the circular buffer object.
  * @return uint8_t  The length of the data in the circular buffer.
  */
-ERR_te cbuf_len(CBUF_HANDLE_ts *cbuf_handle, uint8_t *len) {	
+ERR_te cbuf_len(CBUF_HANDLE_ts const *cbuf_handle, uint8_t *len) {	
 	*len = (cbuf_handle->write_position - cbuf_handle->read_position) & (cbuf_handle->size - 1);
 	
 	return ERR_OK;

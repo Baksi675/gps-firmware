@@ -14,6 +14,11 @@
 #include "common.h"
 #include "stm32f401re.h"
 
+////////////////////// To reset time, call rcc_reset_bkpd //////////////////////
+
+#define RTC_BKP_DOMAIN_RST_INDICATOR_BKPxR			0	
+#define RTC_BKP_DOMAIN_RST_INDICATOR_PATTERN		0xABCD
+
 static void rtc_set_write_protection(EN_STATUS_te en_status);
 
 /** 
@@ -25,110 +30,113 @@ static void rtc_set_write_protection(EN_STATUS_te en_status);
  * @brief Initializes the RTC of the MCU.
  * 
  */
-void rtc_init(){
-	// Enable peripheral clock for PWR
-	rcc_set_pclk_apb1(RCC_APB1ENR_PWREN, ENABLE);
-	
-	// Enable write access to backup domain after system reset
-	PWR->PWR_CR |= (0x1 << PWR_CR_DBP);
+void rtc_init(void)
+{
+    // Enable PWR clock FIRST
+    rcc_set_pclk_apb1(RCC_APB1ENR_PWREN, ENABLE);
 
-	// Disable write protection on RTC registers
-	rtc_set_write_protection(DISABLE);
+    // Enable backup domain access
+    PWR->PWR_CR |= (1 << PWR_CR_DBP);
 
-	// Enable LSE clock
-	RCC->RCC_BDCR |= (0x1 << RCC_BDCR_LSEON);
-	while(!((RCC->RCC_BDCR >> RCC_BDCR_LSERDY) & 0x1));
+    if ((RTC->RTC_BKPxR[RTC_BKP_DOMAIN_RST_INDICATOR_BKPxR]
+         & RTC_BKP_DOMAIN_RST_INDICATOR_PATTERN)
+        == RTC_BKP_DOMAIN_RST_INDICATOR_PATTERN)
+    {
+        // Already initialized
+        return;
+    }
 
-	// Set LSE as RTC clock source
-	RCC->RCC_BDCR &= ~(0x3 << RCC_BDCR_RTCSEL);
-	RCC->RCC_BDCR |= (0x1 << RCC_BDCR_RTCSEL);
+    // Disable write protection
+    rtc_set_write_protection(DISABLE);
 
-	// Enable RTC
-	RCC->RCC_BDCR |= (0x1 << RCC_BDCR_RTCEN);
+    // Enable LSE
+    RCC->RCC_BDCR |= (1 << RCC_BDCR_LSEON);
+    while (!(RCC->RCC_BDCR & (1 << RCC_BDCR_LSERDY)));
 
-	// Enter initialization mode, wait until entered
-	RTC->RTC_ISR |= (0x1 << RTC_ISR_INIT);
-	while(!((RTC->RTC_ISR >> RTC_ISR_INITF) & 0x1));
+    // Select LSE as RTC clock
+    RCC->RCC_BDCR &= ~(0x3 << RCC_BDCR_RTCSEL);
+    RCC->RCC_BDCR |=  (0x1 << RCC_BDCR_RTCSEL);
 
-	// Set to 24 hour/day format
-	RTC->RTC_CR &= ~(0x1 << RTC_CR_FMT);
+    // Enable RTC
+    RCC->RCC_BDCR |= (1 << RCC_BDCR_RTCEN);
 
-	// Exit initialization mode
-	RTC->RTC_ISR &= ~(0x1 << RTC_ISR_INIT);
-	while(((RTC->RTC_ISR >> RTC_ISR_INITF) & 0x1));
+    // Enter INIT mode
+    RTC->RTC_ISR |= (1 << RTC_ISR_INIT);
+    while (!(RTC->RTC_ISR & (1 << RTC_ISR_INITF)));
 
-	rtc_set_write_protection(ENABLE);
+    // Configure RTC
+    RTC->RTC_CR &= ~(1 << RTC_CR_FMT);
+    RTC->RTC_PRER =
+        (127 << RTC_PRER_PREDIV_A) |
+        (255 << RTC_PRER_PREDIV_S);
+
+    // Exit INIT
+    RTC->RTC_ISR &= ~(1 << RTC_ISR_INIT);
+    while (RTC->RTC_ISR & (1 << RTC_ISR_INITF));
+
+    // NOW mark RTC as valid
+    RTC->RTC_BKPxR[RTC_BKP_DOMAIN_RST_INDICATOR_BKPxR] =
+        RTC_BKP_DOMAIN_RST_INDICATOR_PATTERN;
+
+    rtc_set_write_protection(ENABLE);
 }
+
 
 /**
  * @brief Sets the calendar of the RTC.
  * 
  * @param date Calendar object.
  */
-void rtc_set_calendar(CALENDAR_ts *date) {
-    // Disable write protection on RTC registers
+void rtc_set_calendar(CALENDAR_ts *date)
+{
     rtc_set_write_protection(DISABLE);
 
-    // Enter initialization mode, wait until entered
-    RTC->RTC_ISR |= (0x1 << RTC_ISR_INIT);
-    while (!((RTC->RTC_ISR >> RTC_ISR_INITF) & 0x1));
+    // Enter INIT mode
+    RTC->RTC_ISR |= (1 << RTC_ISR_INIT);
+    while (!(RTC->RTC_ISR & (1 << RTC_ISR_INITF)));
 
-    // Clear only the relevant fields in DR (preserve reserved bits)
-    RTC->RTC_DR &= ~(
-        (0xF << RTC_DR_DU)  | // Date units
-        (0x3 << RTC_DR_DT)  | // Date tens
-        (0xF << RTC_DR_MU)  | // Month units
-        (0x1 << RTC_DR_MT)  | // Month tens
-        (0x7 << RTC_DR_WDU) | // Weekday
-        (0xF << RTC_DR_YU)  | // Year units
-        (0xF << RTC_DR_YT)    // Year tens
-    );
+    RTC->RTC_DR =
+        ((date->calendar_date % 10)        << RTC_DR_DU) |
+        ((date->calendar_date / 10)        << RTC_DR_DT) |
+        ((date->calendar_months % 10)      << RTC_DR_MU) |
+        ((date->calendar_months / 10)      << RTC_DR_MT) |
+        ((date->calendar_week_days)        << RTC_DR_WDU)|
+        (((date->calendar_year - 2000) % 10) << RTC_DR_YU) |
+        (((date->calendar_year - 2000) / 10) << RTC_DR_YT);
 
-    // Day
-    RTC->RTC_DR |= ((date->calendar_date % 10) << RTC_DR_DU);
-    RTC->RTC_DR |= ((date->calendar_date / 10) << RTC_DR_DT);
+    // Exit INIT
+    RTC->RTC_ISR &= ~(1 << RTC_ISR_INIT);
+    while (RTC->RTC_ISR & (1 << RTC_ISR_INITF));
 
-    // Month
-    RTC->RTC_DR |= ((date->calendar_months % 10) << RTC_DR_MU);
-    RTC->RTC_DR |= ((date->calendar_months / 10) << RTC_DR_MT);
-
-    // Weekday
-    RTC->RTC_DR |= (date->calendar_week_days << RTC_DR_WDU);
-
-    // Year (offset from 2000)
-    uint8_t year = date->calendar_year - 2000;
-    RTC->RTC_DR |= ((year % 10) << RTC_DR_YU);
-    RTC->RTC_DR |= ((year / 10) << RTC_DR_YT);
-
-    // Exit initialization mode
-    RTC->RTC_ISR &= ~(0x1 << RTC_ISR_INIT);
-    while ((RTC->RTC_ISR >> RTC_ISR_INITF) & 0x1);
-
-    // Re-enable write protection
     rtc_set_write_protection(ENABLE);
 }
+
 
 /**
  * @brief Sets the time of the RTC.
  * 
  * @param time Time object.
  */
-void rtc_set_time(TIME_ts *time) {
-	// Disable write protection
-	rtc_set_write_protection(DISABLE);
+void rtc_set_time(TIME_ts *time)
+{
+    rtc_set_write_protection(DISABLE);
 
-	// Enter initialization mode, wait until entered
-	RTC->RTC_ISR |= (0x1 << RTC_ISR_INIT);
-	while(!((RTC->RTC_ISR >> RTC_ISR_INITF) & 0x1));
+    // Enter INIT mode
+    RTC->RTC_ISR |= (1 << RTC_ISR_INIT);
+    while (!(RTC->RTC_ISR & (1 << RTC_ISR_INITF)));
 
-	// Configure TR register
-	RTC->RTC_TR = (DEC_TO_BCD(time->time_hours) << 16) | (DEC_TO_BCD(time->time_minutes) << 8) | (DEC_TO_BCD(time->time_seconds) << 0); 
+    RTC->RTC_TR =
+        (DEC_TO_BCD(time->time_hours)   << RTC_TR_HU) |
+        (DEC_TO_BCD(time->time_minutes) << RTC_TR_MNU) |
+        (DEC_TO_BCD(time->time_seconds) << RTC_TR_SU);
 
-	// Exit initialization mode
-	RTC->RTC_ISR &= ~(0x1 << RTC_ISR_INIT);
+    // Exit INIT
+    RTC->RTC_ISR &= ~(1 << RTC_ISR_INIT);
+    while (RTC->RTC_ISR & (1 << RTC_ISR_INITF));
 
-	rtc_set_write_protection(ENABLE);
+    rtc_set_write_protection(ENABLE);
 }
+
 
 /**
  * @brief Gets the time from the RTC.
@@ -136,20 +144,18 @@ void rtc_set_time(TIME_ts *time) {
  * @param time The time object of the RTC (output).
  */
 void rtc_get_time(TIME_ts *time) {
-	uint8_t hours, minutes, seconds;
+    uint32_t tr1, tr2;
 
-	// Reset RSF bit (register synchronization flag) in the ISR register ==> Needed if the SW reads the shadow registers faster than 2 RTC CLK cycles
-	RTC->RTC_ISR &= ~(0x1 << RTC_ISR_RSF);
+	// Read time atomically
+    do {
+        tr1 = RTC->RTC_TR;
+        (void)RTC->RTC_DR; 
+        tr2 = RTC->RTC_TR;
+    } while (tr1 != tr2);
 
-	while(!((RTC->RTC_ISR >> RTC_ISR_RSF) & 0x1));
-
-	seconds = BCD_TO_DEC(RTC->RTC_TR & 0x7F);
-	minutes = BCD_TO_DEC((RTC->RTC_TR >> RTC_TR_MNU) & 0x7F);
-	hours = BCD_TO_DEC((RTC->RTC_TR >> RTC_TR_HU) & 0x7F);
-
-	time->time_seconds = seconds;
-	time->time_minutes = minutes;
-	time->time_hours = hours;
+    time->time_seconds = BCD_TO_DEC(tr1 & 0x7F);
+    time->time_minutes = BCD_TO_DEC((tr1 >> RTC_TR_MNU) & 0x7F);
+    time->time_hours   = BCD_TO_DEC((tr1 >> RTC_TR_HU) & 0x7F);
 }
 
 /** @} */

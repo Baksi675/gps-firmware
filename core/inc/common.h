@@ -46,10 +46,10 @@ typedef enum {
 	UP
 }VERTICAL_DIR_te;
 
-uint32_t get_str_len(char *str);
+uint32_t get_str_len(char const *str);
 void int_to_str(int num, char *str);
 int str_to_int(const char* str);
-void str_set(char *target_str, char *host_str, uint32_t host_str_len, uint32_t pos);
+void str_set(char *target_str, char const *host_str, uint32_t host_str_len, uint32_t pos);
 void double_to_str(double num, char *str, int8_t frac_digits);
 void hex_byte_to_str(uint8_t byte, char *str);
 int32_t get_pow(int32_t base, int32_t exponent);
@@ -57,7 +57,7 @@ void arr_cmprs(char *arr, uint8_t len);
 bool str_cmp(const char *str1, const char *str2);
 uint8_t ascii_hex_to_byte(char high, char low);
 int str_tokenize(char *str, const char *separator, uint16_t max_tokens, char **tokens, uint16_t *num_tokens);
-bool str_to_bool(char *str);
+bool str_to_bool(char const *str);
 int str_cpy(char *str_to, const char *str_from, uint32_t len);
 int txt_cpy(char *txt_to, const char *txt_from, uint32_t len);
 bool is_pow(uint32_t num);

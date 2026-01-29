@@ -16,15 +16,8 @@
 #include "stm32f401re_usart.h"
 #include "stm32f401re_gpio.h"
 #include "err.h"
-
-#define LOG_LEVEL_NAME_LEN		8
-
-typedef enum {
-	LOG_SUBSYS_CMD,
-	LOG_SUBSYS_SSD1309,
-	LOG_SUBSYS_GTU7,
-	LOG_SUBSYS_COUNT
-}LOG_SUBSYS_te;
+#include "configuration.h"
+#include "modules.h"
 
 typedef enum {
 	LOG_LEVEL_INFO,
@@ -46,9 +39,36 @@ typedef struct {
 
 ERR_te log_init(LOG_HANDLE_ts *log_handle);
 ERR_te log_deinit();
-ERR_te log_print(LOG_SUBSYS_te subsys, LOG_LEVEL_te subsys_log_level, LOG_LEVEL_te log_level, char *msg, ...);
+ERR_te log_print(MODULES_te subsys, LOG_LEVEL_te subsys_log_level, LOG_LEVEL_te log_level, char *msg, ...);
 ERR_te log_get_level_name(LOG_LEVEL_te log_level, char *str);
-ERR_te log_level_to_int(char *str, LOG_LEVEL_te *log_level_o);
+ERR_te log_level_to_int(char const *str, LOG_LEVEL_te *log_level_o);
 ERR_te log_set_force_disable(bool bool_status);
+
+#if defined(CONFIG_COMPILE_WITH_LOGGING)
+
+#define LOG_INFO(subsys, lvl, fmt, ...) \
+    log_print((subsys), (lvl), LOG_LEVEL_INFO, fmt, ##__VA_ARGS__)
+
+#define LOG_DEBUG(subsys, lvl, fmt, ...) \
+    log_print((subsys), (lvl), LOG_LEVEL_DEBUG, fmt, ##__VA_ARGS__)
+
+#define LOG_WARNING(subsys, lvl, fmt, ...) \
+    log_print((subsys), (lvl), LOG_LEVEL_WARNING, fmt, ##__VA_ARGS__)
+
+#define LOG_ERROR(subsys, lvl, fmt, ...) \
+    log_print((subsys), (lvl), LOG_LEVEL_ERROR, fmt, ##__VA_ARGS__)
+
+#define LOG_CRITICAL(subsys, lvl, fmt, ...) \
+    log_print((subsys), (lvl), LOG_LEVEL_CRITICAL, fmt, ##__VA_ARGS__)
+
+#else
+
+#define LOG_INFO(subsys, lvl, fmt, ...)  ((void)0)
+#define LOG_DEBUG(subsys, lvl, fmt, ...) ((void)0)
+#define LOG_WARNING(subsys, lvl, fmt, ...)  ((void)0)
+#define LOG_ERROR(subsys, lvl, fmt, ...) ((void)0)
+#define LOG_CRITICAL(subsys, lvl, fmt, ...)  ((void)0)
+
+#endif
 
 #endif
