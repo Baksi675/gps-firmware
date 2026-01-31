@@ -8,11 +8,8 @@ menu "HW Modules"
 			default 1
 	endmenu
 
-	menu "Display"
-		config DISPLAY_MAX_OBJECTS
-			int "Max number of display objects"
-			range 1 3
-			default 1
+	menu "SSD1309"
+
 	endmenu
 
 	menu "GPS"
@@ -42,38 +39,23 @@ endmenu
 menu "System"
 	menu "Peripherals"
 		menu "GPIO"
-			config GPIO_MAX_OBJECTS
-				int "Max number of GPIO objects"
-				range 1 20
-				default 1
+
 		endmenu
 
 		menu "I2C"
-			config I2C_MAX_OBJECTS
-				int "Max number of I2C objects"
-				range 1 3
-				default 1
+
 		endmenu
 
 		menu "SPI"
-			config SPI_MAX_OBJECTS
-				int "Max number of SPI objects"
-				range 1 3
-				default 1
+
 		endmenu
 
 		menu "TIM"
-			config TIM_MAX_OBJECTS
-				int "Max number of TIM objects"
-				range 1 8
-				default 1
+
 		endmenu
 
 		menu "USART"
-			config USART_MAX_OBJECTS
-				int "Max number of USART objects"
-				range 1 3
-				default 1
+
 		endmenu
 	endmenu
 endmenu
