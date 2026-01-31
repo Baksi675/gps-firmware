@@ -52,6 +52,28 @@ ERR_te cmd_register(CMD_CLIENT_INFO_ts *cmd_client_info) {
 	return ERR_OK;
  }
 
+
+ /**
+  * @brief Deregisters a client from the cmd module.
+  * 
+  * @param cmd_client_info Client info pointer.
+  * @return ERR_te Error generated during execution.
+  */
+ERR_te cmd_deregister(CMD_CLIENT_INFO_ts *cmd_client_info) {
+	for(uint8_t i = 0; i < CONFIG_CMD_MAX_CLIENTS; i++) {
+		if(internal_state.cmd_client_info_arr[i] == cmd_client_info) {
+			internal_state.cmd_client_info_arr[i] = NULL;
+			break;
+		}
+		else if(internal_state.cmd_client_info_arr[i] != cmd_client_info && i == CONFIG_CMD_MAX_CLIENTS - 1) {
+			return ERR_DEINITIALIZATION_FAILURE;
+		}
+	}
+
+	return ERR_OK;
+}
+	
+
  /**
   * @brief Interprets and executes a command or calls the command handler of a client.
   * 

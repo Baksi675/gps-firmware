@@ -1,3 +1,4 @@
+#include <stdbool.h>
 #include <stdint.h>
 #include "common.h"
 #include "stm32f401re_gpio.h"
@@ -5,6 +6,7 @@
 #include "log.h"
 #include "console.h"
 #include "io.h"
+#include "ssd1309.h"
 
 static void init_all(void);
 
@@ -16,6 +18,7 @@ static void init_all(void);
 
 IO_HANDLE_ts *io_handle;
 IO_HANDLE_ts *io_handle1;
+SSD1309_HANDLE_ts *ssd1309_handle;
 
 void led_init(void) {
 	// Enable GPIOA peripheral
@@ -49,6 +52,9 @@ int main(void) {
 	return 0;
 }*/
 
+uint32_t btn_count = 0;
+bool processed = false;
+
 int main(void) {
 	init_all();
 
@@ -61,6 +67,12 @@ int main(void) {
 }
 
 static void init_all(void) {
+	GPIO_HANDLE_ts btn = { 0 };
+	btn.mode = GPIO_MODE_INPUT;
+	btn.port = GPIOC;
+	btn.pin = GPIO_PIN_13;
+	gpio_init(&btn);
+
 	rtc_init();
 
 	CALENDAR_ts rtc_calendar;
@@ -116,4 +128,17 @@ static void init_all(void) {
 	io_init_handle(&io_config, &io_handle);
 	io_init_handle(&io_config1, &io_handle1);
 	io_start_subsys();
+
+	SSD1309_CONFIG_ts ssd1309_conf = { 0 };
+	ssd1309_get_def_conf(&ssd1309_conf);
+	ssd1309_conf.i2c_instance = I2C1;
+	ssd1309_conf.gpio_alternate_function = GPIO_ALTERNATE_FUNCTION_AF4;
+	ssd1309_conf.scl_gpio_pin = GPIO_PIN_8;
+	ssd1309_conf.scl_gpio_port = GPIOB;
+	ssd1309_conf.sda_gpio_pin = GPIO_PIN_9;
+	ssd1309_conf.sda_gpio_port = GPIOB;
+
+	ssd1309_init_subsys();
+	ssd1309_init_handle(&ssd1309_conf, &ssd1309_handle);
+	ssd1309_start_subsys();
 }

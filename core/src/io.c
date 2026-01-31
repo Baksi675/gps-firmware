@@ -80,10 +80,8 @@ ERR_te io_init_subsys(void) {
 		return ERR_INITIALIZATION_FAILURE;
 	}
 
-	for(uint32_t i = 0; i < CONFIG_IO_MAX_OBJECTS; i++)
-		internal_state.ios[i] = (struct io_handle_s){ 0 };
-
-	internal_state.io_num = 0;	
+	internal_state = (struct internal_state_s){ 0 };
+	
 	internal_state.log_level = LOG_LEVEL_INFO;
 	internal_state.subsys = MODULES_IO;
 	internal_state.initialized = true;
@@ -96,6 +94,8 @@ ERR_te io_init_subsys(void) {
 			internal_state.log_level,
 			"io_init_subsys: cmd_register error"
 		);
+
+		return err;
 	}
 	LOG_INFO(
 		internal_state.subsys, 
@@ -115,7 +115,7 @@ ERR_te io_deinit_subsys(void) {
 	if(internal_state.initialized && !internal_state.started) {
 		internal_state = (struct internal_state_s){ 0 };
 
-		// To implement: Deregister subsystem commands (modify cmd module)
+		cmd_deregister(&io_cmd_client_info);
 	}
 	else {
 		LOG_ERROR(
@@ -126,6 +126,11 @@ ERR_te io_deinit_subsys(void) {
 
 		return ERR_DEINITIALIZATION_FAILURE;
 	}
+	LOG_INFO(
+		internal_state.subsys, 
+		internal_state.log_level,
+		"io_deinit_subsys: subsys deinitialized"
+	);
 
 	return ERR_OK;
 }
@@ -469,6 +474,7 @@ static ERR_te io_cmd_r_handler(uint32_t argc, char** argv) {
 			return ERR_INVALID_ARGUMENT;
 		}
 	}
+
 	return ERR_OK;
 }
 

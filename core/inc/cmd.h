@@ -42,6 +42,7 @@ typedef struct {
 }CMD_CLIENT_INFO_ts;
 
 ERR_te cmd_register(CMD_CLIENT_INFO_ts *cmd_client_info);
+ERR_te cmd_deregister(CMD_CLIENT_INFO_ts *cmd_client_info);
 ERR_te cmd_execute(char *console_text);
 
 #endif

@@ -21,6 +21,8 @@ build/output.elf: build/startup_stm32f401re.o \
 					build/log.o \
 					build/cmd.o \
 					build/modules.o \
+					build/stm32f401re_i2c.o \
+					build/ssd1309.o \
 					| build
 	$(CC) $(LDFLAGS) $^ -o $@
 
@@ -64,6 +66,12 @@ build/cmd.o: core/src/cmd.c | build
 	$(CC) $(CFLAGS) $< -o $@
 
 build/modules.o: core/src/modules.c | build
+	$(CC) $(CFLAGS) $< -o $@
+
+build/stm32f401re_i2c.o: drivers/src/stm32f401re_i2c.c | build
+	$(CC) $(CFLAGS) $< -o $@
+
+build/ssd1309.o: core/src/ssd1309.c | build
 	$(CC) $(CFLAGS) $< -o $@
 
 ### PHONY ###
