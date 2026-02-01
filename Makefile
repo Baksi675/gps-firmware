@@ -23,6 +23,8 @@ build/output.elf: build/startup_stm32f401re.o \
 					build/modules.o \
 					build/stm32f401re_i2c.o \
 					build/ssd1309.o \
+					build/button.o \
+					build/arm_cortex_m4_systick.o \
 					| build
 	$(CC) $(LDFLAGS) $^ -o $@
 
@@ -72,6 +74,12 @@ build/stm32f401re_i2c.o: drivers/src/stm32f401re_i2c.c | build
 	$(CC) $(CFLAGS) $< -o $@
 
 build/ssd1309.o: core/src/ssd1309.c | build
+	$(CC) $(CFLAGS) $< -o $@
+
+build/button.o: core/src/button.c | build
+	$(CC) $(CFLAGS) $< -o $@
+
+build/arm_cortex_m4_systick.o: drivers/src/arm_cortex_m4_systick.c | build
 	$(CC) $(CFLAGS) $< -o $@
 
 ### PHONY ###

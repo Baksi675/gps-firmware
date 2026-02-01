@@ -22,6 +22,8 @@
 #define ADDR_NVIC_IPR			(0xE000E400U)
 #define ADDR_NVIC_STIR			(0xE000EF00U)
 
+#define ADDR_SYSTICK			(0xE000E010U)
+
 /**
  * @brief NVIC_ISER register definition.
  * 
@@ -84,5 +86,54 @@ typedef struct {
 	uint32_t volatile NVIC_STIR_;
 }NVIC_STIR_REGDEF_ts;
 #define NVIC_STIR		((NVIC_STIR_REGDEF_ts*)ADDR_NVIC_STIR)
+
+/**
+ * @brief Register definition for systick.
+ * 
+ */
+typedef struct {
+	uint32_t volatile SYST_CSR;
+	uint32_t volatile SYST_RVR;
+	uint32_t volatile SYST_CVR;
+	uint32_t volatile SYST_CALIB;
+}SYST_REGDEF_ts;
+#define SYSTICK		((SYST_REGDEF_ts*)ADDR_SYSTICK)
+
+/**
+ * @brief SYST_CSR bit positions
+ * 
+ */
+typedef enum {
+	SYST_CSR_ENABLE = 0,
+	SYST_CSR_TICKINT,
+	SYST_CSR_CLKSOURCE,
+	SYST_CSR_COUNTFLAG = 16 
+}SYST_CSR_te;
+
+/**
+ * @brief SYST_RVR bit positions
+ * 
+ */
+typedef enum {
+	SYST_RVR_RELOAD = 0
+}SYST_RVR_te;
+
+/**
+ * @brief SYST_CVR bit positions
+ * 
+ */
+typedef enum {
+	SYST_CVR_CURRENT = 0
+}SYST_CVR_te;
+
+/**
+ * @brief SYST_CALIB bit positions
+ * 
+ */
+typedef enum {
+	SYST_CALIB_TENMS = 0,
+	SYST_CALIB_SKEW = 30,
+	SYST_CALIB_NOREF
+}SYST_CALIB_te;
 
 #endif

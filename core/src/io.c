@@ -121,7 +121,7 @@ ERR_te io_deinit_subsys(void) {
 		LOG_ERROR(
 			internal_state.subsys, 
 			internal_state.log_level,
-			"io_deinit_subsys: subsys is not initialized or stopped"
+			"io_deinit_subsys: subsys is not initialized or not stopped"
 		);
 
 		return ERR_DEINITIALIZATION_FAILURE;
@@ -486,6 +486,16 @@ static ERR_te io_cmd_r_handler(uint32_t argc, char** argv) {
  * @return ERR_te Error generated during execution.
  */
 static ERR_te io_cmd_info_handler(uint32_t argc, char **argv) {
+	if(argc != 2) {
+		LOG_ERROR(
+			internal_state.subsys,
+			internal_state.log_level,
+			"io_cmd_info_handler: invalid arguments"
+		);
+
+		return ERR_INVALID_ARGUMENT;
+	}
+
 	LOG_INFO(internal_state.subsys, internal_state.log_level, "Printing IO information:");
 
 	for(uint32_t i = 0; i < CONFIG_IO_MAX_OBJECTS; i++) {

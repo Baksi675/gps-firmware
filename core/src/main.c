@@ -1,5 +1,6 @@
 #include <stdbool.h>
 #include <stdint.h>
+#include "button.h"
 #include "common.h"
 #include "stm32f401re_gpio.h"
 #include "stm32f401re_rtc.h"
@@ -19,6 +20,7 @@ static void init_all(void);
 IO_HANDLE_ts *io_handle;
 IO_HANDLE_ts *io_handle1;
 SSD1309_HANDLE_ts *ssd1309_handle;
+BUTTON_HANDLE_ts *lbtn;
 
 void led_init(void) {
 	// Enable GPIOA peripheral
@@ -54,12 +56,36 @@ int main(void) {
 
 uint32_t btn_count = 0;
 bool processed = false;
+bool left_btn_pushed = false;
+bool can_toggle_left_btn = true;
+bool left_btn_held = false;
+bool can_hold_left_btn = true;
 
 int main(void) {
 	init_all();
 
 	while(1) {
 		console_run();
+		button_run_handle_all();
+
+		button_get_pushed_state(lbtn, &left_btn_pushed);
+		button_get_held_state(lbtn, &left_btn_held);
+
+		if(left_btn_pushed && can_toggle_left_btn) {
+
+			can_toggle_left_btn = false;
+		}
+		else if(!left_btn_pushed && !can_toggle_left_btn) {
+			can_toggle_left_btn = true;
+		}
+
+		if(left_btn_held && can_hold_left_btn) {
+
+			can_hold_left_btn = false;
+		}
+		else if(!left_btn_held && !can_hold_left_btn) {
+			can_hold_left_btn = true;
+		}
 	
 	}
 
@@ -141,4 +167,20 @@ static void init_all(void) {
 	ssd1309_init_subsys();
 	ssd1309_init_handle(&ssd1309_conf, &ssd1309_handle);
 	ssd1309_start_subsys();
+
+	BUTTON_CFG_ts lbtn_cfg = { 0 };
+	lbtn_cfg.gpio_port = GPIOB;
+	lbtn_cfg.gpio_pin = GPIO_PIN_5;
+	lbtn_cfg.debounce_limit_ms = 50;
+	lbtn_cfg.held_limit_ms = 1000;
+	lbtn_cfg.pushed_type = BUTTON_PUSHED_TYPE_HIGH;
+	str_cpy(
+		lbtn_cfg.name,
+		"leftbtn",
+		get_str_len("leftbtn") + 1 
+	);
+
+	button_init_subsys();
+	button_init_handle(&lbtn_cfg, &lbtn);
+	button_start_subsys();
 }

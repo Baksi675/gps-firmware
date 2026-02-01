@@ -6,6 +6,11 @@ menu "HW Modules"
 			int "Max number of button objects"
 			range 1 5
 			default 1
+
+		config BUTTON_MAX_NAME_LEN
+			int "Max button name length"
+			range 1 32
+			default 1
 	endmenu
 
 	menu "SSD1309"
