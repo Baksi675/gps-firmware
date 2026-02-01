@@ -1,7 +1,7 @@
 /**
  * @file arm_cortex_m4_systick.c
- * @author your name (you@domain.com)
- * @brief 
+ * @author github.com/Baksi675
+ * @brief Implementation file for Arm Cortex M4 systick.
  * @version 0.1
  * @date 2026-02-01
  * 
