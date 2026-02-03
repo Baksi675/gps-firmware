@@ -16,5 +16,6 @@ const char *modules_names[] = {
 	[MODULES_SSD1309] = "ssd1309",
 	[MODULES_GTU7] = "gtu7",
 	[MODULES_IO] = "io",
-	[MODULES_BUTTON] = "button"
+	[MODULES_BUTTON] = "button",
+	[MODULES_MENU] = "menu"
 };

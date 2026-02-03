@@ -2,6 +2,7 @@
 #include <stdint.h>
 #include "button.h"
 #include "common.h"
+#include "menu.h"
 #include "stm32f401re_gpio.h"
 #include "stm32f401re_rtc.h"
 #include "log.h"
@@ -21,6 +22,7 @@ IO_HANDLE_ts *io_handle;
 IO_HANDLE_ts *io_handle1;
 SSD1309_HANDLE_ts *ssd1309_handle;
 BUTTON_HANDLE_ts *lbtn;
+MENU_HANDLE_ts *main_menu;
 
 void led_init(void) {
 	// Enable GPIOA peripheral
@@ -63,6 +65,7 @@ bool can_hold_left_btn = true;
 
 int main(void) {
 	init_all();
+	menu_run_handle(main_menu);
 
 	while(1) {
 		console_run();
@@ -183,4 +186,18 @@ static void init_all(void) {
 	button_init_subsys();
 	button_init_handle(&lbtn_cfg, &lbtn);
 	button_start_subsys();
+
+	MENU_CFG_ts main_menu_cfg = { 0 };
+	txt_cpy(main_menu_cfg.name, "main", 5);
+	txt_cpy(main_menu_cfg.title, "      MENU      ", 16);
+	txt_cpy(main_menu_cfg.options[0], "LOCATION", get_str_len("LOCATION"));
+	txt_cpy(main_menu_cfg.options[1], "DATE/TIME", get_str_len("DATE/TIME"));
+	txt_cpy(main_menu_cfg.options[2], "MOVEMENT", get_str_len("MOVEMENT"));
+	txt_cpy(main_menu_cfg.options[3], "ACCURACY", get_str_len("ACCURACY"));
+	txt_cpy(main_menu_cfg.options[4], "SATELLITES", get_str_len("SATELLITES"));
+	main_menu_cfg.type = MENU_TYPE_SELECTABLE;
+
+	menu_init_subsys();
+	menu_init_handle(&main_menu_cfg, &main_menu);
+	menu_start_subsys();
 }

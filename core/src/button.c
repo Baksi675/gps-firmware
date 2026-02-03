@@ -303,7 +303,7 @@ ERR_te button_init_handle(BUTTON_CFG_ts *button_cfg, BUTTON_HANDLE_ts **button_h
  * @param[in] button_handle The button handle.
  * @return ERR_te The error code generated during execution.
  */
-ERR_te button_deinit_handle(BUTTON_HANDLE_ts *button_handle) {
+ERR_te button_deinit_handle(BUTTON_HANDLE_ts const *button_handle) {
 	if(internal_state.started) {
 		LOG_INFO(
 			internal_state.subsys, 
@@ -487,7 +487,7 @@ ERR_te button_run_handle_all(void) {
  * @param pushed_state 
  * @return ERR_te 
  */
-ERR_te button_get_pushed_state(BUTTON_HANDLE_ts *button_handle, bool *pushed_state_o) {
+ERR_te button_get_pushed_state(BUTTON_HANDLE_ts const *button_handle, bool *pushed_state_o) {
 	if(!internal_state.initialized || !internal_state.started) {
 		LOG_ERROR(
 			internal_state.subsys,
@@ -510,7 +510,7 @@ ERR_te button_get_pushed_state(BUTTON_HANDLE_ts *button_handle, bool *pushed_sta
  * @param held_state 
  * @return ERR_te 
  */
-ERR_te button_get_held_state(BUTTON_HANDLE_ts *button_handle, bool *held_state_o) {
+ERR_te button_get_held_state(BUTTON_HANDLE_ts const *button_handle, bool *held_state_o) {
 	if(!internal_state.initialized || !internal_state.started) {
 		LOG_ERROR(
 			internal_state.subsys,

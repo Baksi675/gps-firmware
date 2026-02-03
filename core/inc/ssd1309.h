@@ -1020,7 +1020,7 @@ ERR_te ssd1309_start_subsys(void);
 ERR_te ssd1309_stop_subsys(void);
 ERR_te ssd1309_get_def_conf(SSD1309_CONFIG_ts *ssd1309_config_o);
 ERR_te ssd1309_init_handle(SSD1309_CONFIG_ts *ssd1309_config, SSD1309_HANDLE_ts **ssd1309_handle_o);
-ERR_te ssd1309_draw_text(char *text, uint8_t text_len, uint8_t line);
+ERR_te ssd1309_draw_text(char const *text, uint8_t text_len, uint8_t line);
 ERR_te ssd1309_draw_rect(uint8_t x_src, uint8_t y_src, uint8_t x_dest, uint8_t y_dest);
 ERR_te ssd1309_clear_line(uint8_t line);
 ERR_te ssd1309_invert_line(uint8_t line);

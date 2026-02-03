@@ -100,7 +100,25 @@ menu "SW Modules"
 	endmenu
 
 	menu "Menu"
-	
+		config MENU_MAX_OBJECTS
+			int "Max number of menu objects"
+			range 1 10
+			default 1
+
+		config MENU_MAX_OPTIONS
+			int "Max number of menu options"
+			range 1 20
+			default 1
+
+		config MENU_MAX_BUF_SIZE
+			int "Max number of menus in buffer"
+			range 1 10
+			default 1
+
+		config MENU_MAX_NAME_LEN
+			int "Max menu name length"
+			range 1 20
+			default 1
 	endmenu
 endmenu
 

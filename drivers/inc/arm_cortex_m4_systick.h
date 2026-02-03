@@ -29,7 +29,7 @@ typedef struct {
 	SYSTICK_IT_te interrupt;
 }SYSTICK_CFG_ts;
 
-void systick_init(SYSTICK_CFG_ts *systick_cfg);
+void systick_init(SYSTICK_CFG_ts const *systick_cfg);
 void systick_deinit(void);
 void systick_get_def_conf(SYSTICK_CFG_ts *systick_cfg_o);
 uint32_t systick_get_ms(void);

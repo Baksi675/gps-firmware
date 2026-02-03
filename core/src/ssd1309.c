@@ -453,12 +453,10 @@ ERR_te ssd1309_init_subsys(void) {
  * @return ERR_te Eror generated during execution.
  */
 ERR_te ssd1309_deinit_subsys(void) {
-	ERR_te err;
-
 	if(internal_state.initialized && !internal_state.started) {
 		internal_state = (struct internal_state_s){ 0 };
 
-		err = cmd_deregister(&ssd1309_cmd_client_info);
+		ERR_te err = cmd_deregister(&ssd1309_cmd_client_info);
 		if(err != ERR_OK) {
 			return err;
 		}
@@ -704,7 +702,7 @@ ERR_te ssd1309_init_handle(SSD1309_CONFIG_ts *ssd1309_config, SSD1309_HANDLE_ts 
 		cmd_buf[idx++] = 0xB0 | ssd1309_config->page_start_addr_pam;
 
 		// Column start (PAM)
-		cmd_buf[idx++] = 0x00 | ssd1309_config->low_col_start_addr_pam;
+		cmd_buf[idx++] = ssd1309_config->low_col_start_addr_pam;
 		cmd_buf[idx++] = 0x10 | ssd1309_config->high_col_start_addr_pam;
 	}
 
@@ -779,7 +777,7 @@ ERR_te ssd1309_init_handle(SSD1309_CONFIG_ts *ssd1309_config, SSD1309_HANDLE_ts 
  * @param[in] line The line where to draw the text.
  * @return ERR_te Error generated during execution.
  */
-ERR_te ssd1309_draw_text(char *text, uint8_t text_len, uint8_t line) {
+ERR_te ssd1309_draw_text(char const *text, uint8_t text_len, uint8_t line) {
 	if(!internal_state.ssd1309_handle.initialized || !internal_state.started) {
 		LOG_ERROR(
 			internal_state.subsys,

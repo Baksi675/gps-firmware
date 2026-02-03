@@ -24,7 +24,7 @@ static struct internal_state_s internal_state;
  * 
  * @param[in] systick_cfg Systick configuration structure. 
  */
-void systick_init(SYSTICK_CFG_ts *systick_cfg) {
+void systick_init(SYSTICK_CFG_ts const *systick_cfg) {
 	if(internal_state.initialized) {
 		return;
 	} 
