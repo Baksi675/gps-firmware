@@ -704,7 +704,7 @@ static ERR_te gtu7_process_gsa(char **tokens) {
 		msg_part_len + 1);
 	}
 
-	msg_part_len = 4;
+	msg_part_len = get_str_len(tokens[GSA_VDOP_POS]) - 2;
 	if(msg_part_len == 0) {
 		str_cpy(internal_state.gtu7_info.vdop, "No data",
 		get_str_len("No data") + 1);
