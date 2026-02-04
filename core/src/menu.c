@@ -222,7 +222,7 @@ ERR_te menu_init_handle(MENU_CFG_ts *menu_cfg, MENU_HANDLE_ts **menu_handle_o) {
 	else if(options_count > CONFIG_MENU_MAX_OPTIONS)
 		return ERR_NOT_ENOUGH_SPACE;
 
-	for(uint32_t i = 0; i < CONFIG_IO_MAX_OBJECTS; i++) {
+	for(uint32_t i = 0; i < CONFIG_MENU_MAX_OBJECTS; i++) {
 		if(internal_state.menus[i].in_use == false) {
 			// Copy input data (menu title) to internal state
 			txt_cpy(

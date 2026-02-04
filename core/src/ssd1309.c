@@ -1100,6 +1100,13 @@ ERR_te ssd1309_update(void) {
 	return ERR_OK;
 }
 
+/**
+ * @brief Command handler routine for fillrect command.
+ * 
+ * @param[in] argc Number of arguments.
+ * @param[in] argv Arguments.
+ * @return ERR_te Error generated during execution.
+ */
 static ERR_te ssd1309_cmd_fillrect_handler(uint32_t argc, char **argv) {
 	ERR_te err;
 	
@@ -1149,6 +1156,13 @@ static ERR_te ssd1309_cmd_fillrect_handler(uint32_t argc, char **argv) {
 	return ERR_OK;
 }
 
+/**
+ * @brief Command handler routine for clearrect command.
+ * 
+ * @param[in] argc Number of arguments.
+ * @param[in] argv Arguments.
+ * @return ERR_te Error generated during execution.
+ */
 static ERR_te ssd1309_cmd_clearrect_handler(uint32_t argc, char **argv) {
 	ERR_te err;
 	
@@ -1198,6 +1212,13 @@ static ERR_te ssd1309_cmd_clearrect_handler(uint32_t argc, char **argv) {
 	return ERR_OK;
 }
 
+/**
+ * @brief Command handler routine for invertrect command.
+ * 
+ * @param[in] argc Number of arguments.
+ * @param[in] argv Arguments.
+ * @return ERR_te Error generated during execution.
+ */
 static ERR_te ssd1309_cmd_invertrect_handler(uint32_t argc, char **argv) {
 	ERR_te err;
 	
@@ -1247,6 +1268,13 @@ static ERR_te ssd1309_cmd_invertrect_handler(uint32_t argc, char **argv) {
 	return ERR_OK;
 }
 
+/**
+ * @brief Command handler routine for drawtext command.
+ * 
+ * @param[in] argc Number of arguments.
+ * @param[in] argv Arguments.
+ * @return ERR_te Error generated during execution.
+ */
 static ERR_te ssd1309_cmd_drawtext_handler(uint32_t argc, char **argv) {
 	ERR_te err;
 
@@ -1281,6 +1309,13 @@ static ERR_te ssd1309_cmd_drawtext_handler(uint32_t argc, char **argv) {
 	return ERR_OK;
 }
 
+/**
+ * @brief Command handler routine for clearline command.
+ * 
+ * @param[in] argc Number of arguments.
+ * @param[in] argv Arguments.
+ * @return ERR_te Error generated during execution.
+ */
 static ERR_te ssd1309_cmd_clearline_handler(uint32_t argc, char **argv) {
 	ERR_te err;
 
@@ -1315,6 +1350,13 @@ static ERR_te ssd1309_cmd_clearline_handler(uint32_t argc, char **argv) {
 	return ERR_OK;
 }
 
+/**
+ * @brief Command handler routine for invertline command.
+ * 
+ * @param[in] argc Number of arguments.
+ * @param[in] argv Arguments.
+ * @return ERR_te Error generated during execution.
+ */
 static ERR_te ssd1309_cmd_invertline_handler(uint32_t argc, char **argv) {
 	ERR_te err;
 

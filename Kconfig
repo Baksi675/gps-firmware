@@ -17,13 +17,8 @@ menu "HW Modules"
 
 	endmenu
 
-	menu "GPS"
-		config GPS_MAX_OBJECTS
-			int "Max number of GPS objects"
-			range 1 5
-			default 1
-
-		config GPS_MAX_TOKENS
+	menu "GTU7"
+		config GTU7_MAX_TOKENS
 			int "Max number of tokens in a NMEA message"
 			range 1 30
 			default 1

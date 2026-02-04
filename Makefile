@@ -26,6 +26,7 @@ build/output.elf: build/startup_stm32f401re.o \
 					build/button.o \
 					build/arm_cortex_m4_systick.o \
 					build/menu.o \
+					build/gtu7.o \
 					| build
 	$(CC) $(LDFLAGS) $^ -o $@
 
@@ -84,6 +85,9 @@ build/arm_cortex_m4_systick.o: drivers/src/arm_cortex_m4_systick.c | build
 	$(CC) $(CFLAGS) $< -o $@
 
 build/menu.o: core/src/menu.c | build
+	$(CC) $(CFLAGS) $< -o $@
+
+build/gtu7.o: core/src/gtu7.c | build
 	$(CC) $(CFLAGS) $< -o $@
 
 ### PHONY ###
