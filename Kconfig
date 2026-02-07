@@ -23,6 +23,31 @@ menu "HW Modules"
 			int "Max SD name len"
 			range 1 32
 			default 10
+
+		config SD_HW_INIT_WAIT_TIME
+			int "Time for HW initialization (ms)"
+			range 1 1000
+			default 5
+
+		config SD_R1_RESP_TIMEOUT
+			int "Max time to receive an R1 response (ms)"
+			range 1 1000
+			default 5
+
+		config SD_R1B_RESP_TIMEOUT
+			int "Max time for MISO to be held down after an R1B response"
+			range 1 1000
+			default 50
+
+		config SD_TIMEOUT_RETRY_NUM
+			int "Max retries after a timeout has occured"
+			range 1 50
+			default 3
+
+		config SD_INVALID_RESP_RETRY_NUM
+			int "Max retries after not expected response is received"
+			range 1 100
+			default 10
 	endmenu
 
 	menu "SSD1309"

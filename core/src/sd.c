@@ -9,6 +9,9 @@
 * 
 */
 
+#include <stdbool.h>
+#include <string.h>
+
 #include "sd.h"
 #include "common.h"
 #include "err.h"
@@ -20,8 +23,7 @@
 #include "stm32f401re_gpio.h"
 #include "stm32f401re_rcc.h"
 #include "stm32f401re_spi.h"
-#include <stdbool.h>
-#include <string.h>
+#include "arm_cortex_m4_systick.h"
 
 struct sd_handle_s {
 	char name[CONFIG_SD_MAX_NAME_LEN];
@@ -54,7 +56,7 @@ typedef struct {
 	uint8_t r7[4];
 }CMD_RESPONSE_ts;
 
-static ERR_te sd_send_cmd(SD_HANDLE_ts *sd_handle, uint8_t index, uint32_t arg, bool acmd, CMD_RESPONSE_ts *cmd_response_o);
+static ERR_te sd_send_cmd(SPI_REGDEF_ts *spi_instance, uint8_t index, uint32_t arg, bool acmd, CMD_RESPONSE_ts *cmd_response_o);
 static ERR_te sd_cmd_info_handler(uint32_t argc, char **argv);
 
 CMD_INFO_ts sd_cmds[] = {
@@ -211,13 +213,13 @@ ERR_te sd_init_handle(SD_CONFIG_ts *sd_config, SD_HANDLE_ts **sd_handle_o) {
 	ERR_te err;
 
 	if(!internal_state.initialized) {
-		LOG_INFO(
+		LOG_ERROR(
 			internal_state.subsys, 
 			internal_state.log_level,
 			"sd_init_handle: subsys not initialized"
 		);
 
-		return ERR_UNINITIALZIED_OBJECT;
+		return ERR_INITIALIZATION_FAILURE;
 	}
 	
 	if(internal_state.sd_num == CONFIG_SD_MAX_OBJECTS) {
@@ -265,9 +267,6 @@ ERR_te sd_init_handle(SD_CONFIG_ts *sd_config, SD_HANDLE_ts **sd_handle_o) {
 	sd_miso.mode = GPIO_MODE_ALTERNATE_FUNCTION;
 	sd_miso.alternate_function = sd_config->gpio_alternate_function;
 	gpio_init(&sd_miso);
-
-	// Wait for >= 1 ms after supply reached at least 2.2V, do it from main?
-	for(uint32_t i = 0; i < 150000; i++);
 
 	// Configure SPI
 	SPI_HANDLE_ts sd_spi = { 0 };
@@ -329,6 +328,211 @@ ERR_te sd_init_handle(SD_CONFIG_ts *sd_config, SD_HANDLE_ts **sd_handle_o) {
 			break;
 	}
 
+	spi_init(&sd_spi);
+
+	// Wait for >= 1 ms after supply reached at least 2.2V, do it from main?
+	DELAY(CONFIG_SD_HW_INIT_WAIT_TIME);
+
+	// Enable SPI communication
+	spi_set_comm(sd_spi.instance, ENABLE);
+
+	// Set CS high
+	gpio_write(sd_config->cs_gpio_port, sd_config->cs_gpio_pin, HIGH);
+
+	// Send at least 74 dummy clocks
+	uint8_t dummy_tx = 0xFF;
+	for(uint8_t i = 0; i < 10; i++) {
+		spi_send(sd_config->spi_instance, &dummy_tx, 1);
+	}
+
+	CMD_RESPONSE_ts cmd_response;
+
+	gpio_write(sd_config->cs_gpio_port, sd_config->cs_gpio_pin, LOW);
+
+	// Send CMD0
+	uint8_t try = 1;
+	do {
+		err = sd_send_cmd(sd_config->spi_instance, 0, 0, false, &cmd_response);
+		if(err == ERR_TIMEOUT) {
+			LOG_ERROR(internal_state.subsys, 
+				internal_state.log_level, 
+				"sd_init_handle: sd_send_cmd timeout, retry %d/%d in 100 ms", try, CONFIG_SD_TIMEOUT_RETRY_NUM
+			);
+			try++;
+			DELAY(10);
+		}
+	} while(err == ERR_TIMEOUT && try <= CONFIG_SD_TIMEOUT_RETRY_NUM);
+
+	if(try > CONFIG_SD_TIMEOUT_RETRY_NUM) {
+		LOG_ERROR(internal_state.subsys, 
+			internal_state.log_level, 
+			"sd_init_handle: initialization failure "
+		);
+		spi_set_comm(sd_spi.instance, DISABLE);
+		gpio_write(sd_config->cs_gpio_port, sd_config->cs_gpio_pin, HIGH);
+
+		return ERR_INITIALIZATION_FAILURE;
+	}
+
+	if(cmd_response.r1 == 0x01) {
+		cmd_response = (CMD_RESPONSE_ts){ 0 };
+		err = sd_send_cmd(sd_config->spi_instance, 8, 0x000001AA, false, &cmd_response);
+		if(err != ERR_OK) {
+			// Try ACMD41
+			cmd_response = (CMD_RESPONSE_ts){ 0 };
+			uint32_t try_loop1 = 1;
+			do {
+				err = sd_send_cmd(sd_config->spi_instance, 41, 0x00000000, true, &cmd_response);
+				if(err != ERR_OK) {
+					// Try CMD1
+					cmd_response = (CMD_RESPONSE_ts){ 0 };
+					uint32_t try_loop2 = 1;
+					do {
+						err = sd_send_cmd(sd_config->spi_instance, 1, 0x00000000, false, &cmd_response);
+						if(err != ERR_OK) {
+							// Unknown card, error
+							spi_set_comm(sd_spi.instance, DISABLE);
+							gpio_write(sd_config->cs_gpio_port, sd_config->cs_gpio_pin, HIGH);
+							
+							return ERR_UNRECOGNIZED_HW;
+						}
+					}while(cmd_response.r1 == 0x01 && try_loop2-- <= CONFIG_SD_INVALID_RESP_RETRY_NUM);
+
+					if(try_loop2 > CONFIG_SD_INVALID_RESP_RETRY_NUM) {
+						spi_set_comm(sd_spi.instance, DISABLE);
+						gpio_write(sd_config->cs_gpio_port, sd_config->cs_gpio_pin, HIGH);
+						return ERR_INITIALIZATION_FAILURE;
+					}
+
+					if(cmd_response.r1 == 0x00) {
+						// Card is MMC Ver. 3
+						cmd_response = (CMD_RESPONSE_ts){ 0 };
+						err = sd_send_cmd(sd_config->spi_instance, 16, 0x00000200, false, &cmd_response);
+						if(err != ERR_OK) {
+							spi_set_comm(sd_spi.instance, DISABLE);
+							gpio_write(sd_config->cs_gpio_port, sd_config->cs_gpio_pin, HIGH);
+							
+							return ERR_INITIALIZATION_FAILURE;
+						}
+						LOG_INFO(
+							internal_state.subsys,
+							internal_state.log_level, 
+							"sd_init_subsys: MMC Ver.3 detected"
+						);
+					}
+				}
+			}while(cmd_response.r1 == 0x01 && try_loop1-- <= CONFIG_SD_INVALID_RESP_RETRY_NUM);
+
+			if(try_loop1 > CONFIG_SD_INVALID_RESP_RETRY_NUM) {
+				spi_set_comm(sd_spi.instance, DISABLE);
+				gpio_write(sd_config->cs_gpio_port, sd_config->cs_gpio_pin, HIGH);
+
+				return ERR_INITIALIZATION_FAILURE;
+			}
+
+			if(cmd_response.r1 == 0x00) {
+				// Card is SD Ver. 1
+				cmd_response = (CMD_RESPONSE_ts){ 0 };
+				err = sd_send_cmd(sd_config->spi_instance, 16, 0x00000200, false, &cmd_response);
+				if(err != ERR_OK) {
+					spi_set_comm(sd_spi.instance, DISABLE);
+					gpio_write(sd_config->cs_gpio_port, sd_config->cs_gpio_pin, HIGH);
+
+					return ERR_INITIALIZATION_FAILURE;
+				}
+				LOG_INFO(
+					internal_state.subsys,
+					internal_state.log_level, 
+					"sd_init_subsys: SD Ver.1 detected"
+				);
+			}
+		}
+		else {
+			// Check if R7 matches 0x000001AA
+			uint8_t expected[] = { 0x00, 0x00, 0x01, 0xAA };
+			for(uint8_t i = 0; i < 4; i++) {
+				// Mismatch
+				if(cmd_response.r7[i] != expected[i]) {
+					spi_set_comm(sd_spi.instance, DISABLE);
+					gpio_write(sd_config->cs_gpio_port, sd_config->cs_gpio_pin, HIGH);
+					
+					return ERR_INITIALIZATION_FAILURE;
+				}
+			}
+
+			// Match
+			cmd_response = (CMD_RESPONSE_ts){ 0 };
+			uint32_t try_loop1 = 1;
+			do{
+				err = sd_send_cmd(sd_config->spi_instance, 41, 0x40000000, true, &cmd_response);
+				if(err != ERR_OK) {
+					// Initialization failure
+					spi_set_comm(sd_spi.instance, DISABLE);
+					gpio_write(sd_config->cs_gpio_port, sd_config->cs_gpio_pin, HIGH);
+					
+					return ERR_INITIALIZATION_FAILURE;
+				}
+			}while (cmd_response.r1 == 0x01 && --try_loop1 <= CONFIG_SD_INVALID_RESP_RETRY_NUM);
+
+			if(try_loop1 > CONFIG_SD_INVALID_RESP_RETRY_NUM) {
+				spi_set_comm(sd_spi.instance, DISABLE);
+				gpio_write(sd_config->cs_gpio_port, sd_config->cs_gpio_pin, HIGH);
+				
+				return ERR_INITIALIZATION_FAILURE;
+			}
+
+			if(cmd_response.r1 == 0x00) {
+				cmd_response = (CMD_RESPONSE_ts){ 0 };
+				err = sd_send_cmd(sd_config->spi_instance, 58, 0, false, &cmd_response);
+				if(err != ERR_OK) {
+					spi_set_comm(sd_spi.instance, DISABLE);
+					gpio_write(sd_config->cs_gpio_port, sd_config->cs_gpio_pin, HIGH);
+
+					return ERR_INITIALIZATION_FAILURE;
+				}
+
+				if((cmd_response.r3[3] >> 29) & 1) {
+					// CCS bit is set
+					// Card is SD Ver. 2+ (block address)
+					LOG_INFO(
+						internal_state.subsys,
+						internal_state.log_level, 
+						"sd_init_subsys: SD Ver.2+ detected"
+					);
+				}
+				else {
+					// CCS bit is not set
+					// Card is SD Ver. 2+ (byte address)
+					cmd_response = (CMD_RESPONSE_ts){ 0 };
+					err = sd_send_cmd(sd_config->spi_instance, 16, 0x00000200, false, &cmd_response);
+					if(err != ERR_OK) {
+						spi_set_comm(sd_spi.instance, DISABLE);
+						gpio_write(sd_config->cs_gpio_port, sd_config->cs_gpio_pin, HIGH);
+
+						return ERR_INITIALIZATION_FAILURE;
+					}
+					LOG_INFO(
+						internal_state.subsys,
+						internal_state.log_level, 
+						"sd_init_subsys: SD Ver.2+ detected"
+					);
+				}
+			}
+		}
+	}
+	else {
+		spi_set_comm(sd_spi.instance, DISABLE);
+		gpio_write(sd_config->cs_gpio_port, sd_config->cs_gpio_pin, HIGH);
+
+		return ERR_INITIALIZATION_FAILURE;		
+	}
+
+	// Set CS high
+	gpio_write(sd_config->cs_gpio_port, sd_config->cs_gpio_pin, HIGH);
+
+	// Disable SPI
+	spi_set_comm(sd_spi.instance, DISABLE);
+
 	for(uint32_t i = 0; i < CONFIG_SD_MAX_OBJECTS; i++) {
 		if(internal_state.sds[i].in_use == false) {
 			str_cpy(
@@ -354,163 +558,16 @@ ERR_te sd_init_handle(SD_CONFIG_ts *sd_config, SD_HANDLE_ts **sd_handle_o) {
 
 			internal_state.sd_num++;
 
+			LOG_INFO(
+				internal_state.subsys, 
+				internal_state.log_level,
+				"sd_init_handle: sd handle %s initialized",
+				internal_state.sds[i].name
+			);
+
 			break;
 		}
 	}
-
-	spi_init(&sd_spi);
-
-	// Enable SPI communication
-	spi_set_comm(sd_spi.instance, ENABLE);
-
-	// Set CS high
-	gpio_write(sd_config->cs_gpio_port, sd_config->cs_gpio_pin, HIGH);
-
-	// Send at least 74 dummy clocks
-	uint8_t dummy_tx = 0xFF;
-	for(uint8_t i = 0; i < 10; i++) {
-		spi_send(sd_config->spi_instance, &dummy_tx, 1);
-	}
-
-	CMD_RESPONSE_ts cmd_response;
-
-	gpio_write(sd_config->cs_gpio_port, sd_config->cs_gpio_pin, LOW);
-
-	// Send CMD0
-	err = sd_send_cmd(*sd_handle_o, 0, 0, false, &cmd_response);
-	if(err != ERR_OK) {
-		LOG_ERROR(internal_state.subsys, 
-			internal_state.log_level, 
-			"sd_init_handle: sd card initialization failure"
-		);
-
-		return ERR_INITIALIZATION_FAILURE;
-	}
-
-	if(cmd_response.r1 == 0x01) {
-		cmd_response = (CMD_RESPONSE_ts){ 0 };
-		err = sd_send_cmd(*sd_handle_o, 8, 0x000001AA, false, &cmd_response);
-		if(err != ERR_OK) {
-			// Try ACMD41
-			cmd_response = (CMD_RESPONSE_ts){ 0 };
-			uint32_t timeout = 10000;
-			do {
-				err = sd_send_cmd(*sd_handle_o, 41, 0x00000000, true, &cmd_response);
-				if(err != ERR_OK) {
-					// Try CMD1
-					cmd_response = (CMD_RESPONSE_ts){ 0 };
-					timeout = 10000;
-					do {
-						err = sd_send_cmd(*sd_handle_o, 1, 0x00000000, false, &cmd_response);
-						if(err != ERR_OK) {
-							// Unknown card, error
-							return err;
-						}
-					}while(cmd_response.r1 == 0x01 && --timeout);
-
-					if(timeout == 0) {
-						return ERR_TIMEOUT;
-					}
-
-					if(cmd_response.r1 == 0x00) {
-						// Card is MMC Ver. 3
-						cmd_response = (CMD_RESPONSE_ts){ 0 };
-						err = sd_send_cmd(*sd_handle_o, 16, 0x00000200, false, &cmd_response);
-						if(err != ERR_OK) {
-							return err;
-						}
-
-						return ERR_OK;
-					}
-				}
-			}while(cmd_response.r1 == 0x01 && --timeout);
-
-			if(timeout == 0) {
-				return ERR_TIMEOUT;
-			}
-
-			if(cmd_response.r1 == 0x00) {
-				// Card is SD Ver. 1
-				cmd_response = (CMD_RESPONSE_ts){ 0 };
-				err = sd_send_cmd(*sd_handle_o, 16, 0x00000200, false, &cmd_response);
-				if(err != ERR_OK) {
-					return err;
-				}
-
-				return ERR_OK;
-			}
-		}
-
-		// Check if R7 matches 0x000001AA
-		uint8_t expected[] = { 0x00, 0x00, 0x01, 0xAA };
-		for(uint8_t i = 0; i < 4; i++) {
-			// Mismatch
-			if(cmd_response.r7[i] != expected[i]) {
-				return ERR_INITIALIZATION_FAILURE;
-			}
-		}
-
-		// Match
-		cmd_response = (CMD_RESPONSE_ts){ 0 };
-		uint32_t timeout = 10000;
-		do{
-			err = sd_send_cmd(*sd_handle_o, 41, 0x40000000, true, &cmd_response);
-			if(err != ERR_OK) {
-				// Initialization failure
-				return err;
-			}
-		}while (cmd_response.r1 == 0x01 && --timeout);
-
-		if(timeout == 0) {
-			return ERR_TIMEOUT;
-		}
-
-		if(cmd_response.r1 == 0x00) {
-			cmd_response = (CMD_RESPONSE_ts){ 0 };
-			err = sd_send_cmd(*sd_handle_o, 58, 0, false, &cmd_response);
-			if(err != ERR_OK) {
-				return err;
-			}
-
-			if((cmd_response.r3[3] >> 29) & 1) {
-				// CCS bit is set
-				// Card is SD Ver. 2+ (block address)
-				return ERR_OK;
-			}
-			else {
-				// CCS bit is not set
-				// Card is SD Ver. 2+ (byte address)
-				cmd_response = (CMD_RESPONSE_ts){ 0 };
-				err = sd_send_cmd(*sd_handle_o, 16, 0x00000200, false, &cmd_response);
-				if(err != ERR_OK) {
-					return err;
-				}
-
-				return ERR_OK;
-			}
-		}
-	}
-	else {
-		LOG_ERROR(internal_state.subsys, 
-			internal_state.log_level, 
-			"sd_init_handle: sd card initialization failure"
-		);
-
-		return ERR_INITIALIZATION_FAILURE;		
-	}
-
-	// Set CS high
-	gpio_write(sd_config->cs_gpio_port, sd_config->cs_gpio_pin, HIGH);
-
-	// Disable SPI
-	spi_set_comm(sd_spi.instance, DISABLE);
-
-	LOG_INFO(
-		internal_state.subsys, 
-		internal_state.log_level,
-		"sd_init_handle: sd handle %s initialized",
-		sd_config->name
-	);
 
 	return ERR_OK;
 }
@@ -523,7 +580,7 @@ ERR_te sd_init_handle(SD_CONFIG_ts *sd_config, SD_HANDLE_ts **sd_handle_o) {
  */
 ERR_te sd_deinit_handle(SD_HANDLE_ts *sd_handle) {
 	if(internal_state.started) {
-		LOG_INFO(
+		LOG_ERROR(
 			internal_state.subsys, 
 			internal_state.log_level,
 			"sd_deinit_handle: subsys not stopped"
@@ -575,14 +632,29 @@ ERR_te sd_deinit_handle(SD_HANDLE_ts *sd_handle) {
 	return ERR_OK;
 }
 
-static ERR_te sd_send_cmd(SD_HANDLE_ts *sd_handle, uint8_t index, uint32_t arg, bool acmd, CMD_RESPONSE_ts *cmd_response_o) {	
+/**
+ * @brief Sends a command to the SD card via SPI.
+ * 
+ * @param[in] sd_handle The SD handle to send a command through.
+ * @param[in] index The command index byte (without the 7th bit set)
+ * @param[in] arg Command arguments (4 bytes)
+ * @param[in] acmd Whether the command is an application specific command.
+ * @param[out] cmd_response_o The response structure containing R1, R3 and R7 responses.
+ * @return ERR_te Error generated during execution.
+ */
+static ERR_te sd_send_cmd(SPI_REGDEF_ts *spi_instance, uint8_t index, uint32_t arg, bool acmd, CMD_RESPONSE_ts *cmd_response_o) {	
+	ERR_te err;
+	uint32_t start_time;
+	uint32_t end_time;
+
 	uint8_t crc = 0x00;
 	uint8_t cmd[6];
 
 	if(acmd) {
 		CMD_RESPONSE_ts dummy;
-		if(sd_send_cmd(sd_handle, 55, 0, false, &dummy) != ERR_OK) {
-			return ERR_TIMEOUT;
+		err = sd_send_cmd(spi_instance, 55, 0, false, &dummy);
+		if(err != ERR_OK) {
+			return err;
 		}
 	}
 
@@ -603,22 +675,20 @@ static ERR_te sd_send_cmd(SD_HANDLE_ts *sd_handle, uint8_t index, uint32_t arg, 
 	cmd[5] = crc;
 
 	// Send command
-	spi_send(sd_handle->spi_instance, cmd, sizeof(cmd));
+	spi_send(spi_instance, cmd, sizeof(cmd));
+
+	uint8_t r1 = 0xFF;
+	start_time = systick_get_ms();
 
 	// Receive R1
-	uint8_t r1 = 0xFF;
-	uint32_t timeout = 1000;
-
 	do {
-		spi_receive(sd_handle->spi_instance, &r1, 1);
-	} while (r1 == 0xFF && --timeout);
+		spi_receive(spi_instance, &r1, 1);
+		end_time = systick_get_ms() - start_time;
+	} while (r1 == 0xFF && end_time <= CONFIG_SD_R1_RESP_TIMEOUT);
 
 	cmd_response_o->r1 = r1;
 
-	if(timeout == 0) {
-		spi_set_comm(sd_handle->spi_instance, DISABLE);
-		gpio_write(sd_handle->cs_gpio_port, sd_handle->cs_gpio_pin, HIGH);
-
+	if(end_time >= CONFIG_SD_R1_RESP_TIMEOUT) {
 		return ERR_TIMEOUT;
 	}
 
@@ -647,7 +717,7 @@ static ERR_te sd_send_cmd(SD_HANDLE_ts *sd_handle, uint8_t index, uint32_t arg, 
 		// R7 is irrelevant, thus zeroed
 		memset(cmd_response_o->r7, 0, sizeof(cmd_response_o->r7));
 
-		spi_receive(sd_handle->spi_instance, cmd_response_o->r3, 4);
+		spi_receive(spi_instance, cmd_response_o->r3, 4);
 	}
 	else if(
 		index == 8 // CMD8 ==> R7
@@ -655,7 +725,7 @@ static ERR_te sd_send_cmd(SD_HANDLE_ts *sd_handle, uint8_t index, uint32_t arg, 
 		// R3 is irrelevant, thus zeroed out
 		memset(cmd_response_o->r3, 0, sizeof(cmd_response_o->r3));
 
-		spi_receive(sd_handle->spi_instance, cmd_response_o->r7, 4);
+		spi_receive(spi_instance, cmd_response_o->r7, 4);
 	}
 	else if(
 		index == 12 // CMD8 ==> R1B
@@ -665,16 +735,14 @@ static ERR_te sd_send_cmd(SD_HANDLE_ts *sd_handle, uint8_t index, uint32_t arg, 
 		memset(cmd_response_o->r7, 0, sizeof(cmd_response_o->r7));
 
 		uint8_t rx = 0x00;
-		timeout = 100000;
+		start_time = systick_get_ms();
 
 		do{
-			spi_receive(sd_handle->spi_instance, &rx, 1);
-		}while(rx == 0x00 && --timeout);
+			spi_receive(spi_instance, &rx, 1);
+			end_time = systick_get_ms() - start_time;
+		}while(rx == 0x00 && end_time <= CONFIG_SD_R1B_RESP_TIMEOUT);
 
-		if(timeout == 0) {
-			spi_set_comm(sd_handle->spi_instance, DISABLE);
-			gpio_write(sd_handle->cs_gpio_port, sd_handle->cs_gpio_pin, HIGH);
-
+		if(end_time > CONFIG_SD_R1B_RESP_TIMEOUT) {
 			return ERR_TIMEOUT;
 		}
 	}

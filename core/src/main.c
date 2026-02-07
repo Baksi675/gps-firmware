@@ -4,6 +4,7 @@
 #include "arm_cortex_m4_systick.h"
 #include "button.h"
 #include "common.h"
+#include "err.h"
 #include "gtu7.h"
 #include "menu.h"
 #include "sd.h"

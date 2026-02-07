@@ -12,12 +12,19 @@
 #ifndef COMMON_H_
 #define COMMON_H_
 
+#include "arm_cortex_m4_systick.h"
 #include <stdint.h>
 #include <stdbool.h>
 
 #define BCD_TO_DEC(BCD)  		(((BCD) >> 4) * 10 + ((BCD) & 0x0F))
 #define DEC_TO_BCD(DEC)			(((DEC / 10) << 4) | (DEC % 10))
 #define NULL					((void*)0)
+#define DELAY(ms)                         \
+    do {                                  \
+        uint32_t delay_start_time = systick_get_ms(); \
+        while ((systick_get_ms() - delay_start_time) < (ms)) { \
+        }                                  \
+    } while (0)
 
 /**
  * @brief Pin status definition
