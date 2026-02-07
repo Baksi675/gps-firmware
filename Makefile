@@ -27,6 +27,11 @@ build/output.elf: build/startup_stm32f401re.o \
 					build/arm_cortex_m4_systick.o \
 					build/menu.o \
 					build/gtu7.o \
+					build/stm32f401re_spi.o \
+					build/sd.o \
+					build/ff.o \
+					build/diskio.o \
+					build/syscalls.o \
 					| build
 	$(CC) $(LDFLAGS) $^ -o $@
 
@@ -88,6 +93,21 @@ build/menu.o: core/src/menu.c | build
 	$(CC) $(CFLAGS) $< -o $@
 
 build/gtu7.o: core/src/gtu7.c | build
+	$(CC) $(CFLAGS) $< -o $@
+
+build/stm32f401re_spi.o: drivers/src/stm32f401re_spi.c | build
+	$(CC) $(CFLAGS) $< -o $@
+
+build/sd.o: core/src/sd.c | build
+	$(CC) $(CFLAGS) $< -o $@
+
+build/ff.o: core/src/ff.c | build
+	$(CC) $(CFLAGS) $< -o $@
+
+build/diskio.o: core/src/diskio.c | build
+	$(CC) $(CFLAGS) $< -o $@
+
+build/syscalls.o: core/src/syscalls.c | build
 	$(CC) $(CFLAGS) $< -o $@
 
 ### PHONY ###

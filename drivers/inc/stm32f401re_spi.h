@@ -57,17 +57,17 @@ typedef enum {
 }SPI_MASTER_SCLK_SPEED_te;
 	
 typedef struct {
-	SPI_REGDEF_ts *spi_instance;			
-	SPI_MODE_te spi_mode;
-	SPI_DATA_FRAME_FORMAT_te spi_data_frame_format;
-	SPI_CLOCK_POLARITY_te spi_clock_polarity;
-	SPI_CLOCK_PHASE_te spi_clock_phase;
-	SPI_BIT_FIRST_te spi_bit_first;
-	SPI_SLAVE_SELECT_MODE_te spi_slave_select_mode;
-	SPI_MASTER_SCLK_SPEED_te spi_master_sclk_speed;
+	SPI_REGDEF_ts *instance;			
+	SPI_MODE_te mode;
+	SPI_DATA_FRAME_FORMAT_te data_frame_format;
+	SPI_CLOCK_POLARITY_te clock_polarity;
+	SPI_CLOCK_PHASE_te clock_phase;
+	SPI_BIT_FIRST_te bit_first;
+	SPI_SLAVE_SELECT_MODE_te slave_select_mode;
+	SPI_MASTER_SCLK_SPEED_te master_sclk_speed;
 }SPI_HANDLE_ts;
 
-void spi_init(SPI_HANDLE_ts *spi_object);
+void spi_init(SPI_HANDLE_ts *spi_handle);
 void spi_deinit(SPI_REGDEF_ts const *spi_instance);
 void spi_send(SPI_REGDEF_ts *spi_instance, uint8_t *tx_buffer, uint32_t len);
 void spi_receive(SPI_REGDEF_ts *spi_instance, uint8_t *rx_buffer, uint32_t len);

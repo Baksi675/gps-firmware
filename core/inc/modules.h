@@ -19,7 +19,7 @@ typedef enum {
 	MODULES_IO,
 	MODULES_BUTTON,
 	MODULES_MENU,
-	MODULES_COUNT
+	MODULES_SD
 }MODULES_te;
 
 #endif

@@ -6,6 +6,7 @@
 #include "common.h"
 #include "gtu7.h"
 #include "menu.h"
+#include "sd.h"
 #include "stm32f401re_gpio.h"
 #include "stm32f401re_rtc.h"
 #include "log.h"
@@ -25,6 +26,7 @@ MENU_HANDLE_ts *movement_menu;
 MENU_HANDLE_ts *accuracy_menu;
 MENU_HANDLE_ts *satellites_menu;
 GTU7_HANDLE_ts *gtu7_handle;
+SD_HANDLE_ts *sd_handle;
 
 static void init_all(void);
 static void run_all(void);
@@ -49,6 +51,7 @@ char selected_option[SSD1309_MAX_CHARS_IN_LINE];
 uint32_t refreshed_ms;
 
 int main(void) {
+
 	init_all();
 
 	while(1) {
@@ -220,6 +223,22 @@ static void init_all(void) {
 	gtu7_init_subsys();
 	gtu7_init_handle(&gtu7_config, &gtu7_handle);
 	gtu7_start_subsys();
+
+	SD_CONFIG_ts sd_config = { 0 };
+	str_cpy(sd_config.name, "sdcard", get_str_len("sdcard") + 1);
+	sd_config.spi_instance = SPI1;
+	sd_config.sclk_gpio_port = GPIOA;
+	sd_config.sclk_gpio_pin = GPIO_PIN_5;
+	sd_config.miso_gpio_port = GPIOA;
+	sd_config.miso_gpio_pin = GPIO_PIN_6;
+	sd_config.mosi_gpio_port = GPIOA;
+	sd_config.mosi_gpio_pin = GPIO_PIN_7;
+	sd_config.cs_gpio_port = GPIOB;
+	sd_config.cs_gpio_pin = GPIO_PIN_6;
+	sd_config.gpio_alternate_function = GPIO_ALTERNATE_FUNCTION_AF5;
+	sd_init_subsys();
+	sd_init_handle(&sd_config, &sd_handle);
+	sd_start_subsys();
 }
 
 static void run_all(void) {

@@ -11,7 +11,7 @@
 #include "stm32f401re_spi.h"
 #include "stm32f401re_rcc.h"
 
-static void spi_set_pclk(SPI_REGDEF_ts const *spi_instance, EN_STATUS_te en_status);
+static void spi_set_pclk(SPI_REGDEF_ts const *instance, EN_STATUS_te en_status);
 
 /** 
  * @defgroup SPI_Public_APIs SPI Public APIs
@@ -35,100 +35,100 @@ static void spi_set_pclk(SPI_REGDEF_ts const *spi_instance, EN_STATUS_te en_stat
  * @param[in] spi_handale SPI configuration object
  */
 void spi_init(SPI_HANDLE_ts *spi_handale) {
-	spi_set_pclk(spi_handale->spi_instance, ENABLE);
+	spi_set_pclk(spi_handale->instance, ENABLE);
 
 	// Set data frame format to 8 or 16 bit
-	spi_handale->spi_instance->SPI_CR1 &= ~(0x1 << SPI_CR1_DFF);
-	spi_handale->spi_instance->SPI_CR1 |= (spi_handale->spi_data_frame_format << SPI_CR1_DFF);
+	spi_handale->instance->SPI_CR1 &= ~(0x1 << SPI_CR1_DFF);
+	spi_handale->instance->SPI_CR1 |= (spi_handale->data_frame_format << SPI_CR1_DFF);
 
 	// Select clock polarity
-	spi_handale->spi_instance->SPI_CR1 &= ~(0x1 << SPI_CR1_CPOL);
-	spi_handale->spi_instance->SPI_CR1 |= (spi_handale->spi_clock_polarity << SPI_CR1_CPOL);
+	spi_handale->instance->SPI_CR1 &= ~(0x1 << SPI_CR1_CPOL);
+	spi_handale->instance->SPI_CR1 |= (spi_handale->clock_polarity << SPI_CR1_CPOL);
 
 	// Select clock phase
-	spi_handale->spi_instance->SPI_CR1 &= ~(0x1 << SPI_CR1_CPHA);
-	spi_handale->spi_instance->SPI_CR1 |= (spi_handale->spi_clock_phase << SPI_CR1_CPHA);
+	spi_handale->instance->SPI_CR1 &= ~(0x1 << SPI_CR1_CPHA);
+	spi_handale->instance->SPI_CR1 |= (spi_handale->clock_phase << SPI_CR1_CPHA);
 
 	// Select frame format (LSB first or MSB first)
-	spi_handale->spi_instance->SPI_CR1 &= ~(0x1 << SPI_CR1_LSBFIRST);
-	spi_handale->spi_instance->SPI_CR1 |= (spi_handale->spi_bit_first << SPI_CR1_LSBFIRST);
+	spi_handale->instance->SPI_CR1 &= ~(0x1 << SPI_CR1_LSBFIRST);
+	spi_handale->instance->SPI_CR1 |= (spi_handale->bit_first << SPI_CR1_LSBFIRST);
 
 	// Select SW or HW slave select
-	spi_handale->spi_instance->SPI_CR1 &= ~(0b1 << SPI_CR1_SSM);
-	spi_handale->spi_instance->SPI_CR1 |= (spi_handale->spi_slave_select_mode << SPI_CR1_SSM);
+	spi_handale->instance->SPI_CR1 &= ~(0b1 << SPI_CR1_SSM);
+	spi_handale->instance->SPI_CR1 |= (spi_handale->slave_select_mode << SPI_CR1_SSM);
 
-	if(spi_handale->spi_mode == SPI_MODE_MASTER) {
+	if(spi_handale->mode == SPI_MODE_MASTER) {
 		// Set SSI to avoid MODF fault
-		spi_handale->spi_instance->SPI_CR1 |= (0x1 << SPI_CR1_SSI);
+		spi_handale->instance->SPI_CR1 |= (0x1 << SPI_CR1_SSI);
 
 		//  Enable SS output (set SSOE bit)
-		if(spi_handale->spi_slave_select_mode == SPI_SLAVE_SELECT_MODE_HW) {
-			spi_handale->spi_instance->SPI_CR2 &= ~(0x1 << SPI_CR2_SSOE);
-			spi_handale->spi_instance->SPI_CR2 |= (0x1 << SPI_CR2_SSOE);
+		if(spi_handale->slave_select_mode == SPI_SLAVE_SELECT_MODE_HW) {
+			spi_handale->instance->SPI_CR2 &= ~(0x1 << SPI_CR2_SSOE);
+			spi_handale->instance->SPI_CR2 |= (0x1 << SPI_CR2_SSOE);
 		}
 
 		// Select serial clock baud rate
-		spi_handale->spi_instance->SPI_CR1 &= ~(0x07 << SPI_CR1_BR);
-		spi_handale->spi_instance->SPI_CR1 |= (spi_handale->spi_master_sclk_speed << SPI_CR1_BR);
+		spi_handale->instance->SPI_CR1 &= ~(0x07 << SPI_CR1_BR);
+		spi_handale->instance->SPI_CR1 |= (spi_handale->master_sclk_speed << SPI_CR1_BR);
 	}
-	else if(spi_handale->spi_mode == SPI_MODE_SLAVE) {
+	else if(spi_handale->mode == SPI_MODE_SLAVE) {
 		// Set slave selection internally (pull it low)
-		spi_handale->spi_instance->SPI_CR1 &= ~(0x1 << SPI_CR1_SSI);
+		spi_handale->instance->SPI_CR1 &= ~(0x1 << SPI_CR1_SSI);
 	}
 
 	// Set SPI as slave or master
-	spi_handale->spi_instance->SPI_CR1 &= ~(0x1 << SPI_CR1_MSTR);
-	spi_handale->spi_instance->SPI_CR1 |= (spi_handale->spi_mode << SPI_CR1_MSTR);
+	spi_handale->instance->SPI_CR1 &= ~(0x1 << SPI_CR1_MSTR);
+	spi_handale->instance->SPI_CR1 |= (spi_handale->mode << SPI_CR1_MSTR);
 }
 
 /**
  * @brief Deinitializes the given SPI peripheral by setting its registers back to their reset values. It also turns of the peripherals clock.
  * 
- * @param[in] spi_instance The SPI instance to deinitialize.
+ * @param[in] instance The SPI instance to deinitialize.
  */
-void spi_deinit(SPI_REGDEF_ts const *spi_instance) {
-	if(spi_instance == SPI1) {
+void spi_deinit(SPI_REGDEF_ts const *instance) {
+	if(instance == SPI1) {
 		rcc_reset_periph_apb2(RCC_APB2RSTR_SPI1RST);
 	}
-	else if(spi_instance == SPI2) {
+	else if(instance == SPI2) {
 		rcc_reset_periph_apb1(RCC_APB1RSTR_SPI2RST);
 	}
-	else if(spi_instance == SPI3) {
+	else if(instance == SPI3) {
 		rcc_reset_periph_apb1(RCC_APB1RSTR_SPI3RST);
 	}
-	else if(spi_instance == SPI4) {
+	else if(instance == SPI4) {
 		rcc_reset_periph_apb2(RCC_APB2RSTR_SPI4RST);
 	}
 
-	spi_set_pclk(spi_instance, DISABLE);
+	spi_set_pclk(instance, DISABLE);
 }
 
 /**
  * @brief A blocking SPI send function. Sends data, blocks until it's completed.
  * 
- * @param[in] spi_instance The SPI instance on which to send data.
+ * @param[in] instance The SPI instance on which to send data.
  * @param[in] tx_buffer A pointer to the buffer containing the data to be sent.
  * @param[in] len The length of the buffer to be sent.
  */
-void spi_send(SPI_REGDEF_ts *spi_instance, uint8_t *tx_buffer, uint32_t len) {
+void spi_send(SPI_REGDEF_ts *instance, uint8_t *tx_buffer, uint32_t len) {
 	while(len != 0) {
 		// 8 bit data frame format
-		if(((spi_instance->SPI_CR1 >> SPI_CR1_DFF) & 0x1) == 0) {
-			while(!((spi_instance->SPI_SR >> SPI_SR_TXE) & 0x1));
-			spi_instance->SPI_DR = *tx_buffer;
+		if(((instance->SPI_CR1 >> SPI_CR1_DFF) & 0x1) == 0) {
+			while(!((instance->SPI_SR >> SPI_SR_TXE) & 0x1));
+			instance->SPI_DR = *tx_buffer;
 			tx_buffer++;
 			len--; 
 		}
 		// 16 bit data frame format
 		else {
-			while(!((spi_instance->SPI_SR >> SPI_SR_TXE) & 0x1));
-			spi_instance->SPI_DR = *((uint16_t*)tx_buffer);
+			while(!((instance->SPI_SR >> SPI_SR_TXE) & 0x1));
+			instance->SPI_DR = *((uint16_t*)tx_buffer);
 			tx_buffer += 2;
 			len -= 2; 
 		}
 
-		while(!((spi_instance->SPI_SR >> SPI_SR_RXNE) & 0x1));
-		uint16_t dummy_rx = SPI1->SPI_DR;
+		while(!((instance->SPI_SR >> SPI_SR_RXNE) & 0x1));
+		uint16_t dummy_rx = instance->SPI_DR;
 		(void)dummy_rx;
 	}
 }
@@ -136,31 +136,31 @@ void spi_send(SPI_REGDEF_ts *spi_instance, uint8_t *tx_buffer, uint32_t len) {
 /**
  * @brief A blocking SPI receive function. Receives data, blocks until completed.
  * 
- * @param[in] spi_instance The SPI instance on which to receive data.
+ * @param[in] instance The SPI instance on which to receive data.
  * @param[out] rx_buffer A pointer to the buffer that will store the received data.
  * @param[in] len The length of the data to be received.
  */
-void spi_receive(SPI_REGDEF_ts *spi_instance, uint8_t *rx_buffer, uint32_t len) {
+void spi_receive(SPI_REGDEF_ts *instance, uint8_t *rx_buffer, uint32_t len) {
 	uint16_t dummy_tx = 0xFFFF;
 	
 	while(len != 0) {
 		// 8 bit data frame format
-		if(((spi_instance->SPI_CR1 >> SPI_CR1_DFF) & 0x1) == 0) {
-			spi_instance->SPI_DR = (uint8_t)dummy_tx;
-			while(!((spi_instance->SPI_SR >> SPI_SR_TXE) & 0x1));
+		if(((instance->SPI_CR1 >> SPI_CR1_DFF) & 0x1) == 0) {
+			instance->SPI_DR = (uint8_t)dummy_tx;
+			while(!((instance->SPI_SR >> SPI_SR_TXE) & 0x1));
 
-			while(!((spi_instance->SPI_SR >> SPI_SR_RXNE) & 0x1));
-			*rx_buffer = spi_instance->SPI_DR;
+			while(!((instance->SPI_SR >> SPI_SR_RXNE) & 0x1));
+			*rx_buffer = instance->SPI_DR;
 			len--;
 			rx_buffer++;
 		}
 		// 16 bit data frame format
 		else {
-			spi_instance->SPI_DR = dummy_tx;
-			while(!((spi_instance->SPI_SR >> SPI_SR_TXE) & 0x1));
+			instance->SPI_DR = dummy_tx;
+			while(!((instance->SPI_SR >> SPI_SR_TXE) & 0x1));
 
-			while(!((spi_instance->SPI_SR >> SPI_SR_RXNE) & 0x1));
-			*((uint16_t*)rx_buffer) = spi_instance->SPI_DR;
+			while(!((instance->SPI_SR >> SPI_SR_RXNE) & 0x1));
+			*((uint16_t*)rx_buffer) = instance->SPI_DR;
 			len -= 2;
 			rx_buffer += 2;
 		}
@@ -174,17 +174,17 @@ void spi_receive(SPI_REGDEF_ts *spi_instance, uint8_t *rx_buffer, uint32_t len) 
  * - If set to ENABLE, this call must preceed the first send or receive call.
  * - If set to DISABLE, this call must follow the last send or receive call.
  *
- * @param[in] spi_instance The SPI instance to be ENABLE.
+ * @param[in] instance The SPI instance to be ENABLE.
  * @param[out] en_status Whether to enable or disable the communication.
  */
-void spi_set_comm(SPI_REGDEF_ts *spi_instance, EN_STATUS_te en_status) {
+void spi_set_comm(SPI_REGDEF_ts *instance, EN_STATUS_te en_status) {
 	if(en_status == ENABLE) {
-		spi_instance->SPI_CR1 &= ~(0x1 << SPI_CR1_SPE);
-		spi_instance->SPI_CR1 |= (0x1 << SPI_CR1_SPE);
+		instance->SPI_CR1 &= ~(0x1 << SPI_CR1_SPE);
+		instance->SPI_CR1 |= (0x1 << SPI_CR1_SPE);
 	}
 	else if(en_status == DISABLE) {
-		while((spi_instance->SPI_SR >> SPI_SR_BSY) & 0x01);
-		spi_instance->SPI_CR1 &= ~(0x1 << SPI_CR1_SPE);
+		while((instance->SPI_SR >> SPI_SR_BSY) & 0x01);
+		instance->SPI_CR1 &= ~(0x1 << SPI_CR1_SPE);
 	}
 }
 
@@ -198,11 +198,11 @@ void spi_set_comm(SPI_REGDEF_ts *spi_instance, EN_STATUS_te en_status) {
 /**
  * @brief Enable or disable the peripheral clock of the given SPI instance.
  * 
- * @param spi_instance The SPI instance.
+ * @param instance The SPI instance.
  * @param en_status Whether to enable or disable the peripheral clock.
  */
-static void spi_set_pclk(SPI_REGDEF_ts const *spi_instance, EN_STATUS_te en_status) {
-	if(spi_instance == SPI1) {
+static void spi_set_pclk(SPI_REGDEF_ts const *instance, EN_STATUS_te en_status) {
+	if(instance == SPI1) {
 		if(en_status == ENABLE) {
 			rcc_set_pclk_apb2(RCC_APB2ENR_SPI1EN, ENABLE);
 		}
@@ -210,7 +210,7 @@ static void spi_set_pclk(SPI_REGDEF_ts const *spi_instance, EN_STATUS_te en_stat
 			rcc_set_pclk_apb2(RCC_APB2ENR_SPI1EN, DISABLE);
 		}
 	}
-	else if(spi_instance == SPI2) {
+	else if(instance == SPI2) {
 		if(en_status == ENABLE) {
 			rcc_set_pclk_apb1(RCC_APB1ENR_SPI2EN, ENABLE);
 		}
@@ -219,7 +219,7 @@ static void spi_set_pclk(SPI_REGDEF_ts const *spi_instance, EN_STATUS_te en_stat
 
 		}
 	}
-	else if(spi_instance == SPI3) {
+	else if(instance == SPI3) {
 		if(en_status == ENABLE) {
 			rcc_set_pclk_apb1(RCC_APB1ENR_SPI3EN, ENABLE);
 		}
@@ -227,7 +227,7 @@ static void spi_set_pclk(SPI_REGDEF_ts const *spi_instance, EN_STATUS_te en_stat
 			rcc_set_pclk_apb1(RCC_APB1ENR_SPI3EN, DISABLE);
 		}
 	}
-	else if(spi_instance == SPI4) {
+	else if(instance == SPI4) {
 		if(en_status == ENABLE) {
 			rcc_set_pclk_apb2(RCC_APB2ENR_SPI4EN, ENABLE);
 		}

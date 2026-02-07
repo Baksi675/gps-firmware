@@ -13,6 +13,18 @@ menu "HW Modules"
 			default 1
 	endmenu
 
+	menu "SD"
+		config SD_MAX_OBJECTS
+			int "Max number of SD objects"
+			range 1 3
+			default 1
+
+		config SD_MAX_NAME_LEN
+			int "Max SD name len"
+			range 1 32
+			default 10
+	endmenu
+
 	menu "SSD1309"
 
 	endmenu

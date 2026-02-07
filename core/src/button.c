@@ -625,11 +625,11 @@ static ERR_te button_getheld_handler(uint32_t argc, char **argv) {
 }
 
 /**
- * @brief 
+ * @brief Handler routine for the info command. Shows information about objects commands.
  * 
- * @param argc 
- * @param argv 
- * @return ERR_te 
+ * @param[in] argc Argument count.
+ * @param[in] argv Argument list.
+ * @return ERR_te Error generated during execution.
  */
 static ERR_te button_cmd_info_handler(uint32_t argc, char **argv) {
 	if(argc != 2) {
