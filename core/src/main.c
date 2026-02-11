@@ -1,5 +1,6 @@
 #include <stdbool.h>
 #include <stdint.h>
+#include <string.h>
 
 #include "arm_cortex_m4_systick.h"
 #include "button.h"
@@ -240,6 +241,22 @@ static void init_all(void) {
 	sd_init_subsys();
 	sd_init_handle(&sd_config, &sd_handle);
 	sd_start_subsys();
+
+	uint8_t data[1024];
+
+	memset(data, 0x02, 1024);
+
+	ERR_te err = sd_write(sd_handle, data, 0, 2);
+	if(err != ERR_OK) {
+		uint8_t asd = 0;
+	}
+
+	uint8_t datar[1024];
+	
+	err = sd_read(sd_handle, datar, 0, 2);
+	if(err != ERR_OK) {	
+		uint8_t asd = 0;
+	}
 }
 
 static void run_all(void) {

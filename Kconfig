@@ -39,6 +39,16 @@ menu "HW Modules"
 			range 1 1000
 			default 50
 
+		config SD_DATA_TOKEN_RECV_TIMEOUT
+			int "Max time for data token to be received"
+			range 1 1000
+			default 10
+
+		config SD_BUSY_TIMOUT
+			int "Max blocking time to produce a response"
+			range 1 1000
+			default 10
+
 		config SD_TIMEOUT_RETRY_NUM
 			int "Max retries after a timeout has occured"
 			range 1 50
@@ -48,6 +58,7 @@ menu "HW Modules"
 			int "Max retries after not expected response is received"
 			range 1 100
 			default 10
+
 	endmenu
 
 	menu "SSD1309"

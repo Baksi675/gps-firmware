@@ -25,6 +25,12 @@
 #include "stm32f401re_spi.h"
 #include "arm_cortex_m4_systick.h"
 
+typedef enum {
+	STA_NOINIT = 0x01,
+	STA_NODISK = 0x02,
+	STA_PROTECT = 0x04
+}STATUS_te;
+
 struct sd_handle_s {
 	char name[CONFIG_SD_MAX_NAME_LEN];
 	SPI_REGDEF_ts *spi_instance;
@@ -37,6 +43,7 @@ struct sd_handle_s {
 	GPIO_PIN_te miso_gpio_pin;
 	GPIO_PIN_te mosi_gpio_pin;
 	GPIO_ALTERNATE_FUNCTION_te gpio_alternate_function;
+	STATUS_te status;
 	bool in_use;
 };
 
@@ -57,6 +64,8 @@ typedef struct {
 }CMD_RESPONSE_ts;
 
 static ERR_te sd_send_cmd(SPI_REGDEF_ts *spi_instance, uint8_t index, uint32_t arg, bool acmd, CMD_RESPONSE_ts *cmd_response_o);
+static ERR_te sd_cease_comms_helper(SPI_REGDEF_ts *spi_instance, GPIO_REGDEF_ts *gpio_port, GPIO_PIN_te gpio_pin);
+
 static ERR_te sd_cmd_info_handler(uint32_t argc, char **argv);
 
 CMD_INFO_ts sd_cmds[] = {
@@ -98,6 +107,10 @@ ERR_te sd_init_subsys(void) {
 	internal_state.subsys = MODULES_SD;
 	internal_state.initialized = true;
 	internal_state.started = false;
+
+	for(uint32_t i = 0; i < CONFIG_SD_MAX_OBJECTS; i++) {
+		internal_state.sds[i].status = STA_NOINIT;
+	}
 
 	err = cmd_register(&sd_cmd_client_info);
 	if(err != ERR_OK) {
@@ -368,8 +381,7 @@ ERR_te sd_init_handle(SD_CONFIG_ts *sd_config, SD_HANDLE_ts **sd_handle_o) {
 			internal_state.log_level, 
 			"sd_init_handle: initialization failure "
 		);
-		spi_set_comm(sd_spi.instance, DISABLE);
-		gpio_write(sd_config->cs_gpio_port, sd_config->cs_gpio_pin, HIGH);
+		sd_cease_comms_helper(sd_spi.instance, sd_cs.port, sd_cs.pin);
 
 		return ERR_INITIALIZATION_FAILURE;
 	}
@@ -391,16 +403,15 @@ ERR_te sd_init_handle(SD_CONFIG_ts *sd_config, SD_HANDLE_ts **sd_handle_o) {
 						err = sd_send_cmd(sd_config->spi_instance, 1, 0x00000000, false, &cmd_response);
 						if(err != ERR_OK) {
 							// Unknown card, error
-							spi_set_comm(sd_spi.instance, DISABLE);
-							gpio_write(sd_config->cs_gpio_port, sd_config->cs_gpio_pin, HIGH);
+							sd_cease_comms_helper(sd_spi.instance, sd_cs.port, sd_cs.pin);
 							
 							return ERR_UNRECOGNIZED_HW;
 						}
 					}while(cmd_response.r1 == 0x01 && try_loop2-- <= CONFIG_SD_INVALID_RESP_RETRY_NUM);
 
 					if(try_loop2 > CONFIG_SD_INVALID_RESP_RETRY_NUM) {
-						spi_set_comm(sd_spi.instance, DISABLE);
-						gpio_write(sd_config->cs_gpio_port, sd_config->cs_gpio_pin, HIGH);
+						sd_cease_comms_helper(sd_spi.instance, sd_cs.port, sd_cs.pin);
+						
 						return ERR_INITIALIZATION_FAILURE;
 					}
 
@@ -409,8 +420,7 @@ ERR_te sd_init_handle(SD_CONFIG_ts *sd_config, SD_HANDLE_ts **sd_handle_o) {
 						cmd_response = (CMD_RESPONSE_ts){ 0 };
 						err = sd_send_cmd(sd_config->spi_instance, 16, 0x00000200, false, &cmd_response);
 						if(err != ERR_OK) {
-							spi_set_comm(sd_spi.instance, DISABLE);
-							gpio_write(sd_config->cs_gpio_port, sd_config->cs_gpio_pin, HIGH);
+							sd_cease_comms_helper(sd_spi.instance, sd_cs.port, sd_cs.pin);
 							
 							return ERR_INITIALIZATION_FAILURE;
 						}
@@ -424,8 +434,7 @@ ERR_te sd_init_handle(SD_CONFIG_ts *sd_config, SD_HANDLE_ts **sd_handle_o) {
 			}while(cmd_response.r1 == 0x01 && try_loop1-- <= CONFIG_SD_INVALID_RESP_RETRY_NUM);
 
 			if(try_loop1 > CONFIG_SD_INVALID_RESP_RETRY_NUM) {
-				spi_set_comm(sd_spi.instance, DISABLE);
-				gpio_write(sd_config->cs_gpio_port, sd_config->cs_gpio_pin, HIGH);
+				sd_cease_comms_helper(sd_spi.instance, sd_cs.port, sd_cs.pin);
 
 				return ERR_INITIALIZATION_FAILURE;
 			}
@@ -435,8 +444,7 @@ ERR_te sd_init_handle(SD_CONFIG_ts *sd_config, SD_HANDLE_ts **sd_handle_o) {
 				cmd_response = (CMD_RESPONSE_ts){ 0 };
 				err = sd_send_cmd(sd_config->spi_instance, 16, 0x00000200, false, &cmd_response);
 				if(err != ERR_OK) {
-					spi_set_comm(sd_spi.instance, DISABLE);
-					gpio_write(sd_config->cs_gpio_port, sd_config->cs_gpio_pin, HIGH);
+					sd_cease_comms_helper(sd_spi.instance, sd_cs.port, sd_cs.pin);
 
 					return ERR_INITIALIZATION_FAILURE;
 				}
@@ -453,8 +461,7 @@ ERR_te sd_init_handle(SD_CONFIG_ts *sd_config, SD_HANDLE_ts **sd_handle_o) {
 			for(uint8_t i = 0; i < 4; i++) {
 				// Mismatch
 				if(cmd_response.r7[i] != expected[i]) {
-					spi_set_comm(sd_spi.instance, DISABLE);
-					gpio_write(sd_config->cs_gpio_port, sd_config->cs_gpio_pin, HIGH);
+					sd_cease_comms_helper(sd_spi.instance, sd_cs.port, sd_cs.pin);
 					
 					return ERR_INITIALIZATION_FAILURE;
 				}
@@ -467,16 +474,14 @@ ERR_te sd_init_handle(SD_CONFIG_ts *sd_config, SD_HANDLE_ts **sd_handle_o) {
 				err = sd_send_cmd(sd_config->spi_instance, 41, 0x40000000, true, &cmd_response);
 				if(err != ERR_OK) {
 					// Initialization failure
-					spi_set_comm(sd_spi.instance, DISABLE);
-					gpio_write(sd_config->cs_gpio_port, sd_config->cs_gpio_pin, HIGH);
+					sd_cease_comms_helper(sd_spi.instance, sd_cs.port, sd_cs.pin);
 					
 					return ERR_INITIALIZATION_FAILURE;
 				}
 			}while (cmd_response.r1 == 0x01 && --try_loop1 <= CONFIG_SD_INVALID_RESP_RETRY_NUM);
 
 			if(try_loop1 > CONFIG_SD_INVALID_RESP_RETRY_NUM) {
-				spi_set_comm(sd_spi.instance, DISABLE);
-				gpio_write(sd_config->cs_gpio_port, sd_config->cs_gpio_pin, HIGH);
+				sd_cease_comms_helper(sd_spi.instance, sd_cs.port, sd_cs.pin);
 				
 				return ERR_INITIALIZATION_FAILURE;
 			}
@@ -485,8 +490,7 @@ ERR_te sd_init_handle(SD_CONFIG_ts *sd_config, SD_HANDLE_ts **sd_handle_o) {
 				cmd_response = (CMD_RESPONSE_ts){ 0 };
 				err = sd_send_cmd(sd_config->spi_instance, 58, 0, false, &cmd_response);
 				if(err != ERR_OK) {
-					spi_set_comm(sd_spi.instance, DISABLE);
-					gpio_write(sd_config->cs_gpio_port, sd_config->cs_gpio_pin, HIGH);
+					sd_cease_comms_helper(sd_spi.instance, sd_cs.port, sd_cs.pin);
 
 					return ERR_INITIALIZATION_FAILURE;
 				}
@@ -506,8 +510,7 @@ ERR_te sd_init_handle(SD_CONFIG_ts *sd_config, SD_HANDLE_ts **sd_handle_o) {
 					cmd_response = (CMD_RESPONSE_ts){ 0 };
 					err = sd_send_cmd(sd_config->spi_instance, 16, 0x00000200, false, &cmd_response);
 					if(err != ERR_OK) {
-						spi_set_comm(sd_spi.instance, DISABLE);
-						gpio_write(sd_config->cs_gpio_port, sd_config->cs_gpio_pin, HIGH);
+						sd_cease_comms_helper(sd_spi.instance, sd_cs.port, sd_cs.pin);
 
 						return ERR_INITIALIZATION_FAILURE;
 					}
@@ -521,17 +524,13 @@ ERR_te sd_init_handle(SD_CONFIG_ts *sd_config, SD_HANDLE_ts **sd_handle_o) {
 		}
 	}
 	else {
-		spi_set_comm(sd_spi.instance, DISABLE);
-		gpio_write(sd_config->cs_gpio_port, sd_config->cs_gpio_pin, HIGH);
+		sd_cease_comms_helper(sd_spi.instance, sd_cs.port, sd_cs.pin);
+
 
 		return ERR_INITIALIZATION_FAILURE;		
 	}
 
-	// Set CS high
-	gpio_write(sd_config->cs_gpio_port, sd_config->cs_gpio_pin, HIGH);
-
-	// Disable SPI
-	spi_set_comm(sd_spi.instance, DISABLE);
+	sd_cease_comms_helper(sd_spi.instance, sd_cs.port, sd_cs.pin);
 
 	for(uint32_t i = 0; i < CONFIG_SD_MAX_OBJECTS; i++) {
 		if(internal_state.sds[i].in_use == false) {
@@ -632,6 +631,330 @@ ERR_te sd_deinit_handle(SD_HANDLE_ts *sd_handle) {
 	return ERR_OK;
 }
 
+ERR_te sd_status(SD_HANDLE_ts *sd_handle) {
+
+}
+
+/**
+ * @brief Reads data from an SD card.
+ * 
+ * @param[in] sd_handle The SD card handle to read data from. 
+ * @param[out] read_buf The buffer to read data into.
+ * @param[in] start_sector The sector to read data from.
+ * @param[in] num_sectors Number of sectors to read from start_sector.
+ * @return ERR_te Error generated during execution.
+ */
+ERR_te sd_read(SD_HANDLE_ts *sd_handle, uint8_t *read_buf, uint32_t start_sector, uint32_t num_sectors) {
+	ERR_te err;
+	uint32_t start_time = 0;
+	uint32_t elapsed_time = 0;
+	CMD_RESPONSE_ts cmd_response = { 0 };
+
+	if(!internal_state.initialized || !internal_state.started) {
+		LOG_ERROR(
+			internal_state.subsys, 
+			internal_state.log_level,
+			"sd_read: subsys not initialized or started"
+		);
+
+		return ERR_INITIALIZATION_FAILURE;
+	}
+
+	if(sd_handle == NULL || num_sectors == 0) {
+		return ERR_INVALID_ARGUMENT;
+	}
+	
+	spi_set_comm(sd_handle->spi_instance, ENABLE);
+	gpio_write(sd_handle->cs_gpio_port, sd_handle->cs_gpio_pin, LOW);
+
+	if(num_sectors == 1) {
+		err = sd_send_cmd(sd_handle->spi_instance, 17, start_sector, false, &cmd_response);
+		if(err != ERR_OK) {
+			sd_cease_comms_helper(sd_handle->spi_instance,sd_handle->cs_gpio_port, sd_handle->cs_gpio_pin);
+
+			return err;
+		}
+		
+		if(cmd_response.r1 != 0x0) {
+			sd_cease_comms_helper(sd_handle->spi_instance,sd_handle->cs_gpio_port, sd_handle->cs_gpio_pin);
+
+			return ERR_UNKNOWN;
+		}
+
+		uint8_t token = 0xFF;
+		start_time = systick_get_ms();
+
+		do {
+			elapsed_time = systick_get_ms() - start_time;
+			spi_receive(sd_handle->spi_instance, &token, 1);
+		} while(token == 0xFF && elapsed_time <= CONFIG_SD_DATA_TOKEN_RECV_TIMEOUT);
+		
+		if(elapsed_time > CONFIG_SD_DATA_TOKEN_RECV_TIMEOUT) {
+			sd_cease_comms_helper(sd_handle->spi_instance,sd_handle->cs_gpio_port, sd_handle->cs_gpio_pin);
+
+			return ERR_TIMEOUT;
+		}
+
+		if(token != 0xFE) {
+			// Error token
+			sd_cease_comms_helper(sd_handle->spi_instance,sd_handle->cs_gpio_port, sd_handle->cs_gpio_pin);
+
+			return ERR_UNKNOWN;
+		}
+		
+		// Read data
+		spi_receive(sd_handle->spi_instance, read_buf, 512);
+
+		// Read CRC
+		uint8_t crc[2];
+		spi_receive(sd_handle->spi_instance, crc, 2);
+	}
+	else {
+		err = sd_send_cmd(sd_handle->spi_instance, 18, start_sector, false, &cmd_response);
+		if(err != ERR_OK) {
+			sd_cease_comms_helper(sd_handle->spi_instance,sd_handle->cs_gpio_port, sd_handle->cs_gpio_pin);
+
+			return err;
+		}
+		
+		if(cmd_response.r1 != 0x0) {
+			sd_cease_comms_helper(sd_handle->spi_instance,sd_handle->cs_gpio_port, sd_handle->cs_gpio_pin);
+			return ERR_UNKNOWN;
+		}	
+
+		for(uint32_t i = 0; i < num_sectors; i++) {
+			uint8_t token = 0xFF;
+			start_time = systick_get_ms();
+
+			do {
+				elapsed_time = systick_get_ms() - start_time;
+				spi_receive(sd_handle->spi_instance, &token, 1);
+			} while(token == 0xFF && elapsed_time <= CONFIG_SD_DATA_TOKEN_RECV_TIMEOUT);
+			
+			if(elapsed_time > CONFIG_SD_DATA_TOKEN_RECV_TIMEOUT) {
+				sd_cease_comms_helper(sd_handle->spi_instance,sd_handle->cs_gpio_port, sd_handle->cs_gpio_pin);
+
+				return ERR_TIMEOUT;
+			}
+
+			if(token != 0xFE) {
+				// Error token
+				sd_cease_comms_helper(sd_handle->spi_instance,sd_handle->cs_gpio_port, sd_handle->cs_gpio_pin);
+
+				return ERR_UNKNOWN;
+			}
+			
+			// Read data
+			spi_receive(sd_handle->spi_instance, read_buf + (i * 512), 512);
+
+			// Read CRC
+			uint8_t crc[2];
+			spi_receive(sd_handle->spi_instance, crc, 2);
+		}
+		uint8_t retry = 0;
+		do {
+			err = sd_send_cmd(sd_handle->spi_instance, 12, 0, false, &cmd_response);
+			if(err != ERR_OK) {
+				sd_cease_comms_helper(sd_handle->spi_instance,sd_handle->cs_gpio_port, sd_handle->cs_gpio_pin);
+
+				return err;
+			}
+		}while(cmd_response.r1 != 0x0 && retry++ < CONFIG_SD_INVALID_RESP_RETRY_NUM);
+
+		if(cmd_response.r1 != 0x00) {
+			sd_cease_comms_helper(sd_handle->spi_instance,sd_handle->cs_gpio_port, sd_handle->cs_gpio_pin);
+
+			return ERR_UNKNOWN;
+		}
+	}
+
+	sd_cease_comms_helper(sd_handle->spi_instance,sd_handle->cs_gpio_port, sd_handle->cs_gpio_pin);
+
+	return ERR_OK;
+}
+
+/**
+ * @brief Writes data to an SD card.
+ * 
+ * @param[in] sd_handle The SD card handle to write data. 
+ * @param[out] write Writes data from this buffer.
+ * @param[in] start_sector The sector to write data to.
+ * @param[in] num_sectors Number of sectors to write from start_sector.
+ * @return ERR_te Error generated during execution.
+ */
+ERR_te sd_write(SD_HANDLE_ts *sd_handle, uint8_t *write_buf, uint32_t start_sector, uint32_t num_sectors) {
+	ERR_te err;
+	uint32_t start_time = 0;
+	uint32_t elapsed_time = 0;
+
+	if(!internal_state.initialized || !internal_state.started) {
+		LOG_ERROR(
+			internal_state.subsys, 
+			internal_state.log_level,
+			"sd_write: subsys not initialized or started"
+		);
+
+		return ERR_INITIALIZATION_FAILURE;
+	}
+
+	if(sd_handle == NULL || num_sectors == 0) {
+		return ERR_INVALID_ARGUMENT;
+	}
+
+	spi_set_comm(sd_handle->spi_instance, ENABLE);
+	gpio_write(sd_handle->cs_gpio_port, sd_handle->cs_gpio_pin, LOW);
+
+	CMD_RESPONSE_ts cmd_response = { 0 };
+
+	if(num_sectors == 1) {
+		err = sd_send_cmd(sd_handle->spi_instance, 24, start_sector, false, &cmd_response);
+		if(err != ERR_OK) {
+			sd_cease_comms_helper(sd_handle->spi_instance,sd_handle->cs_gpio_port, sd_handle->cs_gpio_pin);
+		
+			return err;
+		}
+		
+		if(cmd_response.r1 != 0x0) {
+			sd_cease_comms_helper(sd_handle->spi_instance,sd_handle->cs_gpio_port, sd_handle->cs_gpio_pin);
+
+			return ERR_UNKNOWN;
+		}
+
+		uint8_t token = 0xFE;
+		
+		// Send token
+		spi_send(sd_handle->spi_instance, &token, 1);
+
+		// Send data
+		spi_send(sd_handle->spi_instance, write_buf, 512);
+
+		// Send dummy CRC
+		uint8_t dummy_crc[2] = { 0xFF, 0xFF };
+		spi_send(sd_handle->spi_instance, dummy_crc, 2);
+
+		uint8_t data_resp = 0xFF;
+		start_time = systick_get_ms();
+
+		do {
+			elapsed_time = systick_get_ms() - start_time;
+			spi_receive(sd_handle->spi_instance, &data_resp, 1);
+		
+		} while(data_resp == 0xFF && elapsed_time <= CONFIG_SD_DATA_TOKEN_RECV_TIMEOUT);
+		if(elapsed_time > CONFIG_SD_DATA_TOKEN_RECV_TIMEOUT) {
+			sd_cease_comms_helper(sd_handle->spi_instance,sd_handle->cs_gpio_port, sd_handle->cs_gpio_pin);
+
+			return ERR_TIMEOUT;
+		}
+
+		if((data_resp & 0b11111) != 0b00101) {
+			// Data not accepted
+			sd_cease_comms_helper(sd_handle->spi_instance,sd_handle->cs_gpio_port, sd_handle->cs_gpio_pin);
+
+			return ERR_UNKNOWN;
+		}
+
+		// Wait until card releases MISO
+		uint8_t busy = 0x00;
+		start_time = systick_get_ms();
+		do {
+			spi_receive(sd_handle->spi_instance, &busy, 1);
+			elapsed_time = systick_get_ms() - start_time;
+		} while(busy == 0x00 && elapsed_time <= CONFIG_SD_BUSY_TIMOUT);
+
+		if(elapsed_time > CONFIG_SD_BUSY_TIMOUT) {
+			sd_cease_comms_helper(sd_handle->spi_instance,sd_handle->cs_gpio_port, sd_handle->cs_gpio_pin);
+
+			return ERR_TIMEOUT;
+		}
+	}
+	else {
+		err = sd_send_cmd(sd_handle->spi_instance, 25, start_sector, false, &cmd_response);
+		if(err != ERR_OK) {
+			sd_cease_comms_helper(sd_handle->spi_instance,sd_handle->cs_gpio_port, sd_handle->cs_gpio_pin);
+		
+			return err;
+		}
+
+		if(cmd_response.r1 != 0x0) {
+			sd_cease_comms_helper(sd_handle->spi_instance,sd_handle->cs_gpio_port, sd_handle->cs_gpio_pin);
+
+			return ERR_UNKNOWN;
+		}
+
+		for(uint32_t i = 0; i < num_sectors; i++) {
+			uint8_t token = 0xFC;
+			
+			// Send token
+			spi_send(sd_handle->spi_instance, &token, 1);
+
+			// Send data
+			spi_send(sd_handle->spi_instance, write_buf + (i * 512), 512);
+
+			// Send dummy CRC
+			uint8_t dummy_crc[2] = { 0xFF, 0xFF };
+			spi_send(sd_handle->spi_instance, dummy_crc, 2);
+
+			uint8_t data_resp = 0xFF;
+			start_time = systick_get_ms();
+
+			do {
+				elapsed_time = systick_get_ms() - start_time;
+				spi_receive(sd_handle->spi_instance, &data_resp, 1);
+			
+			} while(data_resp == 0xFF && elapsed_time <= CONFIG_SD_DATA_TOKEN_RECV_TIMEOUT);
+			if(elapsed_time > CONFIG_SD_DATA_TOKEN_RECV_TIMEOUT) {
+				sd_cease_comms_helper(sd_handle->spi_instance,sd_handle->cs_gpio_port, sd_handle->cs_gpio_pin);
+
+				return ERR_TIMEOUT;
+			}
+
+			if((data_resp & 0b11111) != 0b00101) {
+				// Data not accepted
+				sd_cease_comms_helper(sd_handle->spi_instance,sd_handle->cs_gpio_port, sd_handle->cs_gpio_pin);
+
+				return ERR_UNKNOWN;
+			}
+
+			// Wait until card releases MISO
+			uint8_t busy = 0x00;
+			start_time = systick_get_ms();
+			do {
+				spi_receive(sd_handle->spi_instance, &busy, 1);
+				elapsed_time = systick_get_ms() - start_time;
+			} while(busy == 0x00 && elapsed_time <= CONFIG_SD_BUSY_TIMOUT);
+
+			if(elapsed_time > CONFIG_SD_BUSY_TIMOUT) {
+				sd_cease_comms_helper(sd_handle->spi_instance,sd_handle->cs_gpio_port, sd_handle->cs_gpio_pin);
+
+				return ERR_TIMEOUT;
+			}
+		}
+
+		uint8_t stop_tran_token = 0xFD;
+			
+		// Send token
+		spi_send(sd_handle->spi_instance, &stop_tran_token, 1);
+
+		// Wait until card releases MISO
+		uint8_t busy = 0x00;
+		start_time = systick_get_ms();
+		do {
+			spi_receive(sd_handle->spi_instance, &busy, 1);
+			elapsed_time = systick_get_ms() - start_time;
+		} while(busy == 0x00 && elapsed_time <= CONFIG_SD_BUSY_TIMOUT);
+
+		if(elapsed_time > CONFIG_SD_BUSY_TIMOUT) {
+			sd_cease_comms_helper(sd_handle->spi_instance,sd_handle->cs_gpio_port, sd_handle->cs_gpio_pin);
+
+			return ERR_TIMEOUT;
+		}
+	}
+
+	sd_cease_comms_helper(sd_handle->spi_instance,sd_handle->cs_gpio_port, sd_handle->cs_gpio_pin);
+
+	return ERR_OK;
+}
+
 /**
  * @brief Sends a command to the SD card via SPI.
  * 
@@ -645,7 +968,7 @@ ERR_te sd_deinit_handle(SD_HANDLE_ts *sd_handle) {
 static ERR_te sd_send_cmd(SPI_REGDEF_ts *spi_instance, uint8_t index, uint32_t arg, bool acmd, CMD_RESPONSE_ts *cmd_response_o) {	
 	ERR_te err;
 	uint32_t start_time;
-	uint32_t end_time;
+	uint32_t elapsed_time;
 
 	uint8_t crc = 0x00;
 	uint8_t cmd[6];
@@ -677,18 +1000,25 @@ static ERR_te sd_send_cmd(SPI_REGDEF_ts *spi_instance, uint8_t index, uint32_t a
 	// Send command
 	spi_send(spi_instance, cmd, sizeof(cmd));
 
+	// Special case, if CMD12, discard stuff byte (first byte)
+	if(index == 12) {
+		uint8_t stuff_byte;
+		spi_receive(spi_instance, &stuff_byte, 1);
+		uint8_t asd = 0;
+	}
+
 	uint8_t r1 = 0xFF;
 	start_time = systick_get_ms();
 
 	// Receive R1
 	do {
 		spi_receive(spi_instance, &r1, 1);
-		end_time = systick_get_ms() - start_time;
-	} while (r1 == 0xFF && end_time <= CONFIG_SD_R1_RESP_TIMEOUT);
+		elapsed_time = systick_get_ms() - start_time;
+	} while ((r1 & 0x80) && elapsed_time <= CONFIG_SD_R1_RESP_TIMEOUT);
 
 	cmd_response_o->r1 = r1;
 
-	if(end_time >= CONFIG_SD_R1_RESP_TIMEOUT) {
+	if(elapsed_time > CONFIG_SD_R1_RESP_TIMEOUT) {
 		return ERR_TIMEOUT;
 	}
 
@@ -728,7 +1058,7 @@ static ERR_te sd_send_cmd(SPI_REGDEF_ts *spi_instance, uint8_t index, uint32_t a
 		spi_receive(spi_instance, cmd_response_o->r7, 4);
 	}
 	else if(
-		index == 12 // CMD8 ==> R1B
+		index == 12 // CMD12 ==> R1B
 	) {
 		// R3 and R7 are irrelevent, thus zeroed
 		memset(cmd_response_o->r3, 0, sizeof(cmd_response_o->r3));
@@ -739,16 +1069,36 @@ static ERR_te sd_send_cmd(SPI_REGDEF_ts *spi_instance, uint8_t index, uint32_t a
 
 		do{
 			spi_receive(spi_instance, &rx, 1);
-			end_time = systick_get_ms() - start_time;
-		}while(rx == 0x00 && end_time <= CONFIG_SD_R1B_RESP_TIMEOUT);
+			elapsed_time = systick_get_ms() - start_time;
+		}while(rx == 0x00 && elapsed_time <= CONFIG_SD_R1B_RESP_TIMEOUT);
 
-		if(end_time > CONFIG_SD_R1B_RESP_TIMEOUT) {
+		if(elapsed_time > CONFIG_SD_R1B_RESP_TIMEOUT) {
 			return ERR_TIMEOUT;
 		}
 	}
 
 	return ERR_OK;
 }
+
+/**
+ * @brief A helper function to cease communication on error detection.
+ * 
+ * @param spi_instance Transferred SPI peripheral.
+ * @param gpio_port Transferred GPIO port.
+ * @param gpio_pin Transferred GPIO pin.
+ * @return ERR_te Error generated during execution.
+ */
+static ERR_te sd_cease_comms_helper(SPI_REGDEF_ts *spi_instance, GPIO_REGDEF_ts *gpio_port, GPIO_PIN_te gpio_pin) {
+	gpio_write(gpio_port, gpio_pin, HIGH);
+	
+	uint8_t dummy[2] = { 0xFF, 0xFF };
+	spi_send(spi_instance, dummy, 2);
+	
+	spi_set_comm(spi_instance, DISABLE);
+
+	return ERR_OK;
+}	
+
 
 /**
  * @brief Handler routine for the info command. Shows information about objects commands.
