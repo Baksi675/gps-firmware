@@ -215,8 +215,26 @@ DRESULT disk_ioctl (
 		return res;
 
 	case DEV_MMC :
-
 		// Process of the command for the MMC/SD card
+		switch (cmd) {
+			case CTRL_SYNC:
+				// Nothing to do there, SD write API already takes care of syncing
+				return RES_OK;
+			case GET_SECTOR_COUNT:
+
+				break;
+			case GET_SECTOR_SIZE:
+
+				break;
+			case GET_BLOCK_SIZE:
+
+				break;
+			case CTRL_TRIM:
+
+				break;
+			default:
+				break;
+		}
 
 		return res;
 

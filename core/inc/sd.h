@@ -17,6 +17,80 @@
 #include "stm32f401re_gpio.h"
 #include "configuration.h"
 
+/**
+ * @brief Describes whether the SD card completed the power-up sequence. (OCR content)
+ * 
+ */
+typedef enum {
+	SD_PWRUP_STATUS_BUSY,
+	SD_PWRUP_STATUS_READY
+}SD_PWRUP_STATUS_te;
+
+/**
+ * @brief Describes the type of the SD card. (OCR content)
+ * 
+ */
+typedef enum {
+	SD_TYPE_MMC,				// byte addresing, legacy
+	SD_TYPE_SC_V1,			// byte addressing
+	SD_TYPE_SC_V2,			// byte adressing
+	SD_TYPE_HC				// block addressing
+}SD_TYPE_te;
+
+/**
+ * @brief Describes the minimum allowed operating voltage of the SD card. (OCR content)
+ * 
+ */
+typedef enum {
+	SD_MIN_OPERATING_VOLTAGE_3_5V,
+	SD_MIN_OPERATING_VOLTAGE_3_4V,
+	SD_MIN_OPERATING_VOLTAGE_3_3V,
+	SD_MIN_OPERATING_VOLTAGE_3_2V,
+	SD_MIN_OPERATING_VOLTAGE_3_1V,
+	SD_MIN_OPERATING_VOLTAGE_3_0V,
+	SD_MIN_OPERATING_VOLTAGE_2_9V,
+	SD_MIN_OPERATING_VOLTAGE_2_8V,
+	SD_MIN_OPERATING_VOLTAGE_2_7V,
+	SD_MIN_OPERATING_VOLTAGE_2_6V,
+	SD_MIN_OPERATING_VOLTAGE_2_5V,
+	SD_MIN_OPERATING_VOLTAGE_2_4V,
+	SD_MIN_OPERATING_VOLTAGE_2_3V,
+	SD_MIN_OPERATING_VOLTAGE_2_2V,
+	SD_MIN_OPERATING_VOLTAGE_2_1V,
+	SD_MIN_OPERATING_VOLTAGE_2_0V,
+	SD_MIN_OPERATING_VOLTAGE_1_9V,
+	SD_MIN_OPERATING_VOLTAGE_1_8V,
+	SD_MIN_OPERATING_VOLTAGE_1_7V,
+	SD_MIN_OPERATING_VOLTAGE_1_6V	
+}SD_MIN_OPERATING_VOLTAGE_te;
+
+/**
+ * @brief Descries the maximum allowed operating voltage of the SD card. (OCR content)
+ * 
+ */
+typedef enum {
+	SD_MAX_OPERATING_VOLTAGE_3_6V,
+	SD_MAX_OPERATING_VOLTAGE_3_5V,
+	SD_MAX_OPERATING_VOLTAGE_3_4V,
+	SD_MAX_OPERATING_VOLTAGE_3_3V,
+	SD_MAX_OPERATING_VOLTAGE_3_2V,
+	SD_MAX_OPERATING_VOLTAGE_3_1V,
+	SD_MAX_OPERATING_VOLTAGE_3_0V,
+	SD_MAX_OPERATING_VOLTAGE_2_9V,
+	SD_MAX_OPERATING_VOLTAGE_2_8V,
+	SD_MAX_OPERATING_VOLTAGE_2_7V,
+	SD_MAX_OPERATING_VOLTAGE_2_6V,
+	SD_MAX_OPERATING_VOLTAGE_2_5V,
+	SD_MAX_OPERATING_VOLTAGE_2_4V,
+	SD_MAX_OPERATING_VOLTAGE_2_3V,
+	SD_MAX_OPERATING_VOLTAGE_2_2V,
+	SD_MAX_OPERATING_VOLTAGE_2_1V,
+	SD_MAX_OPERATING_VOLTAGE_2_0V,
+	SD_MAX_OPERATING_VOLTAGE_1_9V,
+	SD_MAX_OPERATING_VOLTAGE_1_8V,
+	SD_MAX_OPERATING_VOLTAGE_1_7V	
+}SD_MAX_OPERATIING_VOLTAGE_te;
+
 typedef struct {
 	char name[CONFIG_SD_MAX_NAME_LEN];
 	SPI_REGDEF_ts *spi_instance;
@@ -39,7 +113,7 @@ ERR_te sd_start_subsys(void);
 ERR_te sd_stop_subsys(void);
 ERR_te sd_init_handle(SD_CONFIG_ts *sd_config, SD_HANDLE_ts **sd_handle_o);		
 ERR_te sd_deinit_handle(SD_HANDLE_ts *sd_handle);
-ERR_te sd_status(SD_HANDLE_ts *sd_handle);
+ERR_te sd_get_handle_init(SD_HANDLE_ts *sd_handle, bool *handle_init_o);
 ERR_te sd_read(SD_HANDLE_ts *sd_handle, uint8_t *read_buf, uint32_t start_sector, uint32_t num_sectors);
 ERR_te sd_write(SD_HANDLE_ts *sd_handle, uint8_t *write_buf, uint32_t start_sector, uint32_t num_sectors);
 ERR_te sd_ioctl(SD_HANDLE_ts *sd_handle);
