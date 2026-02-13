@@ -244,12 +244,13 @@ static void init_all(void) {
 
 	uint8_t data[1024];
 
-	memset(data, 0x03, 1024);
+	memset(data, 0x05, 1024);
 
 	ERR_te err = sd_write(sd_handle, data, 0, 2);
 	if(err != ERR_OK) {
 		uint8_t asd = 0;
 	}
+
 
 	uint8_t datar[1024];
 	

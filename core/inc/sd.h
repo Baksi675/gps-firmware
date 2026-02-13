@@ -31,7 +31,7 @@ typedef enum {
  * 
  */
 typedef enum {
-	SD_TYPE_MMC,				// byte addresing, legacy
+	SD_TYPE_MMC,			// byte addresing, legacy
 	SD_TYPE_SC_V1,			// byte addressing
 	SD_TYPE_SC_V2,			// byte adressing
 	SD_TYPE_HC				// block addressing

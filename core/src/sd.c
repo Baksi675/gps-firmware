@@ -91,7 +91,13 @@ typedef struct {
 	uint8_t r7[4];
 }CMD_RESPONSE_ts;
 
-static ERR_te sd_go_idle_state(void);
+
+static ERR_te sd_go_idle_state_helper(SD_HANDLE_ts *sd_handle);
+static ERR_te sd_send_if_cond_helper(SD_HANDLE_ts *sd_handle, bool *match_o, bool *no_resp_o);
+static ERR_te sd_app_send_op_cond_helper(SD_HANDLE_ts *sd_handle, uint32_t arg);
+static ERR_te sd_read_ocr_helper(SD_HANDLE_ts *sd_handle);
+static ERR_te sd_send_op_cond_helper(SD_HANDLE_ts *sd_handle);
+static ERR_te sd_set_blocklen_helper(SD_HANDLE_ts *sd_handle);
 
 static ERR_te sd_send_cmd(SPI_REGDEF_ts *spi_instance, uint8_t index, uint32_t arg, bool acmd, CMD_RESPONSE_ts *cmd_response_o);
 static ERR_te sd_cease_comms_helper(SD_HANDLE_ts *sd_handle, bool deinit);
@@ -281,12 +287,19 @@ ERR_te sd_init_handle(SD_CONFIG_ts *sd_config, SD_HANDLE_ts **sd_handle_o) {
 		return ERR_INVALID_ARGUMENT;
 	}
 
+	bool found = false;
+
 	for(uint32_t i = 0; i < CONFIG_SD_MAX_OBJECTS; i++) {
-		if(internal_state.sds[i].in_use == false) {
-			free_index = i;	
+		if(!internal_state.sds[i].in_use) {
+			free_index = i;
+			found = true;
 			break;
 		}
 	}
+
+	if(!found)
+		return ERR_NOT_ENOUGH_SPACE;
+
 
 	GPIO_HANDLE_ts sd_sclk = { 0 };
 	sd_sclk.port = sd_config->sclk_gpio_port;
@@ -406,6 +419,8 @@ ERR_te sd_init_handle(SD_CONFIG_ts *sd_config, SD_HANDLE_ts **sd_handle_o) {
 	// Enable SPI communication
 	spi_set_comm(sd_spi.instance, ENABLE);
 
+	// 1. Start initilization
+
 	// Set CS high
 	gpio_write(sd_config->cs_gpio_port, sd_config->cs_gpio_pin, HIGH);
 
@@ -415,243 +430,119 @@ ERR_te sd_init_handle(SD_CONFIG_ts *sd_config, SD_HANDLE_ts **sd_handle_o) {
 		spi_send(sd_config->spi_instance, &dummy_tx, 1);
 	}
 
-	CMD_RESPONSE_ts cmd_response;
-
 	gpio_write(sd_config->cs_gpio_port, sd_config->cs_gpio_pin, LOW);
 
-
-
-
-
-
-
-
-
-
-
-
-
-	// Send CMD0
-	uint8_t try = 1;
-	do {
-		err = sd_send_cmd(sd_config->spi_instance, 0, 0, false, &cmd_response);
-		if(err == ERR_TIMEOUT) {
-			LOG_ERROR(internal_state.subsys, 
-				internal_state.log_level, 
-				"sd_init_handle: sd_send_cmd timeout, retry %d/%d in 100 ms", try, CONFIG_SD_TIMEOUT_RETRY_NUM
-			);
-			try++;
-			DELAY(10);
-		}
-	} while(err == ERR_TIMEOUT && try <= CONFIG_SD_TIMEOUT_RETRY_NUM);
-
-	if(try > CONFIG_SD_TIMEOUT_RETRY_NUM) {
-		LOG_ERROR(internal_state.subsys, 
-			internal_state.log_level, 
-			"sd_init_handle: initialization failure "
-		);
-		sd_cease_comms_helper(&internal_state.sds[free_index], true);
-
-		return ERR_INITIALIZATION_FAILURE;
-	}
-
-	if(cmd_response.r1 == 0x01) {
-		cmd_response = (CMD_RESPONSE_ts){ 0 };
-		err = sd_send_cmd(sd_config->spi_instance, 8, 0x000001AA, false, &cmd_response);
-		if(err != ERR_OK) {
-			// Try ACMD41
-			cmd_response = (CMD_RESPONSE_ts){ 0 };
-			uint32_t try_loop1 = 1;
-			do {
-				err = sd_send_cmd(sd_config->spi_instance, 41, 0x00000000, true, &cmd_response);
-				if(err != ERR_OK) {
-					// Try CMD1
-					cmd_response = (CMD_RESPONSE_ts){ 0 };
-					uint32_t try_loop2 = 1;
-					do {
-						err = sd_send_cmd(sd_config->spi_instance, 1, 0x00000000, false, &cmd_response);
-						if(err != ERR_OK) {
-							// Unknown card, error
-							sd_cease_comms_helper(&internal_state.sds[free_index], true);
-							
-							return ERR_UNRECOGNIZED_HW;
-						}
-					}while(cmd_response.r1 == 0x01 && try_loop2-- <= CONFIG_SD_INVALID_RESP_RETRY_NUM);
-
-					if(try_loop2 > CONFIG_SD_INVALID_RESP_RETRY_NUM) {
-						sd_cease_comms_helper(&internal_state.sds[free_index], true);
-						
-						return ERR_INITIALIZATION_FAILURE;
-					}
-
-					if(cmd_response.r1 == 0x00) {
-						// Card is MMC Ver. 3
-						internal_state.sds[free_index].type = SD_TYPE_MMC;
-
-						cmd_response = (CMD_RESPONSE_ts){ 0 };
-						err = sd_send_cmd(sd_config->spi_instance, 16, 0x00000200, false, &cmd_response);
-						if(err != ERR_OK) {
-							sd_cease_comms_helper(&internal_state.sds[free_index], true);
-							
-							return ERR_INITIALIZATION_FAILURE;
-						}
-					}
-				}
-			}while(cmd_response.r1 == 0x01 && try_loop1-- <= CONFIG_SD_INVALID_RESP_RETRY_NUM);
-
-			if(try_loop1 > CONFIG_SD_INVALID_RESP_RETRY_NUM) {
-				sd_cease_comms_helper(&internal_state.sds[free_index], true);
-
-				return ERR_INITIALIZATION_FAILURE;
-			}
-
-			if(cmd_response.r1 == 0x00) {
-				// Card is SD Ver. 1
-				internal_state.sds[free_index].type = SD_TYPE_SC_V1;
-
-				cmd_response = (CMD_RESPONSE_ts){ 0 };
-				err = sd_send_cmd(sd_config->spi_instance, 16, 0x00000200, false, &cmd_response);
-				if(err != ERR_OK) {
-					sd_cease_comms_helper(&internal_state.sds[free_index], true);
-
-					return ERR_INITIALIZATION_FAILURE;
-				}
-			}
-		}
-		else {
-			// Check if R7 matches 0x000001AA
-			uint8_t expected[] = { 0x00, 0x00, 0x01, 0xAA };
-			for(uint8_t i = 0; i < 4; i++) {
-				// Mismatch
-				if(cmd_response.r7[i] != expected[i]) {
-					sd_cease_comms_helper(&internal_state.sds[free_index], true);
-					
-					return ERR_INITIALIZATION_FAILURE;
-				}
-			}
-
-			// Match
-			cmd_response = (CMD_RESPONSE_ts){ 0 };
-			uint32_t try_loop1 = 1;
-			do{
-				err = sd_send_cmd(sd_config->spi_instance, 41, 0x40000000, true, &cmd_response);
-				if(err != ERR_OK) {
-					// Initialization failure
-					sd_cease_comms_helper(&internal_state.sds[free_index], true);
-					
-					return ERR_INITIALIZATION_FAILURE;
-				}
-			}while (cmd_response.r1 == 0x01 && --try_loop1 <= CONFIG_SD_INVALID_RESP_RETRY_NUM);
-
-			if(try_loop1 > CONFIG_SD_INVALID_RESP_RETRY_NUM) {
-				sd_cease_comms_helper(&internal_state.sds[free_index], true);
-				
-				return ERR_INITIALIZATION_FAILURE;
-			}
-
-			if(cmd_response.r1 == 0x00) {
-				cmd_response = (CMD_RESPONSE_ts){ 0 };
-				err = sd_send_cmd(sd_config->spi_instance, 58, 0, false, &cmd_response);
-				if(err != ERR_OK) {
-					sd_cease_comms_helper(&internal_state.sds[free_index], true);
-
-					return ERR_INITIALIZATION_FAILURE;
-				}
-
-				// Recreate OCR 
-				uint32_t ocr = cmd_response.r3[0] << 24 | 
-					cmd_response.r3[1] << 16 | 
-					cmd_response.r3[2] << 8 | 
-					cmd_response.r3[3];
-
-				// Check and save power-up status
-				if((ocr >> OCR_PWRUP_STATUS) & 0x1) {
-					internal_state.sds[free_index].pwrup_status = SD_PWRUP_STATUS_READY;
-				}
-				else {
-					internal_state.sds[free_index].pwrup_status = SD_PWRUP_STATUS_BUSY;
-				}
-
-				// Check and save card capacity 
-				if((ocr >> OCR_CAPACITY_STATUS) & 0x1) {
-					internal_state.sds[free_index].type = SD_TYPE_HC;
-				}
-				else {
-					internal_state.sds[free_index].type = SD_TYPE_SC_V2;
-
-					cmd_response = (CMD_RESPONSE_ts){ 0 };
-					err = sd_send_cmd(sd_config->spi_instance, 16, 0x00000200, false, &cmd_response);
-					if(err != ERR_OK) {
-						sd_cease_comms_helper(&internal_state.sds[free_index], true);
-
-						return ERR_INITIALIZATION_FAILURE;
-					}
-				}
-
-				// Check and save operating voltage range
-				bool voltage_low_found = false;
-				for(uint8_t ocr_counter = 4; ocr_counter < 24; ocr_counter++) {
-					if((ocr >> ocr_counter) & 0x1 && !voltage_low_found) {
-						internal_state.sds[free_index].min_operating_voltage = (SD_MIN_OPERATING_VOLTAGE_te)(23 - ocr_counter);
-						voltage_low_found = true;
-					}
-					else if((ocr >> ocr_counter) & 0x1 && voltage_low_found) {
-						internal_state.sds[free_index].max_operating_voltage = (SD_MAX_OPERATIING_VOLTAGE_te)(23 - ocr_counter);
-					}
-				}
-			}
-		}
-	}
-	else {
-		sd_cease_comms_helper(&internal_state.sds[free_index], true);
-
-		return ERR_INITIALIZATION_FAILURE;		
-	}
-
-	// Read CSD register
-	cmd_response = (CMD_RESPONSE_ts){ 0 };
-	sd_send_cmd(sd_config->spi_instance, 9, 0, false,  &cmd_response);
+	// 2. Go into idle state
+	err = sd_go_idle_state_helper(&internal_state.sds[free_index]);
 	if(err != ERR_OK) {
-		sd_cease_comms_helper(&internal_state.sds[free_index], true);
+		LOG_CRITICAL(internal_state.subsys, 
+			internal_state.log_level, 
+			"sd_init_handle: failed to enter idle state, deinitializing handle"
+		);
 
-		return ERR_INITIALIZATION_FAILURE;
+		sd_cease_comms_helper(&internal_state.sds[free_index], true);
+		
+		return ERR_UNSUCCESFUL_ACTION;
 	}
 
-	if(cmd_response.r1 != 0x00) {
-		sd_cease_comms_helper(&internal_state.sds[free_index], true);
+	// 3. Get card type and version
+	bool match = false;
+	bool no_response = false;
 
-		return ERR_UNKNOWN;
+	err = sd_send_if_cond_helper(&internal_state.sds[free_index], &match, &no_response);
+	if(err != ERR_OK) {
+		LOG_CRITICAL(internal_state.subsys, 
+			internal_state.log_level, 
+			"sd_init_handle: failed to get SD card type, deinitializing handle"
+		);
+
+		sd_cease_comms_helper(&internal_state.sds[free_index], true);
+		
+		return ERR_UNSUCCESFUL_ACTION;	
 	}
 
-	uint8_t token = 0;
-	uint32_t start_time = systick_get_ms();
-	uint32_t elapsed_time = 0;
-	do {
-		spi_receive(sd_config->spi_instance, &token, 1);
-		elapsed_time = systick_get_ms() - start_time;
-	}while(token != 0xFE && elapsed_time <= CONFIG_SD_DATA_TOKEN_RECV_TIMEOUT);
+	// 3.1 Card is SD Ver.2, get byte or block address information
+	if(match) {
+		err = sd_app_send_op_cond_helper(&internal_state.sds[free_index], 0x40000000);
+		if(err != ERR_OK) {
+			LOG_CRITICAL(
+				internal_state.subsys, 
+				internal_state.log_level, 
+				"sd_init_handle: failed to initiate initialization of SD Ver.2, deinitializing handle"
+			);
 
-	if(elapsed_time > CONFIG_SD_DATA_TOKEN_RECV_TIMEOUT) {
-		sd_cease_comms_helper(&internal_state.sds[free_index], true);
+			sd_cease_comms_helper(&internal_state.sds[free_index], true);
 
-		return ERR_TIMEOUT;
+			return ERR_UNSUCCESFUL_ACTION;
+		}
+
+		err = sd_read_ocr_helper(&internal_state.sds[free_index]);
+		if(err != ERR_OK) {
+			LOG_CRITICAL(
+				internal_state.subsys, 
+				internal_state.log_level, 
+				"sd_init_handle: failed to obtain SD Ver 2. information, deinitializing handle"
+			);	
+			
+			return ERR_UNSUCCESFUL_ACTION;
+		}
+	}
+	// 3.2 Card is either SD Ver.1 or MMC Ver.3
+	else if(no_response) {
+		err = sd_app_send_op_cond_helper(&internal_state.sds[free_index], 0);
+		// Card is SD Ver.1
+		if(err == ERR_OK) {
+			internal_state.sds[free_index].type = SD_TYPE_SC_V1;
+		}
+		// Card is MMC Ver.3 or unknown
+		else if(err == ERR_TIMEOUT) {
+			err = sd_send_op_cond_helper(&internal_state.sds[free_index]);
+			// Card is unknown
+			if(err != ERR_OK) {
+				LOG_CRITICAL(
+					internal_state.subsys, 
+					internal_state.log_level, 
+					"sd_init_handle: unknown card, deinitializing handle"
+				);
+
+				sd_cease_comms_helper(&internal_state.sds[free_index], true);
+
+				return ERR_UNSUCCESFUL_ACTION;
+			}
+			// Card is MMC
+			else {
+				internal_state.sds[free_index].type = SD_TYPE_MMC;
+			}
+		}
+		// Card is unknown
+		else {
+			LOG_CRITICAL(
+				internal_state.subsys, 
+				internal_state.log_level, 
+				"sd_init_handle: unknown card, deinitializing handle"
+			);
+
+			sd_cease_comms_helper(&internal_state.sds[free_index], true);
+
+			return ERR_UNSUCCESFUL_ACTION;
+		}
 	}
 
-	if(token != 0xFE) {
-		sd_cease_comms_helper(&internal_state.sds[free_index], true);
+	if(internal_state.sds[free_index].type != SD_TYPE_HC) {
+		err = sd_set_blocklen_helper(&internal_state.sds[free_index]);
+		if(err != ERR_OK) {
+			LOG_CRITICAL(
+				internal_state.subsys, 
+				internal_state.log_level, 
+				"sd_init_handle: failed to initialize, deinitializing handle"
+			);
 
-		return ERR_UNKNOWN;
+			sd_cease_comms_helper(&internal_state.sds[free_index], true);
+
+			return ERR_UNSUCCESFUL_ACTION;			
+		}
 	}
-
-	uint8_t csd[16];
-	memset(csd, 0, 16);
-	spi_receive(sd_config->spi_instance, csd, 16);
-
-	uint8_t crc[2];
-	spi_receive(sd_config->spi_instance, crc, 2);
-
-	sd_cease_comms_helper(&internal_state.sds[free_index], false);
-
+	
 	internal_state.sds[free_index].initialized = true;
 
 	LOG_INFO(
@@ -660,6 +551,10 @@ ERR_te sd_init_handle(SD_CONFIG_ts *sd_config, SD_HANDLE_ts **sd_handle_o) {
 		"sd_init_handle: sd handle %s initialized",
 		internal_state.sds[free_index].name
 	);
+
+	sd_cease_comms_helper(&internal_state.sds[free_index], false);
+
+	//SPI1->SPI_CR1 &= ~(0x7 << SPI_CR1_BR);
 
 	return ERR_OK;
 }
@@ -1079,6 +974,12 @@ static ERR_te sd_send_cmd(SPI_REGDEF_ts *spi_instance, uint8_t index, uint32_t a
 		CMD_RESPONSE_ts dummy;
 		err = sd_send_cmd(spi_instance, 55, 0, false, &dummy);
 		if(err != ERR_OK) {
+			LOG_ERROR(
+				internal_state.subsys, 
+				LOG_LEVEL_ERROR, 
+				"sd_send_cmd: unknown error"
+			);
+
 			return err;
 		}
 	}
@@ -1120,6 +1021,12 @@ static ERR_te sd_send_cmd(SPI_REGDEF_ts *spi_instance, uint8_t index, uint32_t a
 	cmd_response_o->r1 = r1;
 
 	if(elapsed_time > CONFIG_SD_R1_RESP_TIMEOUT) {
+		LOG_ERROR(
+			internal_state.subsys, 
+			LOG_LEVEL_ERROR, 
+			"sd_send_cmd: timed out"
+		);
+
 		return ERR_TIMEOUT;
 	}
 
@@ -1174,6 +1081,12 @@ static ERR_te sd_send_cmd(SPI_REGDEF_ts *spi_instance, uint8_t index, uint32_t a
 		}while(rx == 0x00 && elapsed_time <= CONFIG_SD_R1B_RESP_TIMEOUT);
 
 		if(elapsed_time > CONFIG_SD_R1B_RESP_TIMEOUT) {
+			LOG_ERROR(
+				internal_state.subsys, 
+				LOG_LEVEL_ERROR, 
+				"sd_send_cmd: timed out"
+			);
+
 			return ERR_TIMEOUT;
 		}
 	}
@@ -1238,6 +1151,258 @@ static ERR_te sd_cmd_info_handler(uint32_t argc, char **argv) {
 	return ERR_OK;
 }
 
-static ERR_te sd_go_idle_state(void) {
+/**
+ * @brief A helper function for sd_init_handle. Sends a command to the sd card to go into idle state.
+ * 		  Includes retry error handling.
+ * 
+ * @param[in] sd_handle The sd_handle to send into idle state. 
+ * @return ERR_te Error generated during execution.
+ *		   ERR_OK
+ *		   ERR_UNSUCCESSFUL_ACTION
+ */
+static ERR_te sd_go_idle_state_helper(SD_HANDLE_ts *sd_handle) {
+	ERR_te err;
+	CMD_RESPONSE_ts cmd_response = { 0 };  
+
+	uint8_t retries = 0;
+	do {
+		retries++;
+		err = sd_send_cmd(sd_handle->spi_instance, 0, 0, false, &cmd_response);
+		if(err != ERR_OK || !(cmd_response.r1 & 0x01)) {
+			LOG_ERROR(
+				internal_state.subsys,
+				internal_state.log_level, 
+				"sd_go_idle_state_helper: command execution failure, retry %d/%d in %d ms",
+				retries, CONFIG_SD_CMD_SEND_ERROR_RETRY_NUM, CONFIG_SD_CMD_SEND_ERROR_RETRY_LATENCY
+			);
+			DELAY(CONFIG_SD_CMD_SEND_ERROR_RETRY_LATENCY);
+		}
+	} while ((err != ERR_OK || !(cmd_response.r1 & 0x01)) && retries < CONFIG_SD_CMD_SEND_ERROR_RETRY_NUM);
+
+	if(err != ERR_OK || !(cmd_response.r1 & 0x01)) {
+		LOG_ERROR(
+			internal_state.subsys,
+			internal_state.log_level, 
+			"sd_go_idle_state_helper: command execution failure"
+		);
+
+		return ERR_UNSUCCESFUL_ACTION;
+	}
+
+	return ERR_OK;
+}
+
+/**
+ * @brief Sends and Interface Condition Command to determine the version of the SD card. (SD Ver2, SD Ver1, MMC Ver3)
+ *        If the function doesn't return ERR_OK, the card is of unknown type and further initialization should be aborted.
+ * 
+ * @param[in] sd_handle 
+ * @param[out] match_o Whether the commands response matches the 0x1AA argument. 
+ * @param[out] no_resp_o Whether the command got no response.
+ * @return ERR_te Error generated during execution.
+ *         ERR_OK
+ *         ERR_INITIALIZATION_FAILURE
+ */
+static ERR_te sd_send_if_cond_helper(SD_HANDLE_ts *sd_handle, bool *match_o, bool *no_resp_o) {
+	ERR_te err;
+	CMD_RESPONSE_ts cmd_response = { 0 }; 
 	
+	err = sd_send_cmd(sd_handle->spi_instance, 8, 0x000001AA, false, &cmd_response);
+	if(err != ERR_OK) {
+		*no_resp_o = true;
+
+		return ERR_OK;
+	}
+
+	// Check if R7 matches 0x000001AA
+	uint8_t expected[] = { 0x00, 0x00, 0x01, 0xAA };
+	for(uint8_t i = 0; i < 4; i++) {
+		// Mismatch
+		if(cmd_response.r7[i] != expected[i]) {
+			LOG_ERROR(
+				internal_state.subsys,
+				internal_state.log_level, 
+				"sd_send_if_cond_helper: initialization failure"
+			);
+
+			return ERR_INITIALIZATION_FAILURE;
+		}
+	}
+
+	*match_o = true;
+
+	return ERR_OK;
+}
+
+/**
+ * @brief Initiates initialization process for SD Ver.2.
+ * 
+ * @param[in] sd_handle The handle to initiate the initialization of.
+ * @return ERR_te Error generated during execution.
+ *		   ERR_OK
+ *         ERR_TIMEOUT
+ *         ERR_INITIALIZATION_FAILURE
+ */
+static ERR_te sd_app_send_op_cond_helper(SD_HANDLE_ts *sd_handle, uint32_t arg) {
+	ERR_te err;
+	CMD_RESPONSE_ts cmd_response = { 0 }; 	
+	uint32_t retries = 0;
+
+	do {
+		retries++;
+		err = sd_send_cmd(sd_handle->spi_instance, 41, arg, true, &cmd_response);
+		if(err == ERR_TIMEOUT) {
+			LOG_ERROR(
+				internal_state.subsys,
+				internal_state.log_level, 
+				"sd_app_send_op_cond_helper: R1 response timeout"
+			);
+
+			return ERR_TIMEOUT;
+		}
+	} while(cmd_response.r1 == 0x01 && retries < CONFIG_SD_INVALID_RESP_RETRY_NUM);
+
+	if(cmd_response.r1 != 0x00) {
+		LOG_ERROR(
+			internal_state.subsys,
+			internal_state.log_level, 
+			"sd_app_send_op_cond_helper: initialization failure"
+		);
+
+		return ERR_INITIALIZATION_FAILURE;
+	}
+
+	return ERR_OK;
+}
+
+/**
+ * @brief Reads the OCR register. Obtains information about power-up status, SD Ver.2 capacity, allowed operating voltages. 
+ * 
+ * @param[in] sd_handle The handle to obtain the OCR information of. 
+ * @return ERR_te Error generated during execution.
+ *         ERR_OK
+ *         ERR_UNSUCCESSFUL_ACTION
+ */
+static ERR_te sd_read_ocr_helper(SD_HANDLE_ts *sd_handle) {
+	ERR_te err;
+	CMD_RESPONSE_ts cmd_response = { 0 }; 
+	
+	err = sd_send_cmd(sd_handle->spi_instance, 58, 0, false, &cmd_response);
+	if(err != ERR_OK) {
+		LOG_ERROR(
+			internal_state.subsys,
+			internal_state.log_level, 
+			"sd_read_ocr_helper: failed to read ocr"
+		);		
+
+		return ERR_UNSUCCESFUL_ACTION;
+	}
+
+	// Recreate OCR 
+	uint32_t ocr =
+		((uint32_t)cmd_response.r3[0] << 24) |
+		((uint32_t)cmd_response.r3[1] << 16) |
+		((uint32_t)cmd_response.r3[2] << 8)  |
+		((uint32_t)cmd_response.r3[3]);
+
+	// Check and save power-up status
+	if((ocr >> OCR_PWRUP_STATUS) & 0x1) {
+		sd_handle->pwrup_status = SD_PWRUP_STATUS_READY;
+	}
+	else {
+		sd_handle->pwrup_status = SD_PWRUP_STATUS_BUSY;
+	}
+
+	// Check and save card capacity 
+	if((ocr >> OCR_CAPACITY_STATUS) & 0x1) {
+		sd_handle->type = SD_TYPE_HC;
+	}
+	else {
+		sd_handle->type = SD_TYPE_SC_V2;
+	}
+
+	// Check and save operating voltage range
+	bool voltage_low_found = false;
+	for(uint8_t ocr_counter = 4; ocr_counter < 24; ocr_counter++) {
+		if((ocr >> ocr_counter) & 0x1 && !voltage_low_found) {
+			sd_handle->min_operating_voltage = (SD_MIN_OPERATING_VOLTAGE_te)(23 - ocr_counter);
+			voltage_low_found = true;
+		}
+		else if((ocr >> ocr_counter) & 0x1 && voltage_low_found) {
+			sd_handle->max_operating_voltage = (SD_MAX_OPERATIING_VOLTAGE_te)(23 - ocr_counter);
+		}
+	}
+
+	return ERR_OK;
+}
+
+/**
+ * @brief Initiates the initialization process. 
+ * 
+ * @param[in] sd_handle The handle to initiate the initialization process of.
+ * @return ERR_te Error generated during execution.
+ *         ERR_OK
+ * 		   ERR_TIMEOUT
+ * 		   ERR_INITIALIZATION_FAILURE 
+ */
+static ERR_te sd_send_op_cond_helper(SD_HANDLE_ts *sd_handle) {
+	ERR_te err;
+	CMD_RESPONSE_ts cmd_response = { 0 }; 	
+	uint32_t retries = 0;
+
+	do {
+		retries++;
+		err = sd_send_cmd(sd_handle->spi_instance, 1, 0, false, &cmd_response);
+		if(err == ERR_TIMEOUT) {
+			LOG_ERROR(
+				internal_state.subsys,
+				internal_state.log_level, 
+				"sd_send_op_cond_helper: R1 response timeout"
+			);
+
+			return ERR_TIMEOUT;
+		}
+	} while(cmd_response.r1 == 0x01 && retries < CONFIG_SD_INVALID_RESP_RETRY_NUM);
+
+	if(cmd_response.r1 != 0x00) {
+		LOG_ERROR(
+			internal_state.subsys,
+			internal_state.log_level, 
+			"sd_send_op_cond_helper: initialization failure"
+		);
+
+		return ERR_INITIALIZATION_FAILURE;
+	}
+
+	return ERR_OK;
+}
+
+/**
+ * @brief Sets the block length of cards with byte addressing.
+ * 
+ * @param[in] sd_handle The handle to set the block length of. 
+ * @return ERR_te Error generated during execution.
+ *         ERR_OK
+ *         ERR_UNSUCCESFUL_ACTION
+ */
+static ERR_te sd_set_blocklen_helper(SD_HANDLE_ts *sd_handle) {
+	ERR_te err;
+	CMD_RESPONSE_ts cmd_response = { 0 };
+
+	err = sd_send_cmd(sd_handle->spi_instance, 16, 0x00000200, false, &cmd_response);
+	if(err != ERR_OK) {
+		LOG_ERROR(
+			internal_state.subsys,
+			internal_state.log_level, 
+			"sd_set_blocklen_helper: failed to set block length"
+		);
+
+		return ERR_UNSUCCESFUL_ACTION;
+	}
+
+	if(cmd_response.r1 != 0x00)
+    	return ERR_UNSUCCESFUL_ACTION;
+
+
+	return ERR_OK;
 }
