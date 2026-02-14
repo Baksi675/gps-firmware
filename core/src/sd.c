@@ -26,6 +26,16 @@
 #include "arm_cortex_m4_systick.h"
 
 /**
+ * @brief Struct for containing responses by a command to the SD card.
+ * 
+ */
+typedef struct {
+	uint8_t r1;
+	uint8_t r3[4];
+	uint8_t r7[4];
+}CMD_RESPONSE_ts;
+
+/**
  * @brief OCR register bit positions.
  * 
  */
@@ -54,6 +64,54 @@ typedef enum {
 	OCR_PWRUP_STATUS
 }OCR_te;
 
+/**
+ * @brief Structure containing information retrieved from CSD register.
+ * 
+ */
+typedef struct {
+    uint32_t capacity_bytes;      // Total capacity in bytes
+    uint32_t capacity_mb;         // Total capacity in MB
+    uint16_t block_len;           // Read block length
+    uint32_t block_count;         // Number of blocks
+    uint8_t tran_speed;           // Transfer speed
+    uint16_t ccc;                 // Card command classes
+    uint8_t csd_structure;        // CSD structure version
+    
+    // CSD v1.0 specific fields
+    struct {
+        uint16_t c_size;
+        uint8_t c_size_mult;
+        uint8_t read_bl_len;
+    } v1;
+    
+    // CSD v2.0 specific fields
+    struct {
+        uint32_t c_size;          // 22-bit value
+    } v2;
+    
+    // Common fields
+    uint8_t taac;
+    uint8_t nsac;
+    uint8_t read_bl_partial;
+    uint8_t write_blk_misalign;
+    uint8_t read_blk_misalign;
+    uint8_t dsr_imp;
+    uint8_t erase_blk_en;
+    uint8_t sector_size;
+    uint8_t wp_grp_size;
+    uint8_t wp_grp_enable;
+    uint8_t r2w_factor;
+    uint8_t write_bl_len;
+    uint8_t write_bl_partial;
+    uint8_t file_format_grp;
+    uint8_t copy;
+    uint8_t perm_write_protect;
+    uint8_t tmp_write_protect;
+    uint8_t file_format;
+    uint8_t wp_upc;
+    uint8_t crc;
+} SD_CSD_INFO_ts;
+
 struct sd_handle_s {
 	char name[CONFIG_SD_MAX_NAME_LEN];
 	SPI_REGDEF_ts *spi_instance;
@@ -68,9 +126,11 @@ struct sd_handle_s {
 	GPIO_ALTERNATE_FUNCTION_te gpio_alternate_function;
 	SD_PWRUP_STATUS_te pwrup_status;
 	SD_TYPE_te type;
-	SD_MIN_OPERATING_VOLTAGE_te min_operating_voltage;
-	SD_MAX_OPERATIING_VOLTAGE_te max_operating_voltage;
-	uint32_t sector_size;
+	SD_MIN_OPERATING_VOLTAGE_te min_operating_voltage;				// not needed
+	SD_MAX_OPERATIING_VOLTAGE_te max_operating_voltage;				// not needed
+	uint32_t block_len;
+	uint32_t block_count;
+	uint32_t capacity_mb;
 	bool initialized;
 	bool in_use;
 };
@@ -85,29 +145,29 @@ struct internal_state_s {
 };
 struct internal_state_s internal_state;
 
-typedef struct {
-	uint8_t r1;
-	uint8_t r3[4];
-	uint8_t r7[4];
-}CMD_RESPONSE_ts;
-
-
-static ERR_te sd_go_idle_state_helper(SD_HANDLE_ts *sd_handle);
-static ERR_te sd_send_if_cond_helper(SD_HANDLE_ts *sd_handle, bool *match_o, bool *no_resp_o);
-static ERR_te sd_app_send_op_cond_helper(SD_HANDLE_ts *sd_handle, uint32_t arg);
-static ERR_te sd_read_ocr_helper(SD_HANDLE_ts *sd_handle);
-static ERR_te sd_send_op_cond_helper(SD_HANDLE_ts *sd_handle);
-static ERR_te sd_set_blocklen_helper(SD_HANDLE_ts *sd_handle);
-
+static ERR_te sd_go_idle_state(SD_HANDLE_ts *sd_handle);
+static ERR_te sd_send_if_cond(SD_HANDLE_ts *sd_handle, bool *match_o, bool *no_resp_o);
+static ERR_te sd_app_send_op_cond(SD_HANDLE_ts *sd_handle, uint32_t arg);
+static ERR_te sd_read_ocr(SD_HANDLE_ts *sd_handle);
+static ERR_te sd_send_op_cond(SD_HANDLE_ts *sd_handle);
+static ERR_te sd_set_blocklen(SD_HANDLE_ts *sd_handle);
+static ERR_te sd_read_csd(SD_HANDLE_ts *sd_handle);
+static ERR_te decode_csd_v1(const uint8_t *csd_raw, SD_CSD_INFO_ts *csd_info_o);
+static ERR_te decode_csd_v2(const uint8_t *csd_raw, SD_CSD_INFO_ts *csd_info_o);
 static ERR_te sd_send_cmd(SPI_REGDEF_ts *spi_instance, uint8_t index, uint32_t arg, bool acmd, CMD_RESPONSE_ts *cmd_response_o);
-static ERR_te sd_cease_comms_helper(SD_HANDLE_ts *sd_handle, bool deinit);
-
+static ERR_te sd_cease_comms(SD_HANDLE_ts *sd_handle, bool deinit);
+static ERR_te sd_cmd_list_handler(uint32_t argc, char **argv);
 static ERR_te sd_cmd_info_handler(uint32_t argc, char **argv);
 
 CMD_INFO_ts sd_cmds[] = {
 	{
+		.name = "list",
+		.help = "Lists active sd objects, usage: sd list",
+		.handler = sd_cmd_list_handler
+	},
+	{
 		.name = "info",
-		.help = "Shows SD information, usage: sd info",
+		.help = "Shows sd object info, usage: sd info <sd object>",
 		.handler = sd_cmd_info_handler
 	}
 };
@@ -248,11 +308,16 @@ ERR_te sd_stop_subsys(void) {
 }
 
 /**
- * @brief Initializes an SD handle.
+ * @brief Initializes an SD handle. Obtains information about SD card and initializes it for communication.
  * 
  * @param[in] sd_config The SD configuration.
  * @param[out] sd_handle_o The initialized handle.
  * @return ERR_te Error generated during execution.
+ *		   ERR_OK
+ *         ERR_INITIALIZATION_FAILURE
+ *         ERR_NOT_ENOUGH_SPACE
+ *         ERR_INVALID_ARGUMENT
+ *         ERR_UNSUCCESFUL_ACTION
  */
 ERR_te sd_init_handle(SD_CONFIG_ts *sd_config, SD_HANDLE_ts **sd_handle_o) {
 	ERR_te err;
@@ -269,7 +334,7 @@ ERR_te sd_init_handle(SD_CONFIG_ts *sd_config, SD_HANDLE_ts **sd_handle_o) {
 	}
 	
 	if(internal_state.sd_num == CONFIG_SD_MAX_OBJECTS) {
-		LOG_ERROR(
+		LOG_CRITICAL(
 			internal_state.subsys, 
 			internal_state.log_level,
 			"sd_init_handle: subsystem out of memory space"
@@ -433,14 +498,14 @@ ERR_te sd_init_handle(SD_CONFIG_ts *sd_config, SD_HANDLE_ts **sd_handle_o) {
 	gpio_write(sd_config->cs_gpio_port, sd_config->cs_gpio_pin, LOW);
 
 	// 2. Go into idle state
-	err = sd_go_idle_state_helper(&internal_state.sds[free_index]);
+	err = sd_go_idle_state(&internal_state.sds[free_index]);
 	if(err != ERR_OK) {
 		LOG_CRITICAL(internal_state.subsys, 
 			internal_state.log_level, 
 			"sd_init_handle: failed to enter idle state, deinitializing handle"
 		);
 
-		sd_cease_comms_helper(&internal_state.sds[free_index], true);
+		sd_cease_comms(&internal_state.sds[free_index], true);
 		
 		return ERR_UNSUCCESFUL_ACTION;
 	}
@@ -449,21 +514,21 @@ ERR_te sd_init_handle(SD_CONFIG_ts *sd_config, SD_HANDLE_ts **sd_handle_o) {
 	bool match = false;
 	bool no_response = false;
 
-	err = sd_send_if_cond_helper(&internal_state.sds[free_index], &match, &no_response);
+	err = sd_send_if_cond(&internal_state.sds[free_index], &match, &no_response);
 	if(err != ERR_OK) {
 		LOG_CRITICAL(internal_state.subsys, 
 			internal_state.log_level, 
 			"sd_init_handle: failed to get SD card type, deinitializing handle"
 		);
 
-		sd_cease_comms_helper(&internal_state.sds[free_index], true);
+		sd_cease_comms(&internal_state.sds[free_index], true);
 		
 		return ERR_UNSUCCESFUL_ACTION;	
 	}
 
 	// 3.1 Card is SD Ver.2, get byte or block address information
 	if(match) {
-		err = sd_app_send_op_cond_helper(&internal_state.sds[free_index], 0x40000000);
+		err = sd_app_send_op_cond(&internal_state.sds[free_index], 0x40000000);
 		if(err != ERR_OK) {
 			LOG_CRITICAL(
 				internal_state.subsys, 
@@ -471,12 +536,12 @@ ERR_te sd_init_handle(SD_CONFIG_ts *sd_config, SD_HANDLE_ts **sd_handle_o) {
 				"sd_init_handle: failed to initiate initialization of SD Ver.2, deinitializing handle"
 			);
 
-			sd_cease_comms_helper(&internal_state.sds[free_index], true);
+			sd_cease_comms(&internal_state.sds[free_index], true);
 
 			return ERR_UNSUCCESFUL_ACTION;
 		}
 
-		err = sd_read_ocr_helper(&internal_state.sds[free_index]);
+		err = sd_read_ocr(&internal_state.sds[free_index]);
 		if(err != ERR_OK) {
 			LOG_CRITICAL(
 				internal_state.subsys, 
@@ -489,14 +554,14 @@ ERR_te sd_init_handle(SD_CONFIG_ts *sd_config, SD_HANDLE_ts **sd_handle_o) {
 	}
 	// 3.2 Card is either SD Ver.1 or MMC Ver.3
 	else if(no_response) {
-		err = sd_app_send_op_cond_helper(&internal_state.sds[free_index], 0);
+		err = sd_app_send_op_cond(&internal_state.sds[free_index], 0);
 		// Card is SD Ver.1
 		if(err == ERR_OK) {
 			internal_state.sds[free_index].type = SD_TYPE_SC_V1;
 		}
 		// Card is MMC Ver.3 or unknown
 		else if(err == ERR_TIMEOUT) {
-			err = sd_send_op_cond_helper(&internal_state.sds[free_index]);
+			err = sd_send_op_cond(&internal_state.sds[free_index]);
 			// Card is unknown
 			if(err != ERR_OK) {
 				LOG_CRITICAL(
@@ -505,7 +570,7 @@ ERR_te sd_init_handle(SD_CONFIG_ts *sd_config, SD_HANDLE_ts **sd_handle_o) {
 					"sd_init_handle: unknown card, deinitializing handle"
 				);
 
-				sd_cease_comms_helper(&internal_state.sds[free_index], true);
+				sd_cease_comms(&internal_state.sds[free_index], true);
 
 				return ERR_UNSUCCESFUL_ACTION;
 			}
@@ -522,14 +587,14 @@ ERR_te sd_init_handle(SD_CONFIG_ts *sd_config, SD_HANDLE_ts **sd_handle_o) {
 				"sd_init_handle: unknown card, deinitializing handle"
 			);
 
-			sd_cease_comms_helper(&internal_state.sds[free_index], true);
+			sd_cease_comms(&internal_state.sds[free_index], true);
 
 			return ERR_UNSUCCESFUL_ACTION;
 		}
 	}
 
 	if(internal_state.sds[free_index].type != SD_TYPE_HC) {
-		err = sd_set_blocklen_helper(&internal_state.sds[free_index]);
+		err = sd_set_blocklen(&internal_state.sds[free_index]);
 		if(err != ERR_OK) {
 			LOG_CRITICAL(
 				internal_state.subsys, 
@@ -537,7 +602,7 @@ ERR_te sd_init_handle(SD_CONFIG_ts *sd_config, SD_HANDLE_ts **sd_handle_o) {
 				"sd_init_handle: failed to initialize, deinitializing handle"
 			);
 
-			sd_cease_comms_helper(&internal_state.sds[free_index], true);
+			sd_cease_comms(&internal_state.sds[free_index], true);
 
 			return ERR_UNSUCCESFUL_ACTION;			
 		}
@@ -552,9 +617,13 @@ ERR_te sd_init_handle(SD_CONFIG_ts *sd_config, SD_HANDLE_ts **sd_handle_o) {
 		internal_state.sds[free_index].name
 	);
 
-	sd_cease_comms_helper(&internal_state.sds[free_index], false);
+	// Get CSD information to internalstate
+	sd_read_csd(&internal_state.sds[free_index]);
 
-	//SPI1->SPI_CR1 &= ~(0x7 << SPI_CR1_BR);
+	sd_cease_comms(&internal_state.sds[free_index], false);
+
+	// Set SPI to maximum speed
+	spi_set_pclk_div(internal_state.sds[free_index].spi_instance, SPI_MASTER_SCLK_SPEED_PCLK_DIV_2);
 
 	return ERR_OK;
 }
@@ -590,6 +659,8 @@ ERR_te sd_deinit_handle(SD_HANDLE_ts *sd_handle) {
 			uint8_t name_len = get_str_len(internal_state.sds[i].name) + 1;
 			char name[name_len];
 			str_cpy(name, internal_state.sds[i].name, name_len);
+
+			spi_deinit(internal_state.sds[i].spi_instance);
 
 			internal_state.sds[i] = (SD_HANDLE_ts){ 0 };
 
@@ -647,11 +718,11 @@ ERR_te sd_read(SD_HANDLE_ts *sd_handle, uint8_t *read_buf, uint32_t start_sector
 	uint32_t elapsed_time = 0;
 	CMD_RESPONSE_ts cmd_response = { 0 };
 
-	if(!internal_state.initialized || !internal_state.started) {
+	if(!internal_state.initialized || !internal_state.started || !sd_handle->initialized) {
 		LOG_ERROR(
 			internal_state.subsys, 
 			internal_state.log_level,
-			"sd_read: subsys not initialized or started"
+			"sd_read: subsys or handle not initialized or started"
 		);
 
 		return ERR_INITIALIZATION_FAILURE;
@@ -667,13 +738,13 @@ ERR_te sd_read(SD_HANDLE_ts *sd_handle, uint8_t *read_buf, uint32_t start_sector
 	if(num_sectors == 1) {
 		err = sd_send_cmd(sd_handle->spi_instance, 17, start_sector, false, &cmd_response);
 		if(err != ERR_OK) {
-			sd_cease_comms_helper(sd_handle, true);
+			sd_cease_comms(sd_handle, true);
 
 			return err;
 		}
 		
 		if(cmd_response.r1 != 0x0) {
-			sd_cease_comms_helper(sd_handle, true);
+			sd_cease_comms(sd_handle, true);
 
 			return ERR_UNKNOWN;
 		}
@@ -687,14 +758,14 @@ ERR_te sd_read(SD_HANDLE_ts *sd_handle, uint8_t *read_buf, uint32_t start_sector
 		} while(token == 0xFF && elapsed_time <= CONFIG_SD_DATA_TOKEN_RECV_TIMEOUT);
 		
 		if(elapsed_time > CONFIG_SD_DATA_TOKEN_RECV_TIMEOUT) {
-			sd_cease_comms_helper(sd_handle, true);
+			sd_cease_comms(sd_handle, true);
 
 			return ERR_TIMEOUT;
 		}
 
 		if(token != 0xFE) {
 			// Error token
-			sd_cease_comms_helper(sd_handle, true);
+			sd_cease_comms(sd_handle, true);
 
 			return ERR_UNKNOWN;
 		}
@@ -709,13 +780,13 @@ ERR_te sd_read(SD_HANDLE_ts *sd_handle, uint8_t *read_buf, uint32_t start_sector
 	else {
 		err = sd_send_cmd(sd_handle->spi_instance, 18, start_sector, false, &cmd_response);
 		if(err != ERR_OK) {
-			sd_cease_comms_helper(sd_handle, true);
+			sd_cease_comms(sd_handle, true);
 
 			return err;
 		}
 		
 		if(cmd_response.r1 != 0x0) {
-			sd_cease_comms_helper(sd_handle, true);
+			sd_cease_comms(sd_handle, true);
 			return ERR_UNKNOWN;
 		}	
 
@@ -729,14 +800,14 @@ ERR_te sd_read(SD_HANDLE_ts *sd_handle, uint8_t *read_buf, uint32_t start_sector
 			} while(token == 0xFF && elapsed_time <= CONFIG_SD_DATA_TOKEN_RECV_TIMEOUT);
 			
 			if(elapsed_time > CONFIG_SD_DATA_TOKEN_RECV_TIMEOUT) {
-				sd_cease_comms_helper(sd_handle, true);
+				sd_cease_comms(sd_handle, true);
 
 				return ERR_TIMEOUT;
 			}
 
 			if(token != 0xFE) {
 				// Error token
-				sd_cease_comms_helper(sd_handle, true);
+				sd_cease_comms(sd_handle, true);
 
 				return ERR_UNKNOWN;
 			}
@@ -752,20 +823,20 @@ ERR_te sd_read(SD_HANDLE_ts *sd_handle, uint8_t *read_buf, uint32_t start_sector
 		do {
 			err = sd_send_cmd(sd_handle->spi_instance, 12, 0, false, &cmd_response);
 			if(err != ERR_OK) {
-				sd_cease_comms_helper(sd_handle, true);
+				sd_cease_comms(sd_handle, true);
 
 				return err;
 			}
 		}while(cmd_response.r1 != 0x0 && retry++ < CONFIG_SD_INVALID_RESP_RETRY_NUM);
 
 		if(cmd_response.r1 != 0x00) {
-			sd_cease_comms_helper(sd_handle, true);
+			sd_cease_comms(sd_handle, true);
 
 			return ERR_UNKNOWN;
 		}
 	}
 
-	sd_cease_comms_helper(sd_handle, false);
+	sd_cease_comms(sd_handle, false);
 
 	return ERR_OK;
 }
@@ -806,13 +877,13 @@ ERR_te sd_write(SD_HANDLE_ts *sd_handle, uint8_t *write_buf, uint32_t start_sect
 	if(num_sectors == 1) {
 		err = sd_send_cmd(sd_handle->spi_instance, 24, start_sector, false, &cmd_response);
 		if(err != ERR_OK) {
-			sd_cease_comms_helper(sd_handle, true);
+			sd_cease_comms(sd_handle, true);
 		
 			return err;
 		}
 		
 		if(cmd_response.r1 != 0x0) {
-			sd_cease_comms_helper(sd_handle, true);
+			sd_cease_comms(sd_handle, true);
 
 			return ERR_UNKNOWN;
 		}
@@ -838,14 +909,14 @@ ERR_te sd_write(SD_HANDLE_ts *sd_handle, uint8_t *write_buf, uint32_t start_sect
 		
 		} while(data_resp == 0xFF && elapsed_time <= CONFIG_SD_DATA_TOKEN_RECV_TIMEOUT);
 		if(elapsed_time > CONFIG_SD_DATA_TOKEN_RECV_TIMEOUT) {
-			sd_cease_comms_helper(sd_handle, true);
+			sd_cease_comms(sd_handle, true);
 
 			return ERR_TIMEOUT;
 		}
 
 		if((data_resp & 0b11111) != 0b00101) {
 			// Data not accepted
-			sd_cease_comms_helper(sd_handle, true);
+			sd_cease_comms(sd_handle, true);
 
 			return ERR_UNKNOWN;
 		}
@@ -859,7 +930,7 @@ ERR_te sd_write(SD_HANDLE_ts *sd_handle, uint8_t *write_buf, uint32_t start_sect
 		} while(busy == 0x00 && elapsed_time <= CONFIG_SD_BUSY_TIMOUT);
 
 		if(elapsed_time > CONFIG_SD_BUSY_TIMOUT) {
-			sd_cease_comms_helper(sd_handle, true);
+			sd_cease_comms(sd_handle, true);
 
 			return ERR_TIMEOUT;
 		}
@@ -867,13 +938,13 @@ ERR_te sd_write(SD_HANDLE_ts *sd_handle, uint8_t *write_buf, uint32_t start_sect
 	else {
 		err = sd_send_cmd(sd_handle->spi_instance, 25, start_sector, false, &cmd_response);
 		if(err != ERR_OK) {
-			sd_cease_comms_helper(sd_handle, true);
+			sd_cease_comms(sd_handle, true);
 		
 			return err;
 		}
 
 		if(cmd_response.r1 != 0x0) {
-			sd_cease_comms_helper(sd_handle, true);
+			sd_cease_comms(sd_handle, true);
 
 			return ERR_UNKNOWN;
 		}
@@ -900,14 +971,14 @@ ERR_te sd_write(SD_HANDLE_ts *sd_handle, uint8_t *write_buf, uint32_t start_sect
 			
 			} while(data_resp == 0xFF && elapsed_time <= CONFIG_SD_DATA_TOKEN_RECV_TIMEOUT);
 			if(elapsed_time > CONFIG_SD_DATA_TOKEN_RECV_TIMEOUT) {
-				sd_cease_comms_helper(sd_handle, true);
+				sd_cease_comms(sd_handle, true);
 
 				return ERR_TIMEOUT;
 			}
 
 			if((data_resp & 0b11111) != 0b00101) {
 				// Data not accepted
-				sd_cease_comms_helper(sd_handle, true);
+				sd_cease_comms(sd_handle, true);
 
 				return ERR_UNKNOWN;
 			}
@@ -921,7 +992,7 @@ ERR_te sd_write(SD_HANDLE_ts *sd_handle, uint8_t *write_buf, uint32_t start_sect
 			} while(busy == 0x00 && elapsed_time <= CONFIG_SD_BUSY_TIMOUT);
 
 			if(elapsed_time > CONFIG_SD_BUSY_TIMOUT) {
-				sd_cease_comms_helper(sd_handle, true);
+				sd_cease_comms(sd_handle, true);
 
 				return ERR_TIMEOUT;
 			}
@@ -941,13 +1012,13 @@ ERR_te sd_write(SD_HANDLE_ts *sd_handle, uint8_t *write_buf, uint32_t start_sect
 		} while(busy == 0x00 && elapsed_time <= CONFIG_SD_BUSY_TIMOUT);
 
 		if(elapsed_time > CONFIG_SD_BUSY_TIMOUT) {
-			sd_cease_comms_helper(sd_handle, true);
+			sd_cease_comms(sd_handle, true);
 
 			return ERR_TIMEOUT;
 		}
 	}
 
-	sd_cease_comms_helper(sd_handle, false);
+	sd_cease_comms(sd_handle, false);
 
 	return ERR_OK;
 }
@@ -1100,7 +1171,7 @@ static ERR_te sd_send_cmd(SPI_REGDEF_ts *spi_instance, uint8_t index, uint32_t a
  * @param[in] sd_handle The sd_handle to cease communication on.
  * @return ERR_te Error generated during execution.
  */
-static ERR_te sd_cease_comms_helper(SD_HANDLE_ts *sd_handle, bool deinit) {
+static ERR_te sd_cease_comms(SD_HANDLE_ts *sd_handle, bool deinit) {
 	gpio_write(sd_handle->cs_gpio_port, sd_handle->cs_gpio_pin, HIGH);
 	
 	uint8_t dummy[2] = { 0xFF, 0xFF };
@@ -1119,38 +1190,6 @@ static ERR_te sd_cease_comms_helper(SD_HANDLE_ts *sd_handle, bool deinit) {
 	return ERR_OK;
 }
 
-
-/**
- * @brief Handler routine for the info command. Shows information about objects commands.
- * 
- * @param[in] argc Argument count.
- * @param[in] argv Argument list.
- * @return ERR_te Error generated during execution.
- */
-static ERR_te sd_cmd_info_handler(uint32_t argc, char **argv) {
-	if(argc != 2) {
-		LOG_ERROR(
-			internal_state.subsys,
-			internal_state.log_level,
-			"sd_cmd_info_handler: invalid arguments"
-		);
-		return ERR_INVALID_ARGUMENT;		
-	}
-
-	for(uint32_t i = 0; i < CONFIG_SD_MAX_OBJECTS; i++) {
-		if(internal_state.sds[i].in_use == true) {
-			LOG_INFO(
-				internal_state.subsys, 
-				internal_state.log_level,
-				"name: %s", 
-				internal_state.sds[i].name
-			);
-		}
-	}
-
-	return ERR_OK;
-}
-
 /**
  * @brief A helper function for sd_init_handle. Sends a command to the sd card to go into idle state.
  * 		  Includes retry error handling.
@@ -1160,7 +1199,7 @@ static ERR_te sd_cmd_info_handler(uint32_t argc, char **argv) {
  *		   ERR_OK
  *		   ERR_UNSUCCESSFUL_ACTION
  */
-static ERR_te sd_go_idle_state_helper(SD_HANDLE_ts *sd_handle) {
+static ERR_te sd_go_idle_state(SD_HANDLE_ts *sd_handle) {
 	ERR_te err;
 	CMD_RESPONSE_ts cmd_response = { 0 };  
 
@@ -1172,7 +1211,7 @@ static ERR_te sd_go_idle_state_helper(SD_HANDLE_ts *sd_handle) {
 			LOG_ERROR(
 				internal_state.subsys,
 				internal_state.log_level, 
-				"sd_go_idle_state_helper: command execution failure, retry %d/%d in %d ms",
+				"sd_go_idle_state: command execution failure, retry %d/%d in %d ms",
 				retries, CONFIG_SD_CMD_SEND_ERROR_RETRY_NUM, CONFIG_SD_CMD_SEND_ERROR_RETRY_LATENCY
 			);
 			DELAY(CONFIG_SD_CMD_SEND_ERROR_RETRY_LATENCY);
@@ -1183,7 +1222,7 @@ static ERR_te sd_go_idle_state_helper(SD_HANDLE_ts *sd_handle) {
 		LOG_ERROR(
 			internal_state.subsys,
 			internal_state.log_level, 
-			"sd_go_idle_state_helper: command execution failure"
+			"sd_go_idle_state: command execution failure"
 		);
 
 		return ERR_UNSUCCESFUL_ACTION;
@@ -1203,7 +1242,7 @@ static ERR_te sd_go_idle_state_helper(SD_HANDLE_ts *sd_handle) {
  *         ERR_OK
  *         ERR_INITIALIZATION_FAILURE
  */
-static ERR_te sd_send_if_cond_helper(SD_HANDLE_ts *sd_handle, bool *match_o, bool *no_resp_o) {
+static ERR_te sd_send_if_cond(SD_HANDLE_ts *sd_handle, bool *match_o, bool *no_resp_o) {
 	ERR_te err;
 	CMD_RESPONSE_ts cmd_response = { 0 }; 
 	
@@ -1222,7 +1261,7 @@ static ERR_te sd_send_if_cond_helper(SD_HANDLE_ts *sd_handle, bool *match_o, boo
 			LOG_ERROR(
 				internal_state.subsys,
 				internal_state.log_level, 
-				"sd_send_if_cond_helper: initialization failure"
+				"sd_send_if_cond: initialization failure"
 			);
 
 			return ERR_INITIALIZATION_FAILURE;
@@ -1243,7 +1282,7 @@ static ERR_te sd_send_if_cond_helper(SD_HANDLE_ts *sd_handle, bool *match_o, boo
  *         ERR_TIMEOUT
  *         ERR_INITIALIZATION_FAILURE
  */
-static ERR_te sd_app_send_op_cond_helper(SD_HANDLE_ts *sd_handle, uint32_t arg) {
+static ERR_te sd_app_send_op_cond(SD_HANDLE_ts *sd_handle, uint32_t arg) {
 	ERR_te err;
 	CMD_RESPONSE_ts cmd_response = { 0 }; 	
 	uint32_t retries = 0;
@@ -1255,7 +1294,7 @@ static ERR_te sd_app_send_op_cond_helper(SD_HANDLE_ts *sd_handle, uint32_t arg) 
 			LOG_ERROR(
 				internal_state.subsys,
 				internal_state.log_level, 
-				"sd_app_send_op_cond_helper: R1 response timeout"
+				"sd_app_send_op_cond: R1 response timeout"
 			);
 
 			return ERR_TIMEOUT;
@@ -1266,7 +1305,7 @@ static ERR_te sd_app_send_op_cond_helper(SD_HANDLE_ts *sd_handle, uint32_t arg) 
 		LOG_ERROR(
 			internal_state.subsys,
 			internal_state.log_level, 
-			"sd_app_send_op_cond_helper: initialization failure"
+			"sd_app_send_op_cond: initialization failure"
 		);
 
 		return ERR_INITIALIZATION_FAILURE;
@@ -1283,7 +1322,7 @@ static ERR_te sd_app_send_op_cond_helper(SD_HANDLE_ts *sd_handle, uint32_t arg) 
  *         ERR_OK
  *         ERR_UNSUCCESSFUL_ACTION
  */
-static ERR_te sd_read_ocr_helper(SD_HANDLE_ts *sd_handle) {
+static ERR_te sd_read_ocr(SD_HANDLE_ts *sd_handle) {
 	ERR_te err;
 	CMD_RESPONSE_ts cmd_response = { 0 }; 
 	
@@ -1292,7 +1331,7 @@ static ERR_te sd_read_ocr_helper(SD_HANDLE_ts *sd_handle) {
 		LOG_ERROR(
 			internal_state.subsys,
 			internal_state.log_level, 
-			"sd_read_ocr_helper: failed to read ocr"
+			"sd_read_ocr: failed to read ocr"
 		);		
 
 		return ERR_UNSUCCESFUL_ACTION;
@@ -1345,7 +1384,7 @@ static ERR_te sd_read_ocr_helper(SD_HANDLE_ts *sd_handle) {
  * 		   ERR_TIMEOUT
  * 		   ERR_INITIALIZATION_FAILURE 
  */
-static ERR_te sd_send_op_cond_helper(SD_HANDLE_ts *sd_handle) {
+static ERR_te sd_send_op_cond(SD_HANDLE_ts *sd_handle) {
 	ERR_te err;
 	CMD_RESPONSE_ts cmd_response = { 0 }; 	
 	uint32_t retries = 0;
@@ -1357,7 +1396,7 @@ static ERR_te sd_send_op_cond_helper(SD_HANDLE_ts *sd_handle) {
 			LOG_ERROR(
 				internal_state.subsys,
 				internal_state.log_level, 
-				"sd_send_op_cond_helper: R1 response timeout"
+				"sd_send_op_cond: R1 response timeout"
 			);
 
 			return ERR_TIMEOUT;
@@ -1368,7 +1407,7 @@ static ERR_te sd_send_op_cond_helper(SD_HANDLE_ts *sd_handle) {
 		LOG_ERROR(
 			internal_state.subsys,
 			internal_state.log_level, 
-			"sd_send_op_cond_helper: initialization failure"
+			"sd_send_op_cond: initialization failure"
 		);
 
 		return ERR_INITIALIZATION_FAILURE;
@@ -1385,7 +1424,7 @@ static ERR_te sd_send_op_cond_helper(SD_HANDLE_ts *sd_handle) {
  *         ERR_OK
  *         ERR_UNSUCCESFUL_ACTION
  */
-static ERR_te sd_set_blocklen_helper(SD_HANDLE_ts *sd_handle) {
+static ERR_te sd_set_blocklen(SD_HANDLE_ts *sd_handle) {
 	ERR_te err;
 	CMD_RESPONSE_ts cmd_response = { 0 };
 
@@ -1394,7 +1433,7 @@ static ERR_te sd_set_blocklen_helper(SD_HANDLE_ts *sd_handle) {
 		LOG_ERROR(
 			internal_state.subsys,
 			internal_state.log_level, 
-			"sd_set_blocklen_helper: failed to set block length"
+			"sd_set_blocklen: failed to set block length"
 		);
 
 		return ERR_UNSUCCESFUL_ACTION;
@@ -1406,3 +1445,252 @@ static ERR_te sd_set_blocklen_helper(SD_HANDLE_ts *sd_handle) {
 
 	return ERR_OK;
 }
+
+/**
+ * @brief Reads the CSD register and saves information to the handle.
+ * 
+ * @param[in] sd_handle The handle to read CSD information of.
+ * @return ERR_te Error generated during execution.
+ *		   ERR_OK
+ *		   ERR_UNSUCCESFUL_ACTION
+ */
+static ERR_te sd_read_csd(SD_HANDLE_ts *sd_handle) {
+    ERR_te err;
+    CMD_RESPONSE_ts cmd_response = { 0 };
+    uint8_t csd_raw[16];
+	SD_CSD_INFO_ts csd_info = { 0 } ;
+    
+    // Send CMD9 to read CSD register
+    err = sd_send_cmd(sd_handle->spi_instance, 9, 0, false, &cmd_response);
+    if (err != ERR_OK || cmd_response.r1 != 0x00) {
+        LOG_ERROR(internal_state.subsys, internal_state.log_level, 
+                  "sd_read_csd: failed to send CMD9");
+        return ERR_UNSUCCESFUL_ACTION;
+    }
+    
+    // Wait for data token (0xFE)
+    uint8_t token = 0;
+    uint32_t start_time = systick_get_ms();
+    uint32_t elapsed_time = 0;
+    
+    do {
+        spi_receive(sd_handle->spi_instance, &token, 1);
+        elapsed_time = systick_get_ms() - start_time;
+    } while (token != 0xFE && elapsed_time <= CONFIG_SD_DATA_TOKEN_RECV_TIMEOUT);
+    
+    if (elapsed_time > CONFIG_SD_DATA_TOKEN_RECV_TIMEOUT || token != 0xFE) {
+        LOG_ERROR(internal_state.subsys, internal_state.log_level, 
+                  "sd_read_csd: timeout waiting for data token");
+        return ERR_UNSUCCESFUL_ACTION;
+    }
+    
+    // Read CSD register (16 bytes)
+    memset(csd_raw, 0, sizeof(csd_raw));
+    spi_receive(sd_handle->spi_instance, csd_raw, 16);
+    
+    // Read and ignore CRC (2 bytes)
+    uint8_t crc[2];
+    spi_receive(sd_handle->spi_instance, crc, 2);
+    
+    // Clear the info structure
+    memset(&csd_info, 0, sizeof(SD_CSD_INFO_ts));
+    
+    // Check CSD structure version
+    uint8_t csd_structure = extract_bits(csd_raw, 126, 2);
+    
+    switch (csd_structure) {
+        case 0:
+            // CSD version 1.0 (Standard capacity SDSC)
+            decode_csd_v1(csd_raw, &csd_info);
+            break;
+        case 1:
+            // CSD version 2.0 (High capacity SDHC/SDXC)
+            decode_csd_v2(csd_raw, &csd_info);
+            break;
+		case 3:
+			// SDHC, newer version not implemented
+			break;
+    }
+
+	sd_handle->capacity_mb = csd_info.capacity_mb;
+	sd_handle->block_count = csd_info.block_count;
+	sd_handle->block_len = csd_info.block_len;
+    
+    return ERR_OK;
+}
+
+/**
+ * @brief Decodes the CSD register with version 1.0.
+ * 
+ * @param[in] csd_raw The raw CSD data structure. 
+ * @param[out] csd_info_o Pointer to the data structure that will contain the decoded information.
+ * @return ERR_te Error generated during execution.
+ *		   ERR_OK
+ */
+static ERR_te decode_csd_v1(const uint8_t *csd_raw, SD_CSD_INFO_ts *csd_info_o) {
+    csd_info_o->csd_structure = extract_bits(csd_raw, 126, 2);
+    csd_info_o->taac = extract_bits(csd_raw, 112, 8);
+    csd_info_o->nsac = extract_bits(csd_raw, 104, 8);
+    csd_info_o->tran_speed = extract_bits(csd_raw, 96, 8);
+    csd_info_o->ccc = extract_bits(csd_raw, 84, 12);
+    csd_info_o->v1.read_bl_len = extract_bits(csd_raw, 80, 4);
+    csd_info_o->read_bl_partial = extract_bits(csd_raw, 79, 1);
+    csd_info_o->write_blk_misalign = extract_bits(csd_raw, 78, 1);
+    csd_info_o->read_blk_misalign = extract_bits(csd_raw, 77, 1);
+    csd_info_o->dsr_imp = extract_bits(csd_raw, 76, 1);
+    csd_info_o->v1.c_size = extract_bits(csd_raw, 62, 12);
+    csd_info_o->v1.c_size_mult = extract_bits(csd_raw, 47, 3);
+    csd_info_o->erase_blk_en = extract_bits(csd_raw, 46, 1);
+    csd_info_o->sector_size = extract_bits(csd_raw, 39, 7);
+    csd_info_o->wp_grp_size = extract_bits(csd_raw, 32, 7);
+    csd_info_o->wp_grp_enable = extract_bits(csd_raw, 31, 1);
+    csd_info_o->r2w_factor = extract_bits(csd_raw, 26, 3);
+    csd_info_o->write_bl_len = extract_bits(csd_raw, 22, 4);
+    csd_info_o->write_bl_partial = extract_bits(csd_raw, 21, 1);
+    csd_info_o->file_format_grp = extract_bits(csd_raw, 15, 1);
+    csd_info_o->copy = extract_bits(csd_raw, 14, 1);
+    csd_info_o->perm_write_protect = extract_bits(csd_raw, 13, 1);
+    csd_info_o->tmp_write_protect = extract_bits(csd_raw, 12, 1);
+    csd_info_o->file_format = extract_bits(csd_raw, 10, 2);
+    csd_info_o->wp_upc = extract_bits(csd_raw, 9, 1);
+    csd_info_o->crc = extract_bits(csd_raw, 1, 7);
+    
+    csd_info_o->block_len = 1 << csd_info_o->v1.read_bl_len;
+    uint32_t mult = 1 << (csd_info_o->v1.c_size_mult + 2);
+    csd_info_o->block_count = (csd_info_o->v1.c_size + 1) * mult;
+    csd_info_o->capacity_bytes = csd_info_o->block_count * csd_info_o->block_len;
+    csd_info_o->capacity_mb = csd_info_o->capacity_bytes / (1024 * 1024);
+
+	return ERR_OK;
+}
+
+/**
+ * @brief Decodes the CSD register with version 2.0.
+ * 
+ * @param[in] csd_raw The raw CSD data structure. 
+ * @param[out] csd_info_o Pointer to the data structure that will contain the decoded information.
+ * @return ERR_te Error generated during execution.
+ *		   ERR_OK
+ */
+static ERR_te decode_csd_v2(const uint8_t *csd_raw, SD_CSD_INFO_ts *csd_info_o) {
+    csd_info_o->csd_structure = extract_bits(csd_raw, 126, 2);
+    csd_info_o->taac = extract_bits(csd_raw, 112, 8);
+    csd_info_o->nsac = extract_bits(csd_raw, 104, 8);
+    csd_info_o->tran_speed = extract_bits(csd_raw, 96, 8);
+    csd_info_o->ccc = extract_bits(csd_raw, 84, 12);
+    csd_info_o->v1.read_bl_len = extract_bits(csd_raw, 80, 4); 
+    csd_info_o->read_bl_partial = extract_bits(csd_raw, 79, 1);
+    csd_info_o->write_blk_misalign = extract_bits(csd_raw, 78, 1);
+    csd_info_o->read_blk_misalign = extract_bits(csd_raw, 77, 1);
+    csd_info_o->dsr_imp = extract_bits(csd_raw, 76, 1);
+    csd_info_o->v2.c_size = extract_bits(csd_raw, 48, 22);
+    csd_info_o->erase_blk_en = extract_bits(csd_raw, 46, 1);
+    csd_info_o->sector_size = extract_bits(csd_raw, 39, 7);
+    csd_info_o->wp_grp_size = extract_bits(csd_raw, 32, 7);
+    csd_info_o->wp_grp_enable = extract_bits(csd_raw, 31, 1);
+    csd_info_o->r2w_factor = extract_bits(csd_raw, 26, 3);
+    csd_info_o->write_bl_len = extract_bits(csd_raw, 22, 4);
+    csd_info_o->write_bl_partial = extract_bits(csd_raw, 21, 1);
+    csd_info_o->file_format_grp = extract_bits(csd_raw, 15, 1);
+    csd_info_o->copy = extract_bits(csd_raw, 14, 1);
+    csd_info_o->perm_write_protect = extract_bits(csd_raw, 13, 1);
+    csd_info_o->tmp_write_protect = extract_bits(csd_raw, 12, 1);
+    csd_info_o->file_format = extract_bits(csd_raw, 10, 2);
+    csd_info_o->wp_upc = extract_bits(csd_raw, 9, 1);
+    csd_info_o->crc = extract_bits(csd_raw, 1, 7);
+    
+    csd_info_o->block_len = 512;  
+    csd_info_o->capacity_bytes = (csd_info_o->v2.c_size + 1) * 512 * 1024;
+    csd_info_o->capacity_mb = csd_info_o->capacity_bytes / (1024 * 1024);
+    csd_info_o->block_count = csd_info_o->capacity_bytes / 512;
+
+	return ERR_OK;
+}
+
+/**
+ * @brief Handler routine for the info command. Shows information about objects commands.
+ * 
+ * @param[in] argc Argument count.
+ * @param[in] argv Argument list.
+ * @return ERR_te Error generated during execution.
+ */
+static ERR_te sd_cmd_list_handler(uint32_t argc, char **argv) {
+	if(argc != 2) {
+		LOG_ERROR(
+			internal_state.subsys,
+			internal_state.log_level,
+			"sd_cmd_list_handler: invalid arguments"
+		);
+		return ERR_INVALID_ARGUMENT;		
+	}
+
+	for(uint32_t i = 0; i < CONFIG_SD_MAX_OBJECTS; i++) {
+		if(internal_state.sds[i].in_use == true) {
+			LOG_INFO(
+				internal_state.subsys, 
+				internal_state.log_level,
+				"%s", 
+				internal_state.sds[i].name
+			);
+		}
+	}
+
+	return ERR_OK;
+}
+
+static ERR_te sd_cmd_info_handler(uint32_t argc, char **argv) {
+	if(argc != 3) {
+		LOG_ERROR(
+			internal_state.subsys,
+			internal_state.log_level,
+			"sd_cmd_info_handler: invalid arguments"
+		);
+		return ERR_INVALID_ARGUMENT;		
+	}
+
+	for(uint32_t i = 0; i < CONFIG_SD_MAX_OBJECTS; i++) {
+		if(str_cmp(internal_state.sds[i].name, argv[2]) == true) {
+			char type_str[10];
+
+			switch(internal_state.sds[i].type) {
+				case SD_TYPE_HC:
+					str_cpy(type_str, "SDHC", get_str_len("SDHC") + 1);
+					break;
+				case SD_TYPE_SC_V2:
+					str_cpy(type_str, "SDSCV2", get_str_len("SDSCV2") + 1);
+					break;
+				case SD_TYPE_SC_V1:
+					str_cpy(type_str, "SDSCV1", get_str_len("SDSCV1") + 1);
+					break;
+				case SD_TYPE_MMC:
+					str_cpy(type_str, "MMC", get_str_len("MMC") + 1);
+					break;
+			}
+
+			LOG_INFO(
+				internal_state.subsys, 
+				internal_state.log_level,
+				"type: %s, capacity: %d mb, block size: %d byte, block count: %d", 
+				type_str,
+				internal_state.sds[i].capacity_mb,
+				internal_state.sds[i].block_len,
+				internal_state.sds[i].block_count
+			);
+
+			break;
+		}
+
+		if(i == CONFIG_SD_MAX_OBJECTS - 1) {
+			LOG_ERROR(
+				internal_state.subsys, 
+				internal_state.log_level, 
+				"sd_cmd_info_handler: no such handle"
+			);
+
+			return ERR_INVALID_ARGUMENT;
+		}
+	}
+
+	return ERR_OK;
+}
+

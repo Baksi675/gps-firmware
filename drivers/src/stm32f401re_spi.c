@@ -9,6 +9,7 @@
  */
 
 #include "stm32f401re_spi.h"
+#include "stm32f401re.h"
 #include "stm32f401re_rcc.h"
 
 static void spi_set_pclk(SPI_REGDEF_ts const *instance, EN_STATUS_te en_status);
@@ -165,6 +166,11 @@ void spi_receive(SPI_REGDEF_ts *instance, uint8_t *rx_buffer, uint32_t len) {
 			rx_buffer += 2;
 		}
 	}
+}
+
+void spi_set_pclk_div(SPI_REGDEF_ts *spi_instance, SPI_MASTER_SCLK_SPEED_te pclk_div) {
+	spi_instance->SPI_CR1 &= ~(0x7 << SPI_CR1_BR);
+	spi_instance->SPI_CR1 |= (pclk_div << SPI_CR1_BR);
 }
 
 /**

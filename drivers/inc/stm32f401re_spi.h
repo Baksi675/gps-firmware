@@ -71,6 +71,7 @@ void spi_init(SPI_HANDLE_ts *spi_handle);
 void spi_deinit(SPI_REGDEF_ts const *spi_instance);
 void spi_send(SPI_REGDEF_ts *spi_instance, uint8_t *tx_buffer, uint32_t len);
 void spi_receive(SPI_REGDEF_ts *spi_instance, uint8_t *rx_buffer, uint32_t len);
+void spi_set_pclk_div(SPI_REGDEF_ts *spi_instance, SPI_MASTER_SCLK_SPEED_te pclk_div);
 void spi_set_comm(SPI_REGDEF_ts *spi_instance, EN_STATUS_te en_status);
 
 #endif

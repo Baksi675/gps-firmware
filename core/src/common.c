@@ -455,5 +455,35 @@ bool is_pow(uint32_t num) {
     return num && !(num & (num - 1));
 }
 
+/**
+ * @brief Extracts a bit range from a given data structure.
+ * 
+ * @param[in] data Pointer to the data structure. 
+ * @param[in] start_bit Starting bit position.
+ * @param[in] num_bits Number of bits to extract from starting bit position. 
+ * @return uint32_t The extracted bits.
+ */
+uint32_t extract_bits(const uint8_t *data, uint16_t start_bit, uint8_t num_bits) {
+    uint32_t result = 0;
+    uint16_t byte_index = start_bit / 8;
+    uint8_t bit_offset = start_bit % 8;
+    
+    for (int i = 0; i < num_bits; i++) {
+        // SD card registers are big-endian, bit 127 is MSB of first byte
+        if (data[byte_index] & (1 << (7 - bit_offset))) {
+            result |= (1 << (num_bits - 1 - i));
+        }
+        
+        bit_offset++;
+        if (bit_offset >= 8) {
+            bit_offset = 0;
+            byte_index++;
+        }
+    }
+    
+    return result;
+}
+
+
 
 /** @} */
