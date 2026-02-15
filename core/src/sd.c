@@ -65,6 +65,87 @@ typedef enum {
 }OCR_te;
 
 /**
+ * @brief Describes the minimum allowed operating voltage of the SD card. (OCR content)
+ * 
+ */
+typedef enum {
+	SD_MIN_OPERATING_VOLTAGE_3_5V,
+	SD_MIN_OPERATING_VOLTAGE_3_4V,
+	SD_MIN_OPERATING_VOLTAGE_3_3V,
+	SD_MIN_OPERATING_VOLTAGE_3_2V,
+	SD_MIN_OPERATING_VOLTAGE_3_1V,
+	SD_MIN_OPERATING_VOLTAGE_3_0V,
+	SD_MIN_OPERATING_VOLTAGE_2_9V,
+	SD_MIN_OPERATING_VOLTAGE_2_8V,
+	SD_MIN_OPERATING_VOLTAGE_2_7V,
+	SD_MIN_OPERATING_VOLTAGE_2_6V,
+	SD_MIN_OPERATING_VOLTAGE_2_5V,
+	SD_MIN_OPERATING_VOLTAGE_2_4V,
+	SD_MIN_OPERATING_VOLTAGE_2_3V,
+	SD_MIN_OPERATING_VOLTAGE_2_2V,
+	SD_MIN_OPERATING_VOLTAGE_2_1V,
+	SD_MIN_OPERATING_VOLTAGE_2_0V,
+	SD_MIN_OPERATING_VOLTAGE_1_9V,
+	SD_MIN_OPERATING_VOLTAGE_1_8V,
+	SD_MIN_OPERATING_VOLTAGE_1_7V,
+	SD_MIN_OPERATING_VOLTAGE_1_6V	
+}SD_MIN_OPERATING_VOLTAGE_te;
+
+/**
+ * @brief Descries the maximum allowed operating voltage of the SD card. (OCR content)
+ * 
+ */
+typedef enum {
+	SD_MAX_OPERATING_VOLTAGE_3_6V,
+	SD_MAX_OPERATING_VOLTAGE_3_5V,
+	SD_MAX_OPERATING_VOLTAGE_3_4V,
+	SD_MAX_OPERATING_VOLTAGE_3_3V,
+	SD_MAX_OPERATING_VOLTAGE_3_2V,
+	SD_MAX_OPERATING_VOLTAGE_3_1V,
+	SD_MAX_OPERATING_VOLTAGE_3_0V,
+	SD_MAX_OPERATING_VOLTAGE_2_9V,
+	SD_MAX_OPERATING_VOLTAGE_2_8V,
+	SD_MAX_OPERATING_VOLTAGE_2_7V,
+	SD_MAX_OPERATING_VOLTAGE_2_6V,
+	SD_MAX_OPERATING_VOLTAGE_2_5V,
+	SD_MAX_OPERATING_VOLTAGE_2_4V,
+	SD_MAX_OPERATING_VOLTAGE_2_3V,
+	SD_MAX_OPERATING_VOLTAGE_2_2V,
+	SD_MAX_OPERATING_VOLTAGE_2_1V,
+	SD_MAX_OPERATING_VOLTAGE_2_0V,
+	SD_MAX_OPERATING_VOLTAGE_1_9V,
+	SD_MAX_OPERATING_VOLTAGE_1_8V,
+	SD_MAX_OPERATING_VOLTAGE_1_7V	
+}SD_MAX_OPERATIING_VOLTAGE_te;
+
+/**
+ * @brief Describes the addressing mode of the SD card.
+ * 
+ */
+typedef enum {
+	SD_ADDR_MODE_BYTE,
+	SD_ADDR_MODE_BLOCK
+}SD_ADDR_MODE_te;
+
+/**
+ * @brief Describes whether the SD card completed the power-up sequence. (OCR content)
+ * 
+ */
+typedef enum {
+	SD_PWRUP_STATUS_BUSY,
+	SD_PWRUP_STATUS_READY
+}SD_PWRUP_STATUS_te;
+
+/**
+ * @brief Describes the type of the SD card. (OCR content)
+ * 
+ */
+typedef enum {
+	SDSC,
+	SDHC
+}SD_TYPE_te;
+
+/**
  * @brief Structure containing information retrieved from CSD register.
  * 
  */
@@ -111,11 +192,6 @@ typedef struct {
     uint8_t wp_upc;
     uint8_t crc;
 } SD_CSD_INFO_ts;
-
-typedef enum {
-	SD_ADDR_MODE_BYTE,
-	SD_ADDR_MODE_BLOCK
-}SD_ADDR_MODE_te;
 
 struct sd_handle_s {
 	char name[CONFIG_SD_MAX_NAME_LEN];
