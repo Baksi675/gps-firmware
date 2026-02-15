@@ -19,4 +19,5 @@ const char *modules_names[] = {
 	[MODULES_BUTTON] = "button",
 	[MODULES_MENU] = "menu",
 	[MODULES_SD] = "sd",
+	[MODULES_DATALOG] = "datalog"
 };

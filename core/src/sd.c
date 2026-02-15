@@ -262,7 +262,7 @@ CMD_CLIENT_INFO_ts sd_cmd_client_info = {
 };
 
 /**
- * @brief Deinitializes the SD subsystem internal state to zeroes.
+ * @brief Initializes the subsystem internal state to a clean state and registers the subsystem commands.
  * 
  * @return ERR_te The error generated during execution.
  */
@@ -1725,7 +1725,7 @@ static ERR_te decode_csd_v2(const uint8_t *csd_raw, SD_CSD_INFO_ts *csd_info_o) 
 }
 
 /**
- * @brief Handler routine for the info command. Shows information about objects commands.
+ * @brief Handler routine for the list command. Shows information about objects commands.
  * 
  * @param[in] argc Argument count.
  * @param[in] argv Argument list.

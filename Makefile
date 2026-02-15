@@ -32,6 +32,7 @@ build/output.elf: build/startup_stm32f401re.o \
 					build/ff.o \
 					build/diskio.o \
 					build/syscalls.o \
+					build/datalog.o \
 					| build
 	$(CC) $(LDFLAGS) $^ -o $@
 
@@ -108,6 +109,9 @@ build/diskio.o: core/src/diskio.c | build
 	$(CC) $(CFLAGS) $< -o $@
 
 build/syscalls.o: core/src/syscalls.c | build
+	$(CC) $(CFLAGS) $< -o $@
+
+build/datalog.o: core/src/datalog.c | build
 	$(CC) $(CFLAGS) $< -o $@
 
 ### PHONY ###

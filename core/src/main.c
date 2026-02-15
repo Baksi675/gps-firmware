@@ -13,7 +13,7 @@
 #include "log.h"
 #include "console.h"
 #include "ssd1309.h"
-
+#include "datalog.h"
 
 SSD1309_HANDLE_ts *ssd1309_handle;
 BUTTON_HANDLE_ts *lbtn;
@@ -27,7 +27,7 @@ MENU_HANDLE_ts *movement_menu;
 MENU_HANDLE_ts *accuracy_menu;
 MENU_HANDLE_ts *satellites_menu;
 GTU7_HANDLE_ts *gtu7_handle;
-//SD_HANDLE_ts *sd_handle;
+DATALOG_HANDLE_ts *datalog_handle;
 
 static void init_all(void);
 static void run_all(void);
@@ -36,7 +36,6 @@ static ERR_te acquire_datetime(uint8_t index, char **value_o);
 static ERR_te acquire_movement(uint8_t index, char **value_o);
 static ERR_te acquire_accuracy(uint8_t index, char **value_o);
 static ERR_te acquire_satellites(uint8_t index, char **value_o);
-static void fatfs_test(void);
 
 bool lbtn_pushed = false;
 bool mbtn_pushed = false;
@@ -55,7 +54,6 @@ uint32_t refreshed_ms;
 int main(void) {
 
 	init_all();
-	fatfs_test();
 
 	while(1) {
 		run_all();
@@ -149,6 +147,18 @@ void init2(void) {
 	button_init_handle(&mbtn_cfg, &mbtn);
 	button_init_handle(&rbtn_cfg, &rbtn);
 	button_start_subsys();
+
+	GTU7_CONFIG_ts gtu7_config = { 0 };
+	gtu7_config.usart_instance = USART6;
+	gtu7_config.usart_baud_rate = 9600;
+	gtu7_config.rx_gpio_port = GPIOA;
+	gtu7_config.rx_gpio_pin = GPIO_PIN_12;
+	gtu7_config.tx_gpio_port = GPIOA;
+	gtu7_config.tx_gpio_pin = GPIO_PIN_11;
+	gtu7_config.gpio_alternate_function = GPIO_ALTERNATE_FUNCTION_AF8;
+	gtu7_init_subsys();
+	gtu7_init_handle(&gtu7_config, &gtu7_handle);
+	gtu7_start_subsys();
 }
 
 	
@@ -221,59 +231,20 @@ static void init_all(void) {
 
 	current_menu = main_menu;
 
-	GTU7_CONFIG_ts gtu7_config = { 0 };
-	gtu7_config.usart_instance = USART6;
-	gtu7_config.usart_baud_rate = 9600;
-	gtu7_config.rx_gpio_port = GPIOA;
-	gtu7_config.rx_gpio_pin = GPIO_PIN_12;
-	gtu7_config.tx_gpio_port = GPIOA;
-	gtu7_config.tx_gpio_pin = GPIO_PIN_11;
-	gtu7_config.gpio_alternate_function = GPIO_ALTERNATE_FUNCTION_AF8;
-	gtu7_init_subsys();
-	gtu7_init_handle(&gtu7_config, &gtu7_handle);
-	gtu7_start_subsys();
-
-	/*
-	SD_CONFIG_ts sd_config = { 0 };
-	str_cpy(sd_config.name, "sdcard", get_str_len("sdcard") + 1);
-	sd_config.spi_instance = SPI1;
-	sd_config.sclk_gpio_port = GPIOA;
-	sd_config.sclk_gpio_pin = GPIO_PIN_5;
-	sd_config.miso_gpio_port = GPIOA;
-	sd_config.miso_gpio_pin = GPIO_PIN_6;
-	sd_config.mosi_gpio_port = GPIOA;
-	sd_config.mosi_gpio_pin = GPIO_PIN_7;
-	sd_config.cs_gpio_port = GPIOB;
-	sd_config.cs_gpio_pin = GPIO_PIN_6;
-	sd_config.gpio_alternate_function = GPIO_ALTERNATE_FUNCTION_AF5;
-	
-	ERR_te err;
-	err=sd_init_subsys();
-	err=sd_init_handle(&sd_config, &sd_handle);
-	err=sd_start_subsys();*/
-
-	/*uint8_t data[512];
-
-	memset(data, 0x08, 512);
-
-	err = sd_write(sd_handle, data, 0, 1);
-	if(err != ERR_OK) {
-		uint8_t asd = 0;
-	}
-
-	memset(data, 0x00, 512);
-
-	sd_read(sd_handle, data, 0, 1);
-	if(err != ERR_OK) {	
-		uint8_t asd = 0;
-	}*/
-	
+	/*DATALOG_CONFIG_ts datalog_config = { 0 };
+	str_cpy(datalog_config.name, "datalog", get_str_len("datalog"));
+	datalog_config.datalog_time = DATALOG_TIME_10S;
+	datalog_init_subsys();
+	datalog_init_handle(&datalog_config, &datalog_handle);
+	datalog_start_subsys();*/
 }
 
 static void run_all(void) {
 	gtu7_run();
 
 	console_run();
+
+	//datalog_run_handle(datalog_handle);
 
 	button_run_handle_all();
 
@@ -469,51 +440,4 @@ static ERR_te acquire_satellites(uint8_t index, char **value_o) {
 	}
 
 	return ERR_OK;
-}
-
-
-#include "ff.h"
-
-static FATFS fs;      // File system object
-static FIL fil;       // File object
-FRESULT fr;
-UINT bw, br;
-
-void fatfs_test(void)
-{
-    // 1. Mount filesystem
-    fr = f_mount(&fs, "0:", 1);   
-
-    if (fr != FR_OK) {
-        return;
-    }
-
-    // 2. Create / open file
-    fr = f_open(&fil, "0:test.txt", FA_CREATE_ALWAYS | FA_WRITE);
-    if (fr != FR_OK) {
-        return;
-    }
-
-    // 3. Write to file
-    fr = f_write(&fil, "Hello FatFs!\r\n", 15, &bw);
-    if (fr != FR_OK || bw != 15) {
-    }
-
-    f_close(&fil);
-
-    // 4. Reopen for reading
-    fr = f_open(&fil, "0:test.txt", FA_READ);
-    if (fr != FR_OK) {
-        return;
-    }
-
-    char buffer[32] = {0};
-    fr = f_read(&fil, buffer, sizeof(buffer), &br);
-
-    if (fr == FR_OK) {
-
-    }
-
-    f_close(&fil);
-
 }

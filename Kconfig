@@ -137,6 +137,18 @@ menu "SW Modules"
 
 	endmenu
 
+	menu "GPS Data Logger"
+		config DATALOG_MAX_OBJECTS
+			int "Max number of datalog objects"
+			range 1 5
+			default 1
+
+		config DATALOG_MAX_NAME_LEN
+			int "Max datalog name length"
+			range 1 20
+			default 1 
+	endmenu
+
 	menu "Serial Console"
 		config CONSOLE_USART_CBUF_SIZE
 			int "Size of the USART data receive circular buffer (must be 2^n)"
