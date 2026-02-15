@@ -8,7 +8,6 @@
 #include "err.h"
 #include "gtu7.h"
 #include "menu.h"
-#include "sd.h"
 #include "stm32f401re_gpio.h"
 #include "stm32f401re_rtc.h"
 #include "log.h"
@@ -28,7 +27,7 @@ MENU_HANDLE_ts *movement_menu;
 MENU_HANDLE_ts *accuracy_menu;
 MENU_HANDLE_ts *satellites_menu;
 GTU7_HANDLE_ts *gtu7_handle;
-SD_HANDLE_ts *sd_handle;
+//SD_HANDLE_ts *sd_handle;
 
 static void init_all(void);
 static void run_all(void);
@@ -37,6 +36,7 @@ static ERR_te acquire_datetime(uint8_t index, char **value_o);
 static ERR_te acquire_movement(uint8_t index, char **value_o);
 static ERR_te acquire_accuracy(uint8_t index, char **value_o);
 static ERR_te acquire_satellites(uint8_t index, char **value_o);
+static void fatfs_test(void);
 
 bool lbtn_pushed = false;
 bool mbtn_pushed = false;
@@ -55,6 +55,7 @@ uint32_t refreshed_ms;
 int main(void) {
 
 	init_all();
+	fatfs_test();
 
 	while(1) {
 		run_all();
@@ -63,7 +64,8 @@ int main(void) {
 	return 0;
 }
 
-static void init_all(void) {
+// Needed because of possible stack overflow
+void init2(void) {
 	rtc_init();
 
 	CALENDAR_ts rtc_calendar;
@@ -147,6 +149,11 @@ static void init_all(void) {
 	button_init_handle(&mbtn_cfg, &mbtn);
 	button_init_handle(&rbtn_cfg, &rbtn);
 	button_start_subsys();
+}
+
+	
+static void init_all(void) {
+	init2();
 
 	MENU_CFG_ts main_menu_cfg = { 0 };
 	txt_cpy(main_menu_cfg.name, "main", get_str_len("main"));
@@ -226,6 +233,7 @@ static void init_all(void) {
 	gtu7_init_handle(&gtu7_config, &gtu7_handle);
 	gtu7_start_subsys();
 
+	/*
 	SD_CONFIG_ts sd_config = { 0 };
 	str_cpy(sd_config.name, "sdcard", get_str_len("sdcard") + 1);
 	sd_config.spi_instance = SPI1;
@@ -238,26 +246,28 @@ static void init_all(void) {
 	sd_config.cs_gpio_port = GPIOB;
 	sd_config.cs_gpio_pin = GPIO_PIN_6;
 	sd_config.gpio_alternate_function = GPIO_ALTERNATE_FUNCTION_AF5;
-	sd_init_subsys();
-	sd_init_handle(&sd_config, &sd_handle);
-	sd_start_subsys();
+	
+	ERR_te err;
+	err=sd_init_subsys();
+	err=sd_init_handle(&sd_config, &sd_handle);
+	err=sd_start_subsys();*/
 
-/*	uint8_t data[1024];
+	/*uint8_t data[512];
 
-	memset(data, 0x05, 1024);
+	memset(data, 0x08, 512);
 
-	ERR_te err = sd_write(sd_handle, data, 0, 2);
+	err = sd_write(sd_handle, data, 0, 1);
 	if(err != ERR_OK) {
 		uint8_t asd = 0;
 	}
 
+	memset(data, 0x00, 512);
 
-	uint8_t datar[1024];
-	
-	err = sd_read(sd_handle, datar, 0, 2);
+	sd_read(sd_handle, data, 0, 1);
 	if(err != ERR_OK) {	
 		uint8_t asd = 0;
 	}*/
+	
 }
 
 static void run_all(void) {
@@ -459,4 +469,51 @@ static ERR_te acquire_satellites(uint8_t index, char **value_o) {
 	}
 
 	return ERR_OK;
+}
+
+
+#include "ff.h"
+
+static FATFS fs;      // File system object
+static FIL fil;       // File object
+FRESULT fr;
+UINT bw, br;
+
+void fatfs_test(void)
+{
+    // 1. Mount filesystem
+    fr = f_mount(&fs, "0:", 1);   
+
+    if (fr != FR_OK) {
+        return;
+    }
+
+    // 2. Create / open file
+    fr = f_open(&fil, "0:test.txt", FA_CREATE_ALWAYS | FA_WRITE);
+    if (fr != FR_OK) {
+        return;
+    }
+
+    // 3. Write to file
+    fr = f_write(&fil, "Hello FatFs!\r\n", 15, &bw);
+    if (fr != FR_OK || bw != 15) {
+    }
+
+    f_close(&fil);
+
+    // 4. Reopen for reading
+    fr = f_open(&fil, "0:test.txt", FA_READ);
+    if (fr != FR_OK) {
+        return;
+    }
+
+    char buffer[32] = {0};
+    fr = f_read(&fil, buffer, sizeof(buffer), &br);
+
+    if (fr == FR_OK) {
+
+    }
+
+    f_close(&fil);
+
 }

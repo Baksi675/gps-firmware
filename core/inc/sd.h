@@ -31,10 +31,8 @@ typedef enum {
  * 
  */
 typedef enum {
-	SD_TYPE_MMC,			// byte addresing, legacy
-	SD_TYPE_SC_V1,			// byte addressing
-	SD_TYPE_SC_V2,			// byte adressing
-	SD_TYPE_HC				// block addressing
+	SDSC,
+	SDHC
 }SD_TYPE_te;
 
 /**
@@ -114,6 +112,8 @@ ERR_te sd_stop_subsys(void);
 ERR_te sd_init_handle(SD_CONFIG_ts *sd_config, SD_HANDLE_ts **sd_handle_o);		
 ERR_te sd_deinit_handle(SD_HANDLE_ts *sd_handle);
 ERR_te sd_get_handle_init(SD_HANDLE_ts *sd_handle, bool *handle_init_o);
+ERR_te sd_get_sector_count(SD_HANDLE_ts *sd_handle, uint32_t *sector_count_o);
+ERR_te sd_get_sector_size(SD_HANDLE_ts *sd_handle, uint32_t *sector_size_o);
 ERR_te sd_read(SD_HANDLE_ts *sd_handle, uint8_t *read_buf, uint32_t start_sector, uint32_t num_sectors);
 ERR_te sd_write(SD_HANDLE_ts *sd_handle, uint8_t *write_buf, uint32_t start_sector, uint32_t num_sectors);
 ERR_te sd_ioctl(SD_HANDLE_ts *sd_handle);

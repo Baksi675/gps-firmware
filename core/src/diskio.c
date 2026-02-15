@@ -7,6 +7,7 @@
 /* storage control modules to the FatFs module with a defined API.       */
 /*-----------------------------------------------------------------------*/
 
+#include "err.h"
 #include "ff.h"			/* Basic definitions of FatFs */
 #include "diskio.h"		/* Declarations FatFs MAI */
 
@@ -14,9 +15,11 @@
 #include "sd.h"
 
 /* Example: Mapping of physical drive number for each drive */
-#define DEV_FLASH	0	/* Map FTL to physical drive 0 */
-#define DEV_MMC		1	/* Map MMC/SD card to physical drive 1 */
+#define DEV_FLASH	1	/* Map FTL to physical drive 0 */
+#define DEV_MMC		0	/* Map MMC/SD card to physical drive 1 */
 #define DEV_USB		2	/* Map USB MSD to physical drive 2 */
+
+SD_HANDLE_ts *sd_handle;
 
 
 /*-----------------------------------------------------------------------*/
@@ -27,8 +30,9 @@ DSTATUS disk_status (
 	BYTE pdrv		/* Physical drive nmuber to identify the drive */
 )
 {
-	DSTATUS stat;
-	int result;
+	//DSTATUS stat;
+	//int result;
+	bool initialized;
 
 	switch (pdrv) {
 	case DEV_FLASH :
@@ -36,21 +40,29 @@ DSTATUS disk_status (
 
 		// translate the reslut code here
 
-		return stat;
+		//return stat;
+		break;
 
 	case DEV_MMC :
 		//result = MMC_disk_status();
 
 		// translate the reslut code here
+		sd_get_handle_init(sd_handle, &initialized);
+		if(initialized == true) {
+			return 0;
+		}
 
-		return stat;
+		return STA_NOINIT;
+
+		//return stat;
 
 	case DEV_USB :
 		//result = USB_disk_status();
 
 		// translate the reslut code here
 
-		return stat;
+		//return stat;
+		break;
 	}
 	return STA_NOINIT;
 }
@@ -65,9 +77,54 @@ DSTATUS disk_initialize (
 	BYTE pdrv				/* Physical drive nmuber to identify the drive */
 )
 {
-	DSTATUS stat;
-	int result;
+	//DSTATUS stat;
+	//int result;
+	ERR_te err;
 
+	if(pdrv == DEV_FLASH) {
+		//result = FLASH_disk_initialize();
+
+		// translate the reslut code here
+	}
+	else if(pdrv == DEV_MMC) {
+		//result = MMC_disk_initialize();
+		SD_CONFIG_ts sd_config = { 0 };
+		str_cpy(sd_config.name, "sdcard", get_str_len("sdcard") + 1);
+		sd_config.spi_instance = SPI1;
+		sd_config.sclk_gpio_port = GPIOA;
+		sd_config.sclk_gpio_pin = GPIO_PIN_5;
+		sd_config.miso_gpio_port = GPIOA;
+		sd_config.miso_gpio_pin = GPIO_PIN_6;
+		sd_config.mosi_gpio_port = GPIOA;
+		sd_config.mosi_gpio_pin = GPIO_PIN_7;
+		sd_config.cs_gpio_port = GPIOB;
+		sd_config.cs_gpio_pin = GPIO_PIN_6;
+		sd_config.gpio_alternate_function = GPIO_ALTERNATE_FUNCTION_AF5;
+		
+		// translate the reslut code here
+		err = sd_init_subsys();
+		if(err != ERR_OK) {
+			return STA_NOINIT;
+		}
+		err = sd_init_handle(&sd_config, &sd_handle);
+		if(err != ERR_OK) {
+			return STA_NOINIT;
+		}
+		err = sd_start_subsys();
+		if(err != ERR_OK) {
+			return STA_NOINIT;
+		}
+
+		// Return no error
+		return 0;
+	}
+	else if(pdrv == DEV_USB) {
+		//result = USB_disk_initialize();
+
+		// translate the reslut code here
+	}
+
+	/*
 	switch (pdrv) {
 	case DEV_FLASH :
 		//result = FLASH_disk_initialize();
@@ -90,6 +147,8 @@ DSTATUS disk_initialize (
 
 		return stat;
 	}
+	*/
+
 	return STA_NOINIT;
 }
 
@@ -106,8 +165,9 @@ DRESULT disk_read (
 	UINT count		/* Number of sectors to read */
 )
 {
-	DRESULT res;
-	int result;
+	//DRESULT res;
+	//int result;
+	ERR_te err;
 
 	switch (pdrv) {
 	case DEV_FLASH :
@@ -117,16 +177,23 @@ DRESULT disk_read (
 
 		// translate the reslut code here
 
-		return res;
+		//return res;
+		break;
 
 	case DEV_MMC :
 		// translate the arguments here
 
 		//result = MMC_disk_read(buff, sector, count);
+		err = sd_read(sd_handle, (BYTE *)buff, (LBA_t)sector, (UINT)count);
 
 		// translate the reslut code here
+		if(err != ERR_OK) {
+			return RES_ERROR;
+		}
 
-		return res;
+		return RES_OK;
+
+		//return res;
 
 	case DEV_USB :
 		// translate the arguments here
@@ -135,7 +202,8 @@ DRESULT disk_read (
 
 		// translate the reslut code here
 
-		return res;
+		//return res;
+		break;
 	}
 
 	return RES_PARERR;
@@ -156,8 +224,9 @@ DRESULT disk_write (
 	UINT count			/* Number of sectors to write */
 )
 {
-	DRESULT res;
-	int result;
+	//DRESULT res;
+	//int result;
+	ERR_te err;
 
 	switch (pdrv) {
 	case DEV_FLASH :
@@ -167,16 +236,23 @@ DRESULT disk_write (
 
 		// translate the reslut code here
 
-		return res;
+		//return res;
+		break;
 
 	case DEV_MMC :
 		// translate the arguments here
 
 		//result = MMC_disk_write(buff, sector, count);
+		err = sd_write(sd_handle, (BYTE*)buff, (LBA_t)sector, (UINT)count);
 
 		// translate the reslut code here
+		if(err != ERR_OK) {
+			return RES_ERROR;
+		}
 
-		return res;
+		return RES_OK;
+
+		//return res;
 
 	case DEV_USB :
 		// translate the arguments here
@@ -185,7 +261,8 @@ DRESULT disk_write (
 
 		// translate the reslut code here
 
-		return res;
+		//return res;
+		break;
 	}
 
 	return RES_PARERR;
@@ -204,45 +281,54 @@ DRESULT disk_ioctl (
 	void *buff		/* Buffer to send/receive control data */
 )
 {
-	DRESULT res;
-	int result;
+	//DRESULT res;
+	//int result;
+	ERR_te err = 0;
 
 	switch (pdrv) {
 	case DEV_FLASH :
 
 		// Process of the command for the RAM drive
 
-		return res;
+		//return res;
+		break;
 
 	case DEV_MMC :
 		// Process of the command for the MMC/SD card
-		switch (cmd) {
-			case CTRL_SYNC:
-				// Nothing to do there, SD write API already takes care of syncing
-				return RES_OK;
-			case GET_SECTOR_COUNT:
+		if(cmd == CTRL_SYNC) {
+			// Nothing to do there, SD write API already takes care of syncing
+			return RES_OK;
+		}
+		else if(cmd == GET_SECTOR_COUNT) {
+			uint32_t sector_count;
+			err = sd_get_sector_count(sd_handle, &sector_count);
+			*(uint32_t*)buff = sector_count;
+		}
+		else if(cmd == GET_SECTOR_SIZE) {
+			uint32_t sector_size;
+			err = sd_get_sector_size(sd_handle, &sector_size);
+			*(uint32_t*)buff = sector_size;
+		}
+		/*else if(cmd == GET_BLOCK_SIZE) {
+			
+		}
+		else if(cmd == CTRL_TRIM) {
+			
+		}*/
 
-				break;
-			case GET_SECTOR_SIZE:
-
-				break;
-			case GET_BLOCK_SIZE:
-
-				break;
-			case CTRL_TRIM:
-
-				break;
-			default:
-				break;
+		if(err != ERR_OK) {
+			return RES_ERROR;
 		}
 
-		return res;
+		return RES_OK;
+		//return res;
 
 	case DEV_USB :
 
 		// Process of the command the USB drive
 
-		return res;
+		//return res;
+		break;
 	}
 
 	return RES_PARERR;
@@ -264,5 +350,7 @@ DWORD get_fattime (void)
            (DWORD)stm->tm_min << 5 |
            (DWORD)stm->tm_sec >> 1;
 	*/
+
+	return 0;
 }
 

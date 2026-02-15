@@ -112,6 +112,11 @@ typedef struct {
     uint8_t crc;
 } SD_CSD_INFO_ts;
 
+typedef enum {
+	SD_ADDR_MODE_BYTE,
+	SD_ADDR_MODE_BLOCK
+}SD_ADDR_MODE_te;
+
 struct sd_handle_s {
 	char name[CONFIG_SD_MAX_NAME_LEN];
 	SPI_REGDEF_ts *spi_instance;
@@ -125,6 +130,7 @@ struct sd_handle_s {
 	GPIO_PIN_te mosi_gpio_pin;
 	GPIO_ALTERNATE_FUNCTION_te gpio_alternate_function;
 	SD_PWRUP_STATUS_te pwrup_status;
+	SD_ADDR_MODE_te addr_mode;
 	SD_TYPE_te type;
 	SD_MIN_OPERATING_VOLTAGE_te min_operating_voltage;				// not needed
 	SD_MAX_OPERATIING_VOLTAGE_te max_operating_voltage;				// not needed
@@ -557,7 +563,7 @@ ERR_te sd_init_handle(SD_CONFIG_ts *sd_config, SD_HANDLE_ts **sd_handle_o) {
 		err = sd_app_send_op_cond(&internal_state.sds[free_index], 0);
 		// Card is SD Ver.1
 		if(err == ERR_OK) {
-			internal_state.sds[free_index].type = SD_TYPE_SC_V1;
+			internal_state.sds[free_index].addr_mode = SD_ADDR_MODE_BYTE;
 		}
 		// Card is MMC Ver.3 or unknown
 		else if(err == ERR_TIMEOUT) {
@@ -576,7 +582,7 @@ ERR_te sd_init_handle(SD_CONFIG_ts *sd_config, SD_HANDLE_ts **sd_handle_o) {
 			}
 			// Card is MMC
 			else {
-				internal_state.sds[free_index].type = SD_TYPE_MMC;
+				internal_state.sds[free_index].addr_mode = SD_ADDR_MODE_BYTE;
 			}
 		}
 		// Card is unknown
@@ -593,7 +599,7 @@ ERR_te sd_init_handle(SD_CONFIG_ts *sd_config, SD_HANDLE_ts **sd_handle_o) {
 		}
 	}
 
-	if(internal_state.sds[free_index].type != SD_TYPE_HC) {
+	if(internal_state.sds[free_index].addr_mode == SD_ADDR_MODE_BYTE) {
 		err = sd_set_blocklen(&internal_state.sds[free_index]);
 		if(err != ERR_OK) {
 			LOG_CRITICAL(
@@ -704,6 +710,32 @@ ERR_te sd_get_handle_init(SD_HANDLE_ts *sd_handle, bool *handle_init_o) {
 }
 
 /**
+ * @brief Gets the sector count of the handle.
+ * 
+ * @param[in] sd_handle The handle to get the sector count of. 
+ * @param[out] sector_count_o The sector count.
+ * @return ERR_te Error generated during execution.
+ */
+ERR_te sd_get_sector_count(SD_HANDLE_ts *sd_handle, uint32_t *sector_count_o) {
+	*sector_count_o = sd_handle->block_count;
+
+	return ERR_OK;
+}
+
+/**
+ * @brief Gets the sector size of the handle.
+ * 
+ * @param[in] sd_handle The handle to get the sector size of. 
+ * @param[out] sector_count_o The sector size.
+ * @return ERR_te Error generated during execution.
+ */
+ERR_te sd_get_sector_size(SD_HANDLE_ts *sd_handle, uint32_t *sector_size_o) {
+	*sector_size_o = sd_handle->block_len;
+
+	return ERR_OK;
+}
+
+/**
  * @brief Reads data from an SD card.
  * 
  * @param[in] sd_handle The SD card handle to read data from. 
@@ -734,6 +766,10 @@ ERR_te sd_read(SD_HANDLE_ts *sd_handle, uint8_t *read_buf, uint32_t start_sector
 	
 	spi_set_comm(sd_handle->spi_instance, ENABLE);
 	gpio_write(sd_handle->cs_gpio_port, sd_handle->cs_gpio_pin, LOW);
+
+	if(sd_handle->addr_mode == SD_ADDR_MODE_BYTE) {
+		start_sector = start_sector * sd_handle->block_len;
+	}
 
 	if(num_sectors == 1) {
 		err = sd_send_cmd(sd_handle->spi_instance, 17, start_sector, false, &cmd_response);
@@ -771,7 +807,7 @@ ERR_te sd_read(SD_HANDLE_ts *sd_handle, uint8_t *read_buf, uint32_t start_sector
 		}
 		
 		// Read data
-		spi_receive(sd_handle->spi_instance, read_buf, 512);
+		spi_receive(sd_handle->spi_instance, read_buf, sd_handle->block_len);
 
 		// Read CRC
 		uint8_t crc[2];
@@ -813,7 +849,7 @@ ERR_te sd_read(SD_HANDLE_ts *sd_handle, uint8_t *read_buf, uint32_t start_sector
 			}
 			
 			// Read data
-			spi_receive(sd_handle->spi_instance, read_buf + (i * 512), 512);
+			spi_receive(sd_handle->spi_instance, read_buf + (i * sd_handle->block_len), sd_handle->block_len);
 
 			// Read CRC
 			uint8_t crc[2];
@@ -872,6 +908,10 @@ ERR_te sd_write(SD_HANDLE_ts *sd_handle, uint8_t *write_buf, uint32_t start_sect
 	spi_set_comm(sd_handle->spi_instance, ENABLE);
 	gpio_write(sd_handle->cs_gpio_port, sd_handle->cs_gpio_pin, LOW);
 
+	if(sd_handle->addr_mode == SD_ADDR_MODE_BYTE) {
+		start_sector = start_sector * sd_handle->block_len;
+	}
+
 	CMD_RESPONSE_ts cmd_response = { 0 };
 
 	if(num_sectors == 1) {
@@ -894,7 +934,7 @@ ERR_te sd_write(SD_HANDLE_ts *sd_handle, uint8_t *write_buf, uint32_t start_sect
 		spi_send(sd_handle->spi_instance, &token, 1);
 
 		// Send data
-		spi_send(sd_handle->spi_instance, write_buf, 512);
+		spi_send(sd_handle->spi_instance, write_buf, sd_handle->block_len);
 
 		// Send dummy CRC
 		uint8_t dummy_crc[2] = { 0xFF, 0xFF };
@@ -956,7 +996,7 @@ ERR_te sd_write(SD_HANDLE_ts *sd_handle, uint8_t *write_buf, uint32_t start_sect
 			spi_send(sd_handle->spi_instance, &token, 1);
 
 			// Send data
-			spi_send(sd_handle->spi_instance, write_buf + (i * 512), 512);
+			spi_send(sd_handle->spi_instance, write_buf + (i * sd_handle->block_len), sd_handle->block_len);
 
 			// Send dummy CRC
 			uint8_t dummy_crc[2] = { 0xFF, 0xFF };
@@ -1354,10 +1394,10 @@ static ERR_te sd_read_ocr(SD_HANDLE_ts *sd_handle) {
 
 	// Check and save card capacity 
 	if((ocr >> OCR_CAPACITY_STATUS) & 0x1) {
-		sd_handle->type = SD_TYPE_HC;
+		sd_handle->addr_mode = SD_ADDR_MODE_BLOCK;
 	}
 	else {
-		sd_handle->type = SD_TYPE_SC_V2;
+		sd_handle->addr_mode = SD_ADDR_MODE_BYTE;
 	}
 
 	// Check and save operating voltage range
@@ -1508,6 +1548,7 @@ static ERR_te sd_read_csd(SD_HANDLE_ts *sd_handle) {
             decode_csd_v2(csd_raw, &csd_info);
             break;
 		case 3:
+			decode_csd_v2(csd_raw, &csd_info);
 			// SDHC, newer version not implemented
 			break;
     }
@@ -1651,27 +1692,32 @@ static ERR_te sd_cmd_info_handler(uint32_t argc, char **argv) {
 	for(uint32_t i = 0; i < CONFIG_SD_MAX_OBJECTS; i++) {
 		if(str_cmp(internal_state.sds[i].name, argv[2]) == true) {
 			char type_str[10];
+			char addr_mode[10];
 
 			switch(internal_state.sds[i].type) {
-				case SD_TYPE_HC:
+				case SDSC:
+					str_cpy(type_str, "SDSC", get_str_len("SDSC") + 1);
+					break;
+				case SDHC:
 					str_cpy(type_str, "SDHC", get_str_len("SDHC") + 1);
 					break;
-				case SD_TYPE_SC_V2:
-					str_cpy(type_str, "SDSCV2", get_str_len("SDSCV2") + 1);
+			}
+
+			switch(internal_state.sds[i].addr_mode) {
+				case SD_ADDR_MODE_BLOCK:
+					str_cpy(addr_mode, "block", get_str_len("block") + 1);
 					break;
-				case SD_TYPE_SC_V1:
-					str_cpy(type_str, "SDSCV1", get_str_len("SDSCV1") + 1);
-					break;
-				case SD_TYPE_MMC:
-					str_cpy(type_str, "MMC", get_str_len("MMC") + 1);
+				case SD_ADDR_MODE_BYTE:
+					str_cpy(addr_mode, "byte", get_str_len("byte") + 1);
 					break;
 			}
 
 			LOG_INFO(
 				internal_state.subsys, 
 				internal_state.log_level,
-				"type: %s, capacity: %d mb, block size: %d byte, block count: %d", 
+				"type: %s, addr mode: %s, capacity: %d mb, block size: %d byte, block count: %d", 
 				type_str,
+				addr_mode,
 				internal_state.sds[i].capacity_mb,
 				internal_state.sds[i].block_len,
 				internal_state.sds[i].block_count
