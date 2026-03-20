@@ -40,11 +40,11 @@ static struct internal_state_s internal_state = {
  */
 ERR_te cmd_register(CMD_CLIENT_INFO_ts *cmd_client_info) {
 	for(uint8_t i = 0; i < CONFIG_CMD_MAX_CLIENTS; i++) {
-		if(internal_state.cmd_client_info_arr[i] == NULL) {
+		if(internal_state.cmd_client_info_arr[i] == (void*)0) {
 			internal_state.cmd_client_info_arr[i] = cmd_client_info;
 			break;
 		}
-		else if(internal_state.cmd_client_info_arr[i] != NULL && i == CONFIG_CMD_MAX_CLIENTS - 1) {
+		else if(internal_state.cmd_client_info_arr[i] != (void*)0 && i == CONFIG_CMD_MAX_CLIENTS - 1) {
 			return ERR_NOT_ENOUGH_SPACE;
 		}
 	}
@@ -62,7 +62,7 @@ ERR_te cmd_register(CMD_CLIENT_INFO_ts *cmd_client_info) {
 ERR_te cmd_deregister(CMD_CLIENT_INFO_ts const *cmd_client_info) {
 	for(uint8_t i = 0; i < CONFIG_CMD_MAX_CLIENTS; i++) {
 		if(internal_state.cmd_client_info_arr[i] == cmd_client_info) {
-			internal_state.cmd_client_info_arr[i] = NULL;
+			internal_state.cmd_client_info_arr[i] = (void*)0;
 			break;
 		}
 		else if(i == CONFIG_CMD_MAX_CLIENTS - 1) {
@@ -117,7 +117,7 @@ ERR_te cmd_execute(char *console_text) {
 				for(uint8_t i = 0; i < CONFIG_CMD_MAX_CLIENTS; i++) {
 					client_info = internal_state.cmd_client_info_arr[i];
 
-					if(client_info == NULL) {
+					if(client_info == (void*)0) {
 						continue;
 					}
 
@@ -153,7 +153,7 @@ ERR_te cmd_execute(char *console_text) {
 				for(uint8_t i = 0; i < CONFIG_CMD_MAX_CLIENTS; i++) {
 					client_info = internal_state.cmd_client_info_arr[i];
 
-					if(client_info == NULL) {
+					if(client_info == (void*)0) {
 						continue;
 					}
 
@@ -218,7 +218,7 @@ ERR_te cmd_execute(char *console_text) {
 			);
 
 			for(uint8_t i = 0; i < CONFIG_CMD_MAX_CLIENTS; i++) {
-				if(internal_state.cmd_client_info_arr[i] == NULL) {
+				if(internal_state.cmd_client_info_arr[i] == (void*)0) {
 					continue;
 				}
 
@@ -245,7 +245,7 @@ ERR_te cmd_execute(char *console_text) {
 		}
 		else if(num_tokens == 2) {
 			for(uint8_t i = 0; i < CONFIG_CMD_MAX_CLIENTS; i++) {
-				if(internal_state.cmd_client_info_arr[i] == NULL) {
+				if(internal_state.cmd_client_info_arr[i] == (void*)0) {
 					continue;
 				}
 
@@ -283,7 +283,7 @@ ERR_te cmd_execute(char *console_text) {
 
 	// 4. Handle client commands
 	for(uint8_t i = 0; i < CONFIG_CMD_MAX_CLIENTS; i++) {
-		if(internal_state.cmd_client_info_arr[i] == NULL) {
+		if(internal_state.cmd_client_info_arr[i] == (void*)0) {
 			continue;
 		}
 

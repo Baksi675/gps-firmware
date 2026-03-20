@@ -410,7 +410,7 @@ bool str_to_bool(char const *str) {
  */
 int str_cpy(char *str_to, const char *str_from, uint32_t len)
 {
-    if (len == 0 || str_to == NULL || str_from == NULL) {
+    if (len == 0 || str_to == (void*)0 || str_from == (void*)0) {
         return -1;
     }
 
@@ -433,7 +433,7 @@ int str_cpy(char *str_to, const char *str_from, uint32_t len)
  * @return int 0 if succeeded.
  */
 int txt_cpy(char *txt_to, const char *txt_from, uint32_t len) {
-    if (len == 0 || txt_to == NULL || txt_from == NULL) {
+    if (len == 0 || txt_to == (void*)0 || txt_from == (void*)0) {
         return -1;
     }
 

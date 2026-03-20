@@ -59,6 +59,10 @@ menu "HW Modules"
 			range 1 100
 			default 10
 
+		config SD_INVALID_RESP_RETRY_TIMEOUT
+			int "Time until next retry after a invalid response"
+			range 1 1000
+			default 100
 
 		config SD_CMD_SEND_ERROR_RETRY_NUM
 			int "Max retries after a command send failure"
@@ -76,8 +80,8 @@ menu "HW Modules"
 
 	endmenu
 
-	menu "GTU7"
-		config GTU7_MAX_TOKENS
+	menu "NEO6"
+		config NEO6_MAX_TOKENS
 			int "Max number of tokens in a NMEA message"
 			range 1 30
 			default 1

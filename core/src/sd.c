@@ -564,7 +564,7 @@ ERR_te sd_init_handle(SD_CONFIG_ts *sd_config, SD_HANDLE_ts **sd_handle_o) {
 	DELAY(CONFIG_SD_HW_INIT_WAIT_TIME);
 
 	// Enable SPI communication
-	spi_set_comm(sd_spi.instance, ENABLE);
+	spi_set_comm(sd_config->spi_instance, ENABLE);
 
 	// 1. Start initilization
 
@@ -689,7 +689,7 @@ ERR_te sd_init_handle(SD_CONFIG_ts *sd_config, SD_HANDLE_ts **sd_handle_o) {
 			return ERR_UNSUCCESFUL_ACTION;			
 		}
 	}
-	
+
 	internal_state.sds[free_index].initialized = true;
 
 	LOG_INFO(
@@ -1045,6 +1045,7 @@ ERR_te sd_write(SD_HANDLE_ts *sd_handle, uint8_t *write_buf, uint32_t start_sect
 			elapsed_time = systick_get_ms() - start_time;
 		} while(busy == 0x00 && elapsed_time <= CONFIG_SD_BUSY_TIMOUT);
 
+		// ERROR !!! Timeout happens here. CONFIG_SD_BUSY_TIMEOUT WAS 10ms previously, modified to 500ms
 		if(elapsed_time > CONFIG_SD_BUSY_TIMOUT) {
 			sd_cease_comms(sd_handle, true);
 
@@ -1414,6 +1415,16 @@ static ERR_te sd_app_send_op_cond(SD_HANDLE_ts *sd_handle, uint32_t arg) {
 			);
 
 			return ERR_TIMEOUT;
+		}
+
+		if(cmd_response.r1 != 0x00) {
+			LOG_ERROR(
+				internal_state.subsys,
+				internal_state.log_level, 
+				"sd_app_send_op_cond: invaloid R1 response, retry %d/%d in %d ms",
+				retries, CONFIG_SD_INVALID_RESP_RETRY_NUM, CONFIG_SD_INVALID_RESP_RETRY_TIMEOUT
+			);
+			DELAY(CONFIG_SD_INVALID_RESP_RETRY_TIMEOUT);
 		}
 	} while(cmd_response.r1 == 0x01 && retries < CONFIG_SD_INVALID_RESP_RETRY_NUM);
 

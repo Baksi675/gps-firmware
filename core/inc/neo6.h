@@ -1,7 +1,7 @@
 /**
- * @file gtu7.h
+ * @file neo6.h
  * @author github.com/Baksi675
- * @brief GTU7 GPS module header file
+ * @brief NEO-6M GPS module header file
  * @version 0.1
  * @date 2026-02-03
  * 
@@ -9,8 +9,8 @@
  * 
  */
 
-#ifndef GTU7_H__
-#define GTU7_H__
+#ifndef NEO6_H__
+#define NEO6_H__
 
 #include "stm32f401re.h"
 #include "stm32f401re_gpio.h"
@@ -25,7 +25,7 @@ typedef enum {
 	GPS_MESSAGE_RMC,
 	GPS_MESSAGE_VTG,
 	GPS_MESSAGE_TXT
-}GTU7_MESSAGES_te;
+}NEO6_MESSAGES_te;
 
 typedef struct {
 	char lat[16];					// LOCATION menu			from RMC
@@ -44,7 +44,7 @@ typedef struct {
 	char hdop[16];					// ACCURACY menu			from GSA
 	char vdop[16];					// ACCURACY menu			from GSA
 	char fix_status[16];			// ACCURACY menu			from GGA
-}GTU7_INFO_ts;
+}NEO6_INFO_ts;
 
 typedef struct {
 	USART_REGDEF_ts *usart_instance;
@@ -54,16 +54,16 @@ typedef struct {
 	GPIO_REGDEF_ts *tx_gpio_port;
 	GPIO_PIN_te tx_gpio_pin;
 	GPIO_ALTERNATE_FUNCTION_te gpio_alternate_function;
-}GTU7_CONFIG_ts;
+}NEO6_CONFIG_ts;
 
-typedef struct gtu7_handle_s GTU7_HANDLE_ts;
+typedef struct neo6_handle_s NEO6_HANDLE_ts;
 
-ERR_te gtu7_init_subsys(void);
-ERR_te gtu7_deinit_subsys(void);
-ERR_te gtu7_start_subsys(void);
-ERR_te gtu7_stop_subsys(void);
-ERR_te gtu7_init_handle(GTU7_CONFIG_ts *gtu7_config,  GTU7_HANDLE_ts **gtu7_handle_o);
-ERR_te gtu7_run(void);
-ERR_te gtu7_get_info(GTU7_INFO_ts **gtu7_info_o);
+ERR_te neo6_init_subsys(void);
+ERR_te neo6_deinit_subsys(void);
+ERR_te neo6_start_subsys(void);
+ERR_te neo6_stop_subsys(void);
+ERR_te neo6_init_handle(NEO6_CONFIG_ts *neo6_config,  NEO6_HANDLE_ts **neo6_handle_o);
+ERR_te neo6_run(void);
+ERR_te neo6_get_info(NEO6_INFO_ts **neo6_info_o);
 
 #endif

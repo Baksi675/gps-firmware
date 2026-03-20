@@ -1,3 +1,5 @@
+/********************* on prototype: diskio.c CS pin should be GPIOB pin 6 !!! **************************/
+
 #include <stdbool.h>
 #include <stdint.h>
 #include <string.h>
@@ -6,8 +8,9 @@
 #include "button.h"
 #include "common.h"
 #include "err.h"
-#include "gtu7.h"
+#include "neo6.h"
 #include "menu.h"
+#include "stm32f401re.h"
 #include "stm32f401re_gpio.h"
 #include "stm32f401re_rtc.h"
 #include "log.h"
@@ -26,12 +29,12 @@ MENU_HANDLE_ts *datetime_menu;
 MENU_HANDLE_ts *movement_menu;
 MENU_HANDLE_ts *accuracy_menu;
 MENU_HANDLE_ts *satellites_menu;
-GTU7_HANDLE_ts *gtu7_handle;
+NEO6_HANDLE_ts *neo6_handle;
 DATALOG_HANDLE_ts *datalog_handle;
 
 static void init_all(void);
 static void run_all(void);
-static ERR_te acquire_gtu7_location(uint8_t index, char **value_o);
+static ERR_te acquire_neo6_location(uint8_t index, char **value_o);
 static ERR_te acquire_datetime(uint8_t index, char **value_o);
 static ERR_te acquire_movement(uint8_t index, char **value_o);
 static ERR_te acquire_accuracy(uint8_t index, char **value_o);
@@ -52,8 +55,10 @@ char selected_option[SSD1309_MAX_CHARS_IN_LINE];
 uint32_t refreshed_ms;
 
 int main(void) {
-
 	init_all();
+
+	// Delay here is needed to not crash the system
+	for(uint32_t i = 0; i < 1000; i++);
 
 	while(1) {
 		run_all();
@@ -61,9 +66,8 @@ int main(void) {
 
 	return 0;
 }
-
-// Needed because of possible stack overflow
-void init2(void) {
+	
+static void init_all(void) {
 	rtc_init();
 
 	CALENDAR_ts rtc_calendar;
@@ -148,22 +152,17 @@ void init2(void) {
 	button_init_handle(&rbtn_cfg, &rbtn);
 	button_start_subsys();
 
-	GTU7_CONFIG_ts gtu7_config = { 0 };
-	gtu7_config.usart_instance = USART6;
-	gtu7_config.usart_baud_rate = 9600;
-	gtu7_config.rx_gpio_port = GPIOA;
-	gtu7_config.rx_gpio_pin = GPIO_PIN_12;
-	gtu7_config.tx_gpio_port = GPIOA;
-	gtu7_config.tx_gpio_pin = GPIO_PIN_11;
-	gtu7_config.gpio_alternate_function = GPIO_ALTERNATE_FUNCTION_AF8;
-	gtu7_init_subsys();
-	gtu7_init_handle(&gtu7_config, &gtu7_handle);
-	gtu7_start_subsys();
-}
-
-	
-static void init_all(void) {
-	init2();
+	NEO6_CONFIG_ts neo6_config = { 0 };
+	neo6_config.usart_instance = USART6;
+	neo6_config.usart_baud_rate = 9600;
+	neo6_config.rx_gpio_port = GPIOA;
+	neo6_config.rx_gpio_pin = GPIO_PIN_12;
+	neo6_config.tx_gpio_port = GPIOA;
+	neo6_config.tx_gpio_pin = GPIO_PIN_11;
+	neo6_config.gpio_alternate_function = GPIO_ALTERNATE_FUNCTION_AF8;
+	neo6_init_subsys();
+	neo6_init_handle(&neo6_config, &neo6_handle);
+	neo6_start_subsys();
 
 	MENU_CFG_ts main_menu_cfg = { 0 };
 	txt_cpy(main_menu_cfg.name, "main", get_str_len("main"));
@@ -183,7 +182,7 @@ static void init_all(void) {
 	txt_cpy(location_menu_cfg.options[2], "Orthometric h.:", get_str_len("Orthometric h.:"));
 	txt_cpy(location_menu_cfg.options[3], "Geoid sep.:", get_str_len("Geoid sep.:"));
 	location_menu_cfg.type = MENU_TYPE_DATA_VIEW;
-	location_menu_cfg.get_value_fn = acquire_gtu7_location;
+	location_menu_cfg.get_value_fn = acquire_neo6_location;
 
 	MENU_CFG_ts datetime_menu_cfg = { 0 };
 	txt_cpy(datetime_menu_cfg.name, "dt", get_str_len("dt"));
@@ -231,20 +230,20 @@ static void init_all(void) {
 
 	current_menu = main_menu;
 
-	/*DATALOG_CONFIG_ts datalog_config = { 0 };
-	str_cpy(datalog_config.name, "datalog", get_str_len("datalog"));
+	DATALOG_CONFIG_ts datalog_config = { 0 };
+	str_cpy(datalog_config.name, "datalog", get_str_len("datalog") + 1);
 	datalog_config.datalog_time = DATALOG_TIME_10S;
 	datalog_init_subsys();
 	datalog_init_handle(&datalog_config, &datalog_handle);
-	datalog_start_subsys();*/
+	datalog_start_subsys();
 }
 
 static void run_all(void) {
-	gtu7_run();
+	neo6_run();
 
 	console_run();
 
-	//datalog_run_handle(datalog_handle);
+	datalog_run_handle(datalog_handle);
 
 	button_run_handle_all();
 
@@ -336,25 +335,25 @@ static void run_all(void) {
 
 }
 
-static ERR_te acquire_gtu7_location(uint8_t index, char **value_o) {
-	GTU7_INFO_ts *gtu7_info = NULL;
-	gtu7_get_info(&gtu7_info);
+static ERR_te acquire_neo6_location(uint8_t index, char **value_o) {
+	NEO6_INFO_ts *neo6_info = NULL;
+	neo6_get_info(&neo6_info);
 
 	switch(index) {
 		case 0:
-			*value_o = gtu7_info->lat;
+			*value_o = neo6_info->lat;
 			break;
 			
 		case 1:
-			*value_o = gtu7_info->lon;
+			*value_o = neo6_info->lon;
 			break;
 
 		case 2:
-			*value_o = gtu7_info->ort_height;
+			*value_o = neo6_info->ort_height;
 			break;
 			
 		case 3:
-			*value_o = gtu7_info->geoid_sep;
+			*value_o = neo6_info->geoid_sep;
 			break;
 		
 	}
@@ -363,16 +362,16 @@ static ERR_te acquire_gtu7_location(uint8_t index, char **value_o) {
 }
 
 static ERR_te acquire_datetime(uint8_t index, char **value_o) {
-	GTU7_INFO_ts *gtu7_info = NULL;
-	gtu7_get_info(&gtu7_info);
+	NEO6_INFO_ts *neo6_info = NULL;
+	neo6_get_info(&neo6_info);
 
 	switch(index) {
 		case 0:
-			*value_o = gtu7_info->date;
+			*value_o = neo6_info->date;
 			break;
 			
 		case 1:
-			*value_o = gtu7_info->time;
+			*value_o = neo6_info->time;
 			break;
 	}
 
@@ -380,16 +379,16 @@ static ERR_te acquire_datetime(uint8_t index, char **value_o) {
 }
 
 static ERR_te acquire_movement(uint8_t index, char **value_o) {
-	GTU7_INFO_ts *gtu7_info = NULL;
-	gtu7_get_info(&gtu7_info);
+	NEO6_INFO_ts *neo6_info = NULL;
+	neo6_get_info(&neo6_info);
 
 	switch(index) {
 		case 0:
-			*value_o = gtu7_info->mov_speed;
+			*value_o = neo6_info->mov_speed;
 			break;
 			
 		case 1:
-			*value_o = gtu7_info->mov_dir;
+			*value_o = neo6_info->mov_dir;
 			break;
 	}
 
@@ -397,28 +396,28 @@ static ERR_te acquire_movement(uint8_t index, char **value_o) {
 }
 
 static ERR_te acquire_accuracy(uint8_t index, char **value_o) {
-	GTU7_INFO_ts *gtu7_info = NULL;
-	gtu7_get_info(&gtu7_info);
+	NEO6_INFO_ts *neo6_info = NULL;
+	neo6_get_info(&neo6_info);
 
 	switch(index) {
 		case 0:
-			*value_o = gtu7_info->fix_status;
+			*value_o = neo6_info->fix_status;
 			break;
 			
 		case 1:
-			*value_o = gtu7_info->fix_type;
+			*value_o = neo6_info->fix_type;
 			break;
 
 		case 2:
-			*value_o = gtu7_info->pdop;
+			*value_o = neo6_info->pdop;
 			break;
 
 		case 3:
-			*value_o = gtu7_info->hdop;
+			*value_o = neo6_info->hdop;
 			break;
 
 		case 4:
-			*value_o = gtu7_info->vdop;
+			*value_o = neo6_info->vdop;
 			break;
 	}
 
@@ -426,16 +425,16 @@ static ERR_te acquire_accuracy(uint8_t index, char **value_o) {
 }
 
 static ERR_te acquire_satellites(uint8_t index, char **value_o) {
-	GTU7_INFO_ts *gtu7_info = NULL;
-	gtu7_get_info(&gtu7_info);
+	NEO6_INFO_ts *neo6_info = NULL;
+	neo6_get_info(&neo6_info);
 
 	switch(index) {
 		case 0:
-			*value_o = gtu7_info->num_sats_all;
+			*value_o = neo6_info->num_sats_all;
 			break;
 			
 		case 1:
-			*value_o = gtu7_info->num_sats_used;
+			*value_o = neo6_info->num_sats_used;
 			break;
 	}
 

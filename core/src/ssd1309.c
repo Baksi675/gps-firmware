@@ -597,7 +597,7 @@ ERR_te ssd1309_init_handle(SSD1309_CONFIG_ts *ssd1309_config, SSD1309_HANDLE_ts 
 		return ERR_INITIALIZATION_FAILURE;
 	}
 
-	if(ssd1309_config->i2c_instance == NULL) {
+	if(ssd1309_config->i2c_instance == (void*)0) {
 		LOG_ERROR(
 			internal_state.subsys, 
 			internal_state.log_level,
@@ -606,7 +606,7 @@ ERR_te ssd1309_init_handle(SSD1309_CONFIG_ts *ssd1309_config, SSD1309_HANDLE_ts 
 
 		return ERR_INITIALIZATION_FAILURE;
 	}
-	else if(ssd1309_config->scl_gpio_port == NULL || ssd1309_config->sda_gpio_port == NULL) {
+	else if(ssd1309_config->scl_gpio_port == (void*)0 || ssd1309_config->sda_gpio_port == (void*)0) {
 		LOG_ERROR(
 			internal_state.subsys, 
 			internal_state.log_level,

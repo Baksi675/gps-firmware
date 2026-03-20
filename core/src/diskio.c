@@ -72,11 +72,15 @@ DSTATUS disk_status (
 /*-----------------------------------------------------------------------*/
 /* Inidialize a Drive                                                    */
 /*-----------------------------------------------------------------------*/
-
+static bool initialized = false;
 DSTATUS disk_initialize (
 	BYTE pdrv				/* Physical drive nmuber to identify the drive */
 )
 {
+	if(initialized) {
+		return 0;
+	}
+
 	//DSTATUS stat;
 	//int result;
 	ERR_te err;
@@ -98,7 +102,7 @@ DSTATUS disk_initialize (
 		sd_config.mosi_gpio_port = GPIOA;
 		sd_config.mosi_gpio_pin = GPIO_PIN_7;
 		sd_config.cs_gpio_port = GPIOB;
-		sd_config.cs_gpio_pin = GPIO_PIN_6;
+		sd_config.cs_gpio_pin = GPIO_PIN_7;									// on prototype it's pin 6
 		sd_config.gpio_alternate_function = GPIO_ALTERNATE_FUNCTION_AF5;
 		
 		// translate the reslut code here
@@ -115,6 +119,7 @@ DSTATUS disk_initialize (
 			return STA_NOINIT;
 		}
 
+		initialized = true;
 		// Return no error
 		return 0;
 	}

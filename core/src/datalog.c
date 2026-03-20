@@ -20,7 +20,8 @@
 #include "cmd.h"
 #include "ff.h"
 #include "arm_cortex_m4_systick.h"
-#include "gtu7.h"
+#include "neo6.h"
+
 
 struct datalog_handle_s {
 	char name[CONFIG_DATALOG_MAX_NAME_LEN];
@@ -243,7 +244,6 @@ ERR_te datalog_init_handle(DATALOG_CONFIG_ts *datalog_config, DATALOG_HANDLE_ts 
 
     // Mount filesystem
     internal_state.datalogs[free_index].fr = f_mount(&internal_state.datalogs[free_index].fs, "0:", 1);   
-
     if (internal_state.datalogs[free_index].fr != FR_OK) {
         return ERR_INITIALIZATION_FAILURE;
     }
@@ -267,6 +267,14 @@ ERR_te datalog_init_handle(DATALOG_CONFIG_ts *datalog_config, DATALOG_HANDLE_ts 
 	internal_state.datalog_num++;
 
 	*datalog_handle_o = &internal_state.datalogs[free_index];
+
+	LOG_INFO(
+		internal_state.subsys, 
+		internal_state.log_level,
+		"datalog_init_handle: handle %s initialized",
+		internal_state.datalogs[free_index].name
+	);
+
 
 	return ERR_OK;
 }
@@ -347,17 +355,18 @@ ERR_te datalog_run_handle(DATALOG_HANDLE_ts *datalog_handle) {
 
     // Open file
     datalog_handle->fr = f_open(&datalog_handle->fil, "0:datalog.txt", FA_OPEN_APPEND | FA_WRITE);
-    if ( datalog_handle->fr != FR_OK) {
+    if (datalog_handle->fr != FR_OK) {
+
         return ERR_UNKNOWN;
     }
 
-	GTU7_INFO_ts *gtu7_info = NULL;
-	gtu7_get_info(&gtu7_info);
+	NEO6_INFO_ts *neo6_info = (void*)0;
+	neo6_get_info(&neo6_info);
 
     // Set up time string
-	uint32_t time_len = get_str_len(gtu7_info->time) + 2;
+	uint32_t time_len = get_str_len(neo6_info->time) + 2;
 	char time_str[time_len];
-	str_cpy(time_str, gtu7_info->time, time_len - 2);
+	str_cpy(time_str, neo6_info->time, time_len - 2);
 	time_str[time_len - 2] = '\r';
 	time_str[time_len - 1] = '\n';
 
@@ -370,9 +379,9 @@ ERR_te datalog_run_handle(DATALOG_HANDLE_ts *datalog_handle) {
     }
 
 	// Set up latitude string
-	uint32_t lat_len = get_str_len(gtu7_info->lat) + 2;
+	uint32_t lat_len = get_str_len(neo6_info->lat) + 2;
 	char lat_str[lat_len];
-	str_cpy(lat_str, gtu7_info->lat, lat_len - 2);
+	str_cpy(lat_str, neo6_info->lat, lat_len - 2);
 	lat_str[lat_len - 2] = '\r';
 	lat_str[lat_len - 1] = '\n';
 
@@ -385,9 +394,9 @@ ERR_te datalog_run_handle(DATALOG_HANDLE_ts *datalog_handle) {
     }
 
 	// Set up longitude string
-	uint32_t lon_len = get_str_len(gtu7_info->lon) + 2;
+	uint32_t lon_len = get_str_len(neo6_info->lon) + 2;
 	char lon_str[lon_len];
-	str_cpy(lon_str, gtu7_info->lon,lon_len - 2);
+	str_cpy(lon_str, neo6_info->lon,lon_len - 2);
 	lon_str[lon_len - 2] = '\r';
 	lon_str[lon_len - 1] = '\n';
 
@@ -400,9 +409,9 @@ ERR_te datalog_run_handle(DATALOG_HANDLE_ts *datalog_handle) {
     }
 
 	// Set up orthometric height string
-	uint32_t ort_height_len = get_str_len(gtu7_info->ort_height) + 2;
+	uint32_t ort_height_len = get_str_len(neo6_info->ort_height) + 2;
 	char ort_height_str[ort_height_len];
-	str_cpy(ort_height_str, gtu7_info->ort_height,ort_height_len - 2);
+	str_cpy(ort_height_str, neo6_info->ort_height,ort_height_len - 2);
 	ort_height_str[ort_height_len - 2] = '\r';
 	ort_height_str[ort_height_len - 1] = '\n';
 
@@ -415,9 +424,9 @@ ERR_te datalog_run_handle(DATALOG_HANDLE_ts *datalog_handle) {
     }
 
 	// Set up movement speed string
-	uint32_t mov_speed_len = get_str_len(gtu7_info->mov_speed) + 2;
+	uint32_t mov_speed_len = get_str_len(neo6_info->mov_speed) + 2;
 	char mov_speed_str[mov_speed_len];
-	str_cpy(mov_speed_str, gtu7_info->mov_speed,mov_speed_len - 2);
+	str_cpy(mov_speed_str, neo6_info->mov_speed,mov_speed_len - 2);
 	mov_speed_str[mov_speed_len - 2] = '\r';
 	mov_speed_str[mov_speed_len - 1] = '\n';
 
@@ -430,9 +439,9 @@ ERR_te datalog_run_handle(DATALOG_HANDLE_ts *datalog_handle) {
     }
 
 	// Set up movement direction string
-	uint32_t mov_dir_len = get_str_len(gtu7_info->mov_dir) + 2;
+	uint32_t mov_dir_len = get_str_len(neo6_info->mov_dir) + 2;
 	char mov_dir_str[mov_dir_len];
-	str_cpy(mov_dir_str, gtu7_info->mov_dir,mov_dir_len - 2);
+	str_cpy(mov_dir_str, neo6_info->mov_dir,mov_dir_len - 2);
 	mov_dir_str[mov_dir_len - 2] = '\r';
 	mov_dir_str[mov_dir_len - 1] = '\n';
 

@@ -26,7 +26,7 @@ build/output.elf: build/startup_stm32f401re.o \
 					build/button.o \
 					build/arm_cortex_m4_systick.o \
 					build/menu.o \
-					build/gtu7.o \
+					build/neo6.o \
 					build/stm32f401re_spi.o \
 					build/sd.o \
 					build/ff.o \
@@ -93,7 +93,7 @@ build/arm_cortex_m4_systick.o: drivers/src/arm_cortex_m4_systick.c | build
 build/menu.o: core/src/menu.c | build
 	$(CC) $(CFLAGS) $< -o $@
 
-build/gtu7.o: core/src/gtu7.c | build
+build/neo6.o: core/src/neo6.c | build
 	$(CC) $(CFLAGS) $< -o $@
 
 build/stm32f401re_spi.o: drivers/src/stm32f401re_spi.c | build

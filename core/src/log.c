@@ -42,7 +42,7 @@ inline static ERR_te log_print_prologue(MODULES_te subsys, LOG_LEVEL_te log_leve
  * @return ERR_te Error code generated during execution.
  */
 ERR_te log_init(LOG_HANDLE_ts *log_handle) {
-	if(internal_state.usart_instance != NULL) {
+	if(internal_state.usart_instance != (void*)0) {
 		return ERR_INITIALIZATION_FAILURE;
 	}
 
@@ -71,7 +71,7 @@ ERR_te log_init(LOG_HANDLE_ts *log_handle) {
  * @return ERR_te Error code generated during execution.
  */
 ERR_te log_deinit() {
-	if(internal_state.usart_instance == NULL) {
+	if(internal_state.usart_instance == (void*)0) {
 		return ERR_UNINITIALZIED_OBJECT;
 	}
 
