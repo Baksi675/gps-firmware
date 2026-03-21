@@ -357,6 +357,8 @@ struct internal_state_s {
 };
 static struct internal_state_s internal_state;
 
+static ERR_te ssd1309_cmd_start_handler(uint32_t argc, char **argv);
+static ERR_te ssd1309_cmd_stop_handler(uint32_t argc, char **argv);
 static ERR_te ssd1309_cmd_fillrect_handler(uint32_t argc, char **argv);
 static ERR_te ssd1309_cmd_clearrect_handler(uint32_t argc, char **argv);
 static ERR_te ssd1309_cmd_invertrect_handler(uint32_t argc, char **argv);
@@ -365,6 +367,16 @@ static ERR_te ssd1309_cmd_clearline_handler(uint32_t argc, char **argv);
 static ERR_te ssd1309_cmd_invertline_handler(uint32_t argc, char **argv);
 
 static CMD_INFO_ts ssd1309_cmds[] = {
+	{
+		.name = "start",
+		.help = "Starts the module, usage: ssd1309 start",
+		.handler = ssd1309_cmd_start_handler
+	},
+		{
+		.name = "stop",
+		.help = "Stopss the module, usage: ssd1309 stop",
+		.handler = ssd1309_cmd_stop_handler
+	},
 	{
 		.name = "fillrect",
 		.help = "Fills a rectangle, usage: ssd1309 fillrect <x1,y1,x2,y2>",
@@ -417,14 +429,14 @@ static CMD_CLIENT_INFO_ts ssd1309_cmd_client_info = {
 ERR_te ssd1309_init_subsys(void) {
 	ERR_te err;
 	
-	if(internal_state.initialized || internal_state.started) {
+	if(internal_state.initialized) {
 		LOG_ERROR(
 			internal_state.subsys, 
 			internal_state.log_level,
-			"ssd1309_init_subsys: subsys is already initialized or started"
+			"ssd1309_init_subsys: subsys is already initialized"
 		);
 		
-		return ERR_INITIALIZATION_FAILURE;
+		return ERR_MODULE_ALREADY_INITIALIZED;
 	}
 
 	internal_state = (struct internal_state_s){ 0 };
@@ -782,12 +794,12 @@ ERR_te ssd1309_init_handle(SSD1309_CONFIG_ts *ssd1309_config, SSD1309_HANDLE_ts 
  * @param[in] line The line where to draw the text.
  * @return ERR_te Error generated during execution.
  */
-ERR_te ssd1309_draw_text(char const *text, uint8_t text_len, uint8_t line) {
-	if(!internal_state.ssd1309_handle.initialized || !internal_state.started) {
+ERR_te ssd1309_draw_text(char const *text, uint8_t text_len, uint8_t line, bool force) {
+	if((!internal_state.ssd1309_handle.initialized || !internal_state.started) && !force) {
 		LOG_ERROR(
 			internal_state.subsys,
 			internal_state.log_level,
-			"ssd1309_update: handle not initialized or subsystem not started"
+			"ssd1309_draw_text: handle not initialized or subsystem not started"
 		);
 
 		return ERR_INITIALIZATION_FAILURE;
@@ -827,12 +839,12 @@ ERR_te ssd1309_draw_text(char const *text, uint8_t text_len, uint8_t line) {
  * @param[in] y_dest Destination Y coord.
  * @return ERR_te Error generated during execution. 
  */
-ERR_te ssd1309_draw_rect(uint8_t x_src, uint8_t y_src, uint8_t x_dest, uint8_t y_dest) {
-	if(!internal_state.ssd1309_handle.initialized || !internal_state.started) {
+ERR_te ssd1309_draw_rect(uint8_t x_src, uint8_t y_src, uint8_t x_dest, uint8_t y_dest, bool force) {
+	if((!internal_state.ssd1309_handle.initialized || !internal_state.started) && !force) {
 		LOG_ERROR(
 			internal_state.subsys,
 			internal_state.log_level,
-			"ssd1309_update: handle not initialized or subsystem not started"
+			"ssd1309_draw_rect: handle not initialized or subsystem not started"
 		);
 
 		return ERR_INITIALIZATION_FAILURE;
@@ -890,12 +902,12 @@ ERR_te ssd1309_draw_rect(uint8_t x_src, uint8_t y_src, uint8_t x_dest, uint8_t y
  * @param[in] line The line to clear. 
  * @return ERR_te Error generated during execution.
  */
-ERR_te ssd1309_clear_line(uint8_t line) {
-	if(!internal_state.ssd1309_handle.initialized || !internal_state.started) {
+ERR_te ssd1309_clear_line(uint8_t line, bool force) {
+	if((!internal_state.ssd1309_handle.initialized || !internal_state.started) && !force) {
 		LOG_ERROR(
 			internal_state.subsys,
 			internal_state.log_level,
-			"ssd1309_update: handle not initialized or subsystem not started"
+			"ssd1309_clear_line: handle not initialized or subsystem not started"
 		);
 
 		return ERR_INITIALIZATION_FAILURE;
@@ -907,7 +919,7 @@ ERR_te ssd1309_clear_line(uint8_t line) {
 
 	line--;
 
-	ssd1309_clear_rect(1, line * SSD1309_BITS_IN_PAGE + 1, 128, line * SSD1309_BITS_IN_PAGE + 8);
+	ssd1309_clear_rect(1, line * SSD1309_BITS_IN_PAGE + 1, 128, line * SSD1309_BITS_IN_PAGE + 8, force);
 
 	return ERR_OK;
 }
@@ -918,12 +930,12 @@ ERR_te ssd1309_clear_line(uint8_t line) {
  * @param[in] line The line to invert the pixels of.
  * @return ERR_te Error generated during execution. 
  */
-ERR_te ssd1309_invert_line(uint8_t line) {
-	if(!internal_state.ssd1309_handle.initialized || !internal_state.started) {
+ERR_te ssd1309_invert_line(uint8_t line, bool force) {
+	if((!internal_state.ssd1309_handle.initialized || !internal_state.started) && !force) {
 		LOG_ERROR(
 			internal_state.subsys,
 			internal_state.log_level,
-			"ssd1309_update: handle not initialized or subsystem not started"
+			"ssd1309_invert_line: handle not initialized or subsystem not started"
 		);
 
 		return ERR_INITIALIZATION_FAILURE;
@@ -935,7 +947,7 @@ ERR_te ssd1309_invert_line(uint8_t line) {
 
 	line--;
 
-	ssd1309_invert_rect(1, line * SSD1309_BITS_IN_PAGE + 1, 128, line * SSD1309_BITS_IN_PAGE + 8);
+	ssd1309_invert_rect(1, line * SSD1309_BITS_IN_PAGE + 1, 128, line * SSD1309_BITS_IN_PAGE + 8, force);
 
 	return ERR_OK;
 }
@@ -949,12 +961,12 @@ ERR_te ssd1309_invert_line(uint8_t line) {
  * @param[in] y_dest Destination Y coord.
  * @return ERR_te Error generated during execution. 
  */
-ERR_te ssd1309_clear_rect(uint8_t x_src, uint8_t y_src, uint8_t x_dest, uint8_t y_dest) {
-	if(!internal_state.ssd1309_handle.initialized || !internal_state.started) {
+ERR_te ssd1309_clear_rect(uint8_t x_src, uint8_t y_src, uint8_t x_dest, uint8_t y_dest, bool force) {
+	if((!internal_state.ssd1309_handle.initialized || !internal_state.started) && !force) {
 		LOG_ERROR(
 			internal_state.subsys,
 			internal_state.log_level,
-			"ssd1309_update: handle not initialized or subsystem not started"
+			"ssd1309_clear_rect: handle not initialized or subsystem not started"
 		);
 
 		return ERR_INITIALIZATION_FAILURE;
@@ -1015,12 +1027,12 @@ ERR_te ssd1309_clear_rect(uint8_t x_src, uint8_t y_src, uint8_t x_dest, uint8_t 
  * @param[in] y_dest Destination Y coord.
  * @return ERR_te Error generated during execution. 
  */
-ERR_te ssd1309_invert_rect(uint8_t x_src, uint8_t y_src, uint8_t x_dest, uint8_t y_dest) {
-	if(!internal_state.ssd1309_handle.initialized || !internal_state.started) {
+ERR_te ssd1309_invert_rect(uint8_t x_src, uint8_t y_src, uint8_t x_dest, uint8_t y_dest, bool force) {
+	if((!internal_state.ssd1309_handle.initialized || !internal_state.started) && !force) {
 		LOG_ERROR(
 			internal_state.subsys,
 			internal_state.log_level,
-			"ssd1309_update: handle not initialized or subsystem not started"
+			"ssd1309_invert_rect: handle not initialized or subsystem not started"
 		);
 
 		return ERR_INITIALIZATION_FAILURE;
@@ -1078,8 +1090,8 @@ ERR_te ssd1309_invert_rect(uint8_t x_src, uint8_t y_src, uint8_t x_dest, uint8_t
  * 
  * @return ERR_te Error generated during exection,
  */
-ERR_te ssd1309_update(void) {
-	if(!internal_state.ssd1309_handle.initialized || !internal_state.started) {
+ERR_te ssd1309_update(bool force) {
+	if((!internal_state.ssd1309_handle.initialized || !internal_state.started) && !force) {
 		LOG_ERROR(
 			internal_state.subsys,
 			internal_state.log_level,
@@ -1111,6 +1123,52 @@ ERR_te ssd1309_update(void) {
  * @defgroup SSD1309_COMMAND_HANDLERS SSD1309 COMMAND HANDLERS
  * @{
  */
+
+ /**
+ * @brief Command handler routine for start command.
+ * 
+ * @param[in] argc Number of arguments.
+ * @param[in] argv Arguments.
+ * @return ERR_te Error generated during execution.
+ */
+static ERR_te ssd1309_cmd_start_handler(uint32_t argc, char **argv) {	
+	if(argc != 2) {
+		LOG_ERROR(
+			internal_state.subsys,
+			internal_state.log_level,
+			"ssd1309_cmd_start_handler: invalid arguments"
+		);
+
+		return ERR_INVALID_ARGUMENT;
+	}
+
+	internal_state.started = true;
+
+	return ERR_OK;
+}
+
+/**
+ * @brief Command handler routine for stop command.
+ * 
+ * @param[in] argc Number of arguments.
+ * @param[in] argv Arguments.
+ * @return ERR_te Error generated during execution.
+ */
+static ERR_te ssd1309_cmd_stop_handler(uint32_t argc, char **argv) {
+	if(argc != 2) {
+		LOG_ERROR(
+			internal_state.subsys,
+			internal_state.log_level,
+			"ssd1309_cmd_stop_handler: invalid arguments"
+		);
+
+		return ERR_INVALID_ARGUMENT;
+	}
+
+	internal_state.started = false;
+
+	return ERR_OK;
+}
 
 /**
  * @brief Command handler routine for fillrect command.
@@ -1152,7 +1210,7 @@ static ERR_te ssd1309_cmd_fillrect_handler(uint32_t argc, char **argv) {
 		return ERR_INVALID_ARGUMENT;
 	}
 
-	err = ssd1309_draw_rect(x1, y1, x2, y2);
+	err = ssd1309_draw_rect(x1, y1, x2, y2, true);
 	if(err != ERR_OK) {
 		LOG_ERROR(
 			internal_state.subsys,
@@ -1163,7 +1221,7 @@ static ERR_te ssd1309_cmd_fillrect_handler(uint32_t argc, char **argv) {
 		return ERR_INVALID_ARGUMENT;
 	}
 
-	ssd1309_update();
+	ssd1309_update(true);
 	
 	return ERR_OK;
 }
@@ -1208,7 +1266,7 @@ static ERR_te ssd1309_cmd_clearrect_handler(uint32_t argc, char **argv) {
 		return ERR_INVALID_ARGUMENT;
 	}
 
-	err = ssd1309_clear_rect(x1, y1, x2, y2);
+	err = ssd1309_clear_rect(x1, y1, x2, y2, true);
 	if(err != ERR_OK) {
 		LOG_ERROR(
 			internal_state.subsys,
@@ -1219,7 +1277,7 @@ static ERR_te ssd1309_cmd_clearrect_handler(uint32_t argc, char **argv) {
 		return ERR_INVALID_ARGUMENT;
 	}
 
-	ssd1309_update();
+	ssd1309_update(true);
 	
 	return ERR_OK;
 }
@@ -1264,7 +1322,7 @@ static ERR_te ssd1309_cmd_invertrect_handler(uint32_t argc, char **argv) {
 		return ERR_INVALID_ARGUMENT;
 	}
 
-	err = ssd1309_invert_rect(x1, y1, x2, y2);
+	err = ssd1309_invert_rect(x1, y1, x2, y2, true);
 	if(err != ERR_OK) {
 		LOG_ERROR(
 			internal_state.subsys,
@@ -1275,7 +1333,7 @@ static ERR_te ssd1309_cmd_invertrect_handler(uint32_t argc, char **argv) {
 		return ERR_INVALID_ARGUMENT;
 	}
 
-	ssd1309_update();
+	ssd1309_update(true);
 	
 	return ERR_OK;
 }
@@ -1311,12 +1369,12 @@ static ERR_te ssd1309_cmd_drawtext_handler(uint32_t argc, char **argv) {
 		return ERR_INVALID_ARGUMENT;
 	}
 
-	err = ssd1309_draw_text(argv[2], get_str_len(argv[2]), line);
+	err = ssd1309_draw_text(argv[2], get_str_len(argv[2]), line, true);
 	if(err != ERR_OK) {
 		return err;
 	}
 
-	ssd1309_update();
+	ssd1309_update(true);
 
 	return ERR_OK;
 }
@@ -1352,12 +1410,12 @@ static ERR_te ssd1309_cmd_clearline_handler(uint32_t argc, char **argv) {
 		return ERR_INVALID_ARGUMENT;
 	}
 
-	err = ssd1309_clear_line(line);
+	err = ssd1309_clear_line(line, true);
 	if(err != ERR_OK) {
 		return err;
 	}
 
-	ssd1309_update();
+	ssd1309_update(true);
 
 	return ERR_OK;
 }
@@ -1393,12 +1451,12 @@ static ERR_te ssd1309_cmd_invertline_handler(uint32_t argc, char **argv) {
 		return ERR_INVALID_ARGUMENT;
 	}
 
-	err = ssd1309_invert_line(line);
+	err = ssd1309_invert_line(line, true);
 	if(err != ERR_OK) {
 		return err;
 	}
 
-	ssd1309_update();
+	ssd1309_update(true);
 
 	return ERR_OK;
 }

@@ -291,7 +291,7 @@ ERR_te menu_init_handle(MENU_CFG_ts *menu_cfg, MENU_HANDLE_ts **menu_handle_o) {
  * @return ERR_te Error generated during execution.
  */
 ERR_te menu_run_handle(MENU_HANDLE_ts *menu_handle) {
-	ssd1309_clear_rect(1, 1, 128, 64);
+	ssd1309_clear_rect(1, 1, 128, 64, false);
 
 	if(menu_handle->type == MENU_TYPE_SELECTABLE) {
 		menu_selectable_run(menu_handle);
@@ -300,7 +300,7 @@ ERR_te menu_run_handle(MENU_HANDLE_ts *menu_handle) {
 		menu_dataview_run(menu_handle);
 	}
 
-	ssd1309_update();
+	ssd1309_update(false);
 
 	return ERR_OK;
 }
@@ -481,13 +481,13 @@ static ERR_te menu_selectable_run(MENU_HANDLE_ts *menu_handle) {
 	for(uint8_t i = menu_handle->first_visible_option; i <= menu_handle->last_visible_option; i++) {
 		line_counter++;
 		ssd1309_draw_text(menu_handle->options[i], 
-			get_str_len(menu_handle->options[i]), line_counter);
+			get_str_len(menu_handle->options[i]), line_counter, false);
 	}
 
 	// Simulate selection by inverting the value of pixels
-	ssd1309_invert_line(menu_handle->line_to_highlight);
+	ssd1309_invert_line(menu_handle->line_to_highlight, false);
 
-	ssd1309_draw_text(menu_handle->title, 16, 8);
+	ssd1309_draw_text(menu_handle->title, 16, 8, false);
 
 	return ERR_OK;
 }
@@ -576,7 +576,7 @@ static ERR_te menu_dataview_run(MENU_HANDLE_ts *menu_handle) {
 		// Counter is at option
 		if(i % 2 == 0) {
 			ssd1309_draw_text(menu_handle->options[real_counter], 
-				get_str_len(menu_handle->options[real_counter]), line_counter);
+				get_str_len(menu_handle->options[real_counter]), line_counter, false);
 		}
 		// Counter is at data
 		else {
@@ -589,16 +589,16 @@ static ERR_te menu_dataview_run(MENU_HANDLE_ts *menu_handle) {
 
 			ssd1309_draw_text(value,
 						get_str_len(value),
-						line_counter);
+						line_counter, false);
 
 			real_counter++;
 		}
 	}
 
 	// Simulate selection by inverting the value of pixels
-	ssd1309_invert_line(menu_handle->line_to_highlight);
+	ssd1309_invert_line(menu_handle->line_to_highlight, false);
 
-	ssd1309_draw_text(menu_handle->title, 16, 8);
+	ssd1309_draw_text(menu_handle->title, 16, 8, false);
 
 	return ERR_OK;
 }

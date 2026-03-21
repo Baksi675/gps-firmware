@@ -137,8 +137,6 @@ ERR_te cmd_execute(char *console_text) {
 						client_info->name, 
 						log_level_name
 					);
-
-					return ERR_OK;
 				}
 			}
 			else if(num_tokens == 3) {
