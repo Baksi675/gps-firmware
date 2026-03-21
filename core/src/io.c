@@ -62,6 +62,11 @@ static CMD_CLIENT_INFO_ts io_cmd_client_info = {
 	.log_level_ptr = &internal_state.log_level
 };
 
+ /** 
+ * @defgroup IO_Public_APIs IO Public APIs
+ * @{
+ */
+
 /**
  * @brief Initializes the IO subsystem internal state to a clean state and registers the subsystem commands.
  * 
@@ -366,6 +371,13 @@ ERR_te io_read(IO_HANDLE_ts const *io_handle, PIN_STATUS_te *pin_status_o) {
 	return ERR_OK;
 }
 
+ /** @} */
+
+  /** 
+ * @defgroup IO_COMMAND_HANDLERS IO COMMAND HANDLERS
+ * @{
+ */
+
 /**
  * @brief Handler routine for the w command. Writes an io object.
  * 
@@ -512,4 +524,6 @@ static ERR_te io_cmd_info_handler(uint32_t argc, char **argv) {
 
 	return ERR_OK;
 }
+
+/** @} */
 

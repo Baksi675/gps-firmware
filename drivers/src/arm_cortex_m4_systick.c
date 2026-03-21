@@ -19,6 +19,11 @@ struct internal_state_s {
 };
 static struct internal_state_s internal_state;
 
+ /** 
+ * @defgroup ARM_CORTEX_M4_SYSTICK_Public_APIs ARM_CORTEX_M4_SYSTICK Public APIs
+ * @{
+ */
+
 /**
  * @brief Initializes the systick to the given configuration.
  * 
@@ -117,4 +122,6 @@ uint32_t systick_get_ms(void) {
 void SysTick_Handler(void) {
 	internal_state.elapsed_ms++;
 }
+
+/** @} */
 

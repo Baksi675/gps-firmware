@@ -116,7 +116,7 @@ static CMD_CLIENT_INFO_ts neo6_cmd_client_info = {
 
 
 /** 
- * @defgroup neo6_Public_APIs GPS Public APIs
+ * @defgroup NEO6_Public_APIs NEO6 Public APIs
  * @{
  */
 
@@ -392,7 +392,7 @@ ERR_te neo6_get_info(NEO6_INFO_ts **neo6_info_o) {
 /** @} */
 
 /** 
- * @defgroup neo6_Internal_Helper GPS Internal Helpers
+ * @defgroup NEO6_Internal_Helper NEO6 Internal Helpers
  * @{
  */
 
@@ -738,6 +738,13 @@ static ERR_te neo6_process_gsv(char **tokens) {
 	return ERR_OK;
 }
 
+ /** @} */
+
+  /** 
+ * @defgroup NEO6_COMMAND_HANDLERS NEO6 COMMAND HANDLERS
+ * @{
+ */
+
 /**
  * @brief Command handler routine for dumpnmea command.
  * 
@@ -775,8 +782,8 @@ static ERR_te neo6_dumpnmea_handler(uint32_t argc, char **argv) {
 	return ERR_OK;
 }
 
+/** @} */
+
 void usart6_irq_data_recv_callback(uint8_t data) {
 	cbuf_write(&internal_state.usart_data_recv_cbuf, &data, 1);
 }
-
-/** @} */

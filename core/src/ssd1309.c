@@ -404,6 +404,11 @@ static CMD_CLIENT_INFO_ts ssd1309_cmd_client_info = {
 	.log_level_ptr = &internal_state.log_level
 };
 
+ /** 
+ * @defgroup SSD1309_Public_APIs SSD1309 Public APIs
+ * @{
+ */
+
 /**
  * @brief Initializes the SSD1309 subsystem internal state to a clean state and registers the subsystem commands.
  * 
@@ -1100,6 +1105,13 @@ ERR_te ssd1309_update(void) {
 	return ERR_OK;
 }
 
+/** @} */
+
+  /** 
+ * @defgroup SSD1309_COMMAND_HANDLERS SSD1309 COMMAND HANDLERS
+ * @{
+ */
+
 /**
  * @brief Command handler routine for fillrect command.
  * 
@@ -1390,3 +1402,5 @@ static ERR_te ssd1309_cmd_invertline_handler(uint32_t argc, char **argv) {
 
 	return ERR_OK;
 }
+
+/** @} */

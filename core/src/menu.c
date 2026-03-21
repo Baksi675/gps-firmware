@@ -70,6 +70,11 @@ static CMD_CLIENT_INFO_ts menu_cmd_client_info = {
 	.log_level_ptr = &internal_state.log_level
 };
 
+ /** 
+ * @defgroup MENU_Public_APIs MENU Public APIs
+ * @{
+ */
+
 /**
  * @brief Initializes the menu subsystem internal state to a clean state and registers the subsystem commands.
  * 
@@ -394,6 +399,13 @@ ERR_te menu_set_prev_menu(MENU_HANDLE_ts *menu_handle, MENU_HANDLE_ts *prev_menu
 	return ERR_OK;
 }
 
+/** @} */
+
+  /** 
+ * @defgroup MENU_INTERNAL_HELPERS MENU INTERNAL HELPERS
+ * @{
+ */
+
 /**
  * @brief Runs a selectable type menu as part of a state machine.
  * 
@@ -591,6 +603,13 @@ static ERR_te menu_dataview_run(MENU_HANDLE_ts *menu_handle) {
 	return ERR_OK;
 }
 
+/** @} */
+
+  /** 
+ * @defgroup MENU_COMMAND_HANDLERS MENU COMMAND HANDLERS
+ * @{
+ */
+
 /**
  * @brief Handler routine for the info command. Shows information about available commands.
  * 
@@ -677,6 +696,8 @@ static ERR_te menu_cmd_scroll_handler(uint32_t argc, char **argv) {
 
 	return ERR_OK;
 }
+
+/** @} */
 
 
 

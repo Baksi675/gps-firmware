@@ -261,6 +261,11 @@ CMD_CLIENT_INFO_ts sd_cmd_client_info = {
 	.name = "sd"
 };
 
+ /** 
+ * @defgroup SD_Public_APIs SD Public APIs
+ * @{
+ */
+
 /**
  * @brief Initializes the subsystem internal state to a clean state and registers the subsystem commands.
  * 
@@ -1140,6 +1145,13 @@ ERR_te sd_write(SD_HANDLE_ts *sd_handle, uint8_t *write_buf, uint32_t start_sect
 	return ERR_OK;
 }
 
+/** @} */
+
+  /** 
+ * @defgroup SD_INTERNAL_HELPERS SD INTERNAL HELPERS
+ * @{
+ */
+
 /**
  * @brief Sends a command to the SD card via SPI.
  * 
@@ -1735,6 +1747,13 @@ static ERR_te decode_csd_v2(const uint8_t *csd_raw, SD_CSD_INFO_ts *csd_info_o) 
 	return ERR_OK;
 }
 
+/** @} */
+
+  /** 
+ * @defgroup SD_COMMAND_HANDLERS SD COMMAND HANDLERS
+ * @{
+ */
+
 /**
  * @brief Handler routine for the list command. Shows information about objects commands.
  * 
@@ -1826,4 +1845,6 @@ static ERR_te sd_cmd_info_handler(uint32_t argc, char **argv) {
 
 	return ERR_OK;
 }
+
+/** @} */
 

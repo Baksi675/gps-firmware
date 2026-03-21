@@ -15,7 +15,7 @@
 #include "stm32f401re.h"
 
  /** 
- * @defgroup CORTEX_M4_NVIC_Public_APIs CORTEX_M4_NVIC Public APIs
+ * @defgroup ARM_CORTEX_M4_NVIC_Public_APIs ARM_CORTEX_M4_NVIC Public APIs
  * @{
  */
 

@@ -62,6 +62,11 @@ CMD_CLIENT_INFO_ts datalog_cmd_client_info = {
 	.name = "datalog"
 };
 
+ /** 
+ * @defgroup DATALOG_Public_APIs DATALOG Public APIs
+ * @{
+ */
+
 /**
  * @brief Initializes the subsystem internal state to a clean state and registers the subsystem commands.
  * 
@@ -462,6 +467,13 @@ ERR_te datalog_run_handle(DATALOG_HANDLE_ts *datalog_handle) {
 	return ERR_OK;
 }
 
+ /** @} */
+
+ /** 
+ * @defgroup DATALOG_COMMAND_HANDLERS DATALOG COMMAND HANDLERS
+ * @{
+ */
+
 /**
  * @brief Handler routine for the list command. Shows information about objects commands.
  * 
@@ -492,3 +504,5 @@ static ERR_te datalog_cmd_list_handler(uint32_t argc, char **argv) {
 
 	return ERR_OK;
 }
+
+ /** @} */

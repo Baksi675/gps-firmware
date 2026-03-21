@@ -9,9 +9,6 @@
  * 
  */
 
- // TODO
- // ADD TIMER FOR DEBOUNCE AND HELD TIME
-
 #include "button.h"
 #include "arm_cortex_m4_systick.h"
 #include "cmd.h"
@@ -29,8 +26,6 @@ struct button_handle_s {
 	BUTTON_PUSHED_TYPE_te pushed_type;
 	uint32_t debounce_limit_ms;
 	uint32_t held_limit_ms;
-	//BUTTON_DEBOUNCE_TIME_te debounce_limit;
-	//BUTTON_HELD_TIME_te held_limit;
 	uint32_t debounce_started_ms;
 	uint32_t held_started_ms;
 	bool debounce_started;
@@ -78,6 +73,11 @@ static CMD_CLIENT_INFO_ts button_cmd_client_info = {
 	.name = "button",
 	.log_level_ptr = &internal_state.log_level
 };
+
+ /** 
+ * @defgroup BUTTON_Public_APIs BUTTON Public APIs
+ * @{
+ */
 
 /**
  * @brief Initializes the button subsystem internal state to a clean state and registers the subsystem commands.
@@ -481,11 +481,11 @@ ERR_te button_run_handle_all(void) {
 }
 
 /**
- * @brief 
+ * @brief Gets the pushed state of the button.
  * 
- * @param button_handle 
- * @param pushed_state 
- * @return ERR_te 
+ * @param[in] button_handle The button handle to get the pushed state of.
+ * @param[out] pushed_state The pushed state information.
+ * @return ERR_te Error generated during execution.
  */
 ERR_te button_get_pushed_state(BUTTON_HANDLE_ts const *button_handle, bool *pushed_state_o) {
 	if(!internal_state.initialized || !internal_state.started) {
@@ -504,11 +504,11 @@ ERR_te button_get_pushed_state(BUTTON_HANDLE_ts const *button_handle, bool *push
 }
 
 /**
- * @brief 
+ * @brief Gets the held state of a button.
  * 
- * @param button_handle 
- * @param held_state 
- * @return ERR_te 
+ * @param[in] button_handle The button handle to get the held state of.
+ * @param[out] held_state The held state information.
+ * @return ERR_te Error generated during execution.
  */
 ERR_te button_get_held_state(BUTTON_HANDLE_ts const *button_handle, bool *held_state_o) {
 	if(!internal_state.initialized || !internal_state.started) {
@@ -525,6 +525,13 @@ ERR_te button_get_held_state(BUTTON_HANDLE_ts const *button_handle, bool *held_s
 
 	return ERR_OK;
 }
+
+/** @} */
+
+/** 
+ * @defgroup BUTTON_COMMAND_HANDLERS BUTTON COMMAND HANDLERS
+ * @{
+ */
 
 /**
  * @brief Handler routine for the getheld command. Reads the button pushed state.
@@ -656,3 +663,5 @@ static ERR_te button_cmd_info_handler(uint32_t argc, char **argv) {
 
 	return ERR_OK;
 }
+
+/** @} */
