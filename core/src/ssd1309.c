@@ -4,9 +4,9 @@
  * @brief SSD1309 display driver implementation file.
  * @version 0.1
  * @date 2025-11-28
- * 
+ *
  * @copyright Copyright (c) 2025
- * 
+ *
  */
 
 #include <stdbool.h>
@@ -20,13 +20,30 @@
 #include "stm32f401re_i2c.h"
 #include "log.h"
 #include "cmd.h"
+#include "init.h"
 
-#define SSD1309_ADDR_W			0x3C			// Write mode
-#define SSD1309_ADDR_R			0x3D			// Read mode
-#define SSD1309_PAGE_NUM		8
-#define SSD1309_BITS_IN_PAGE	8
-#define SSD1309_COL_NUM			128
-#define SSD1309_MAX_LINES		8
+/** @brief I2C write address for the SSD1309 (7-bit address 0x3C, write mode). */
+#define SSD1309_ADDR_W      0x3C
+/** @brief I2C read address for the SSD1309 (7-bit address 0x3D, read mode). */
+#define SSD1309_ADDR_R      0x3D
+/** @brief Number of pages in the SSD1309 display (8 pages × 8 rows = 64 rows). */
+#define SSD1309_PAGE_NUM    8
+/** @brief Number of pixel rows per page. */
+#define SSD1309_BITS_IN_PAGE 8
+/** @brief Number of columns in the display. */
+#define SSD1309_COL_NUM     128
+/** @brief Maximum number of text lines on the display (one per page). */
+#define SSD1309_MAX_LINES   8
+
+/**
+ * @brief 8×8 pixel font table for printable ASCII characters (0x20–0x7E).
+ *
+ * @details
+ * Each entry contains 8 bytes representing one character glyph, where each
+ * byte is a column of 8 pixels (bit 0 = top row, bit 7 = bottom row).
+ * Index into the table as `fonts8x8[char - 32]`.
+ * Covers 95 characters: space (0x20) through tilde (0x7E).
+ */
 
 const uint8_t fonts8x8[95][8] = {
 
@@ -317,13 +334,21 @@ const uint8_t fonts8x8[95][8] = {
 
 };
 
+/**
+ * @brief Internal structure representing the SSD1309 hardware instance.
+ *
+ * @details
+ * Mirrors the @ref SSD1309_CFG_ts fields and adds an initialization guard.
+ * Only one instance is supported; it is embedded directly in
+ * @ref internal_state_s rather than allocated from a pool.
+ */
 struct ssd1309_handle_s {
-	I2C_REGDEF_ts *i2c_instance;
-	GPIO_REGDEF_ts *scl_gpio_port;
-	GPIO_PIN_te scl_gpio_pin;
-	GPIO_REGDEF_ts *sda_gpio_port;
-	GPIO_PIN_te sda_gpio_pin;
-	GPIO_ALTERNATE_FUNCTION_te gpio_alternate_function;
+	I2C_REGDEF_ts *i2c_instance;                            /**< I2C peripheral used for display communication. */
+	GPIO_REGDEF_ts *scl_gpio_port;                          /**< GPIO port of the SCL pin. */
+	GPIO_PIN_te scl_gpio_pin;                               /**< GPIO pin number of SCL. */
+	GPIO_REGDEF_ts *sda_gpio_port;                          /**< GPIO port of the SDA pin. */
+	GPIO_PIN_te sda_gpio_pin;                               /**< GPIO pin number of SDA. */
+	GPIO_ALTERNATE_FUNCTION_te gpio_alternate_function;     /**< Alternate function for SCL and SDA. */
 	SSD1309_LOW_COL_START_ADDR_PAM_te low_col_start_addr_pam;
 	SSD1309_HIGH_COL_START_ADDR_PAM_te high_col_start_addr_pam;
 	SSD1309_MEM_ADDR_MODE_te mem_addr_mode;
@@ -344,19 +369,43 @@ struct ssd1309_handle_s {
 	SSD1309_PHASE1_PRECHARGE_DCLK_te phase1_precharge_dclk;
 	SSD1309_PHASE2_PRECHARGE_DCLK_te phase2_precharge_dclk;
 	SSD1309_VCOMH_DESELECT_LVL_te vcomh_deselect_lvl;
-	bool initialized;
+	bool initialized; /**< True after @ref ssd1309_init_handle has completed successfully. */
 };
 
+/**
+ * @brief Internal state of the SSD1309 subsystem.
+ *
+ * @details
+ * Holds the single hardware handle, the display framebuffer, and the
+ * subsystem lifecycle flags.
+ */
 struct internal_state_s {
+	/** The single SSD1309 hardware handle. */
 	SSD1309_HANDLE_ts ssd1309_handle;
+
+	/**
+	 * Framebuffer organized as [page][column].
+	 * Each byte represents 8 vertical pixels within one page column.
+	 * Modified by draw/clear/invert functions and flushed by @ref ssd1309_update.
+	 */
 	uint8_t fb[SSD1309_PAGE_NUM][SSD1309_COL_NUM];
+
+	/** Module identifier used for log messages. */
 	MODULES_te subsys;
+
+	/** Active log level for this subsystem. */
 	LOG_LEVEL_te log_level;
+
+	/** True after @ref ssd1309_init_subsys has completed successfully. */
 	bool initialized;
+
+	/** True after @ref ssd1309_start_subsys has been called. */
 	bool started;
 };
+/** @brief Singleton instance of the SSD1309 subsystem internal state. */
 static struct internal_state_s internal_state;
 
+/* ---- Forward declarations for command handlers ---- */
 static ERR_te ssd1309_cmd_start_handler(uint32_t argc, char **argv);
 static ERR_te ssd1309_cmd_stop_handler(uint32_t argc, char **argv);
 static ERR_te ssd1309_cmd_fillrect_handler(uint32_t argc, char **argv);
@@ -366,6 +415,13 @@ static ERR_te ssd1309_cmd_drawtext_handler(uint32_t argc, char **argv);
 static ERR_te ssd1309_cmd_clearline_handler(uint32_t argc, char **argv);
 static ERR_te ssd1309_cmd_invertline_handler(uint32_t argc, char **argv);
 
+/**
+ * @brief Table of CLI commands registered by the SSD1309 subsystem.
+ *
+ * @details
+ * Registered with the command subsystem via @ref ssd1309_cmd_client_info
+ * during @ref ssd1309_init_subsys.
+ */
 static CMD_INFO_ts ssd1309_cmds[] = {
 	{
 		.name = "start",
@@ -374,7 +430,7 @@ static CMD_INFO_ts ssd1309_cmds[] = {
 	},
 		{
 		.name = "stop",
-		.help = "Stopss the module, usage: ssd1309 stop",
+		.help = "Stops the module, usage: ssd1309 stop",
 		.handler = ssd1309_cmd_stop_handler
 	},
 	{
@@ -409,6 +465,13 @@ static CMD_INFO_ts ssd1309_cmds[] = {
 	}
 };
 
+/**
+ * @brief Registration descriptor passed to the command subsystem.
+ *
+ * @details
+ * Bundles the command table, its size, the subsystem name prefix used
+ * on the CLI, and a pointer to the runtime log-level variable.
+ */
 static CMD_CLIENT_INFO_ts ssd1309_cmd_client_info = {
 	.cmds_ptr = ssd1309_cmds,
 	.num_cmds = sizeof(ssd1309_cmds) / sizeof(ssd1309_cmds[0]),
@@ -416,26 +479,16 @@ static CMD_CLIENT_INFO_ts ssd1309_cmd_client_info = {
 	.log_level_ptr = &internal_state.log_level
 };
 
- /** 
- * @defgroup SSD1309_Public_APIs SSD1309 Public APIs
+/**
+ * @defgroup ssd1309_public_apis SSD1309 Public APIs
  * @{
  */
 
-/**
- * @brief Initializes the SSD1309 subsystem internal state to a clean state and registers the subsystem commands.
- * 
- * @return ERR_te The error generated during execution.
- */
+/** @brief Initializes the SSD1309 subsystem. @see ssd1309_init_subsys */
 ERR_te ssd1309_init_subsys(void) {
 	ERR_te err;
 	
 	if(internal_state.initialized) {
-		LOG_ERROR(
-			internal_state.subsys, 
-			internal_state.log_level,
-			"ssd1309_init_subsys: subsys is already initialized"
-		);
-		
 		return ERR_MODULE_ALREADY_INITIALIZED;
 	}
 
@@ -444,6 +497,8 @@ ERR_te ssd1309_init_subsys(void) {
 	internal_state.subsys = MODULES_SSD1309;
 	internal_state.initialized = true;
 	internal_state.started = false;
+
+	init_log();
 
 	err = cmd_register(&ssd1309_cmd_client_info);
 	if(err != ERR_OK) {
@@ -464,11 +519,7 @@ ERR_te ssd1309_init_subsys(void) {
 	return ERR_OK;
 }
 
-/**
- * @brief Deinitializes the SSD1309 subsystem.
- * 
- * @return ERR_te Eror generated during execution.
- */
+/** @brief Deinitializes the SSD1309 subsystem. @see ssd1309_deinit_subsys */
 ERR_te ssd1309_deinit_subsys(void) {
 	if(internal_state.initialized && !internal_state.started) {
 		internal_state = (struct internal_state_s){ 0 };
@@ -496,11 +547,7 @@ ERR_te ssd1309_deinit_subsys(void) {
 	return ERR_OK;
 }
 
-/**
- * @brief Starts the subsystem.
- * 
- * @return ERR_te Error generated during execution.
- */
+/** @brief Starts the SSD1309 subsystem. @see ssd1309_start_subsys */
 ERR_te ssd1309_start_subsys(void) {
 	if(internal_state.initialized && !internal_state.started) {
 		internal_state.started = true;
@@ -524,11 +571,7 @@ ERR_te ssd1309_start_subsys(void) {
 	return ERR_OK;
 }
 
-/**
- * @brief Stops the subsystem.
- * 
- * @return ERR_te The error generated during execution.
- */
+/** @brief Stops the SSD1309 subsystem. @see ssd1309_stop_subsys */
 ERR_te ssd1309_stop_subsys(void) {
 	if(internal_state.initialized && internal_state.started) {
 		internal_state.started = false;
@@ -552,58 +595,31 @@ ERR_te ssd1309_stop_subsys(void) {
 	return ERR_OK;	
 }
 
-/**
- * @brief Initializes the SSD1309 object to a default configuration:
- * - Memory address mode: HAM
- * - RAM column address start: 0,
- * - RAM column address end: 127,
- * - RAM page address start: 0,
- * - RAM page address end: 7,
- * - SSD1309 start line: 0,
- * - Contrast level: 100,
- * - Horizontal flip: false,
- * - Inverse mode: false,
- * - Multiplex ratio: 64,
- * - Vertical flip: false,
- * - ROW offset: 0,
- * - Clock divide ratio: 1,
- * - Clock frequency: ? (set to RESET value),
- * - Phase 1 precharge DCLK cycle: 2,
- * - Phase 2 precharge DCLK cycle: 2,
- * - V_COMH deselect level: 0x78 * VCC,
- * - 
- * @param[in] ssd1309_handle The SSD1309 object created by the user.
- * @return ERR_te Error generated during execution. 
- */
-ERR_te ssd1309_get_def_conf(SSD1309_CONFIG_ts *ssd1309_config_o) {
-	ssd1309_config_o->mem_addr_mode = SSD1309_MEM_ADDR_MODE_HAM;
-	ssd1309_config_o->col_addr_start_ham_vam = SSD1309_COL_ADDR_START_HAM_VAM_0;
-	ssd1309_config_o->col_addr_end_ham_vam = SSD1309_COL_ADDR_END_HAM_VAM_127;
-	ssd1309_config_o->page_addr_start_ham_vam = SSD1309_PAGE_ADDR_START_HAM_VAM_0;
-	ssd1309_config_o->page_addr_end_ham_vam = SSD1309_PAGE_ADDR_END_HAM_VAM_7;
-	ssd1309_config_o->start_line = SSD1309_START_LINE_0;
-	ssd1309_config_o->contrast = SSD1309_CONTRAST_10;
-	ssd1309_config_o->horizontal_flip = SSD1309_HORIZONTAL_FLIP_TRUE;
-	ssd1309_config_o->inverse_mode = SSD1309_INVERSE_MODE_FALSE;
-	ssd1309_config_o->multiplex_ratio = SSD1309_MULTIPLEX_RATIO_64;
-	ssd1309_config_o->vertical_flip = SSD1309_VERTICAL_FLIP_TRUE;
-	ssd1309_config_o->offset = SSD1309_OFFSET_0;
-	ssd1309_config_o->clk_div_ratio = SSD1309_CLK_DIV_RATIO_1;
-	ssd1309_config_o->clk_speed_lvl = SSD1309_CLK_SPEED_LVL_LVL_15;
-	ssd1309_config_o->phase1_precharge_dclk = SSD1309_PHASE1_PRECHARGE_DCLK_2;
-	ssd1309_config_o->phase2_precharge_dclk = SSD1309_PHASE2_PRECHARGE_DCLK_2;
-	ssd1309_config_o->vcomh_deselect_lvl = SSD1309_VCOMH_DESELECT_LVL_MED;
+/** @brief Populates a configuration structure with sensible default values. @see ssd1309_get_def_cfg */
+ERR_te ssd1309_get_def_cfg(SSD1309_CFG_ts *ssd1309_cfg_o) {
+	ssd1309_cfg_o->mem_addr_mode = SSD1309_MEM_ADDR_MODE_HAM;
+	ssd1309_cfg_o->col_addr_start_ham_vam = SSD1309_COL_ADDR_START_HAM_VAM_0;
+	ssd1309_cfg_o->col_addr_end_ham_vam = SSD1309_COL_ADDR_END_HAM_VAM_127;
+	ssd1309_cfg_o->page_addr_start_ham_vam = SSD1309_PAGE_ADDR_START_HAM_VAM_0;
+	ssd1309_cfg_o->page_addr_end_ham_vam = SSD1309_PAGE_ADDR_END_HAM_VAM_7;
+	ssd1309_cfg_o->start_line = SSD1309_START_LINE_0;
+	ssd1309_cfg_o->contrast = SSD1309_CONTRAST_10;
+	ssd1309_cfg_o->horizontal_flip = SSD1309_HORIZONTAL_FLIP_TRUE;
+	ssd1309_cfg_o->inverse_mode = SSD1309_INVERSE_MODE_FALSE;
+	ssd1309_cfg_o->multiplex_ratio = SSD1309_MULTIPLEX_RATIO_64;
+	ssd1309_cfg_o->vertical_flip = SSD1309_VERTICAL_FLIP_TRUE;
+	ssd1309_cfg_o->offset = SSD1309_OFFSET_0;
+	ssd1309_cfg_o->clk_div_ratio = SSD1309_CLK_DIV_RATIO_1;
+	ssd1309_cfg_o->clk_speed_lvl = SSD1309_CLK_SPEED_LVL_LVL_15;
+	ssd1309_cfg_o->phase1_precharge_dclk = SSD1309_PHASE1_PRECHARGE_DCLK_2;
+	ssd1309_cfg_o->phase2_precharge_dclk = SSD1309_PHASE2_PRECHARGE_DCLK_2;
+	ssd1309_cfg_o->vcomh_deselect_lvl = SSD1309_VCOMH_DESELECT_LVL_MED;
 
 	return ERR_OK;
 }
 
-/**
- * @brief Initializes the SSD1309 display.
- * 
- * @param[in] ssd1309_handle The handle of the SSD1309 module.
- * @return ERR_te Error generated during execution. 
- */
-ERR_te ssd1309_init_handle(SSD1309_CONFIG_ts *ssd1309_config, SSD1309_HANDLE_ts **ssd1309_handle_o) {
+/** @brief Initializes the SSD1309 display handle and sends the configuration sequence. @see ssd1309_init_handle */
+ERR_te ssd1309_init_handle(SSD1309_CFG_ts *ssd1309_cfg, SSD1309_HANDLE_ts **ssd1309_handle_o) {
 	if(internal_state.ssd1309_handle.initialized == true) {
 		LOG_ERROR(
 			internal_state.subsys,
@@ -614,7 +630,7 @@ ERR_te ssd1309_init_handle(SSD1309_CONFIG_ts *ssd1309_config, SSD1309_HANDLE_ts 
 		return ERR_INITIALIZATION_FAILURE;
 	}
 
-	if(ssd1309_config->i2c_instance == (void*)0) {
+	if(ssd1309_cfg->i2c_instance == (void*)0) {
 		LOG_ERROR(
 			internal_state.subsys, 
 			internal_state.log_level,
@@ -623,7 +639,7 @@ ERR_te ssd1309_init_handle(SSD1309_CONFIG_ts *ssd1309_config, SSD1309_HANDLE_ts 
 
 		return ERR_INITIALIZATION_FAILURE;
 	}
-	else if(ssd1309_config->scl_gpio_port == (void*)0 || ssd1309_config->sda_gpio_port == (void*)0) {
+	else if(ssd1309_cfg->scl_gpio_port == (void*)0 || ssd1309_cfg->sda_gpio_port == (void*)0) {
 		LOG_ERROR(
 			internal_state.subsys, 
 			internal_state.log_level,
@@ -633,55 +649,55 @@ ERR_te ssd1309_init_handle(SSD1309_CONFIG_ts *ssd1309_config, SSD1309_HANDLE_ts 
 		return ERR_INITIALIZATION_FAILURE;
 	}
 
-	internal_state.ssd1309_handle.i2c_instance = ssd1309_config->i2c_instance;
-	internal_state.ssd1309_handle.scl_gpio_port = ssd1309_config->scl_gpio_port;
-	internal_state.ssd1309_handle.scl_gpio_pin = ssd1309_config->scl_gpio_pin;
-	internal_state.ssd1309_handle.sda_gpio_port = ssd1309_config->sda_gpio_port;
-	internal_state.ssd1309_handle.sda_gpio_pin = ssd1309_config->sda_gpio_pin;
-	internal_state.ssd1309_handle.gpio_alternate_function = ssd1309_config->gpio_alternate_function;
-	internal_state.ssd1309_handle.low_col_start_addr_pam = ssd1309_config->low_col_start_addr_pam;
-	internal_state.ssd1309_handle.high_col_start_addr_pam = ssd1309_config->high_col_start_addr_pam;
-	internal_state.ssd1309_handle.mem_addr_mode = ssd1309_config->mem_addr_mode;
-	internal_state.ssd1309_handle.col_addr_start_ham_vam = ssd1309_config->col_addr_start_ham_vam;
-	internal_state.ssd1309_handle.col_addr_end_ham_vam = ssd1309_config->col_addr_end_ham_vam;
-	internal_state.ssd1309_handle.page_addr_start_ham_vam = ssd1309_config->page_addr_start_ham_vam;
-	internal_state.ssd1309_handle.page_addr_end_ham_vam = ssd1309_config->page_addr_end_ham_vam;
-	internal_state.ssd1309_handle.start_line = ssd1309_config->start_line;
-	internal_state.ssd1309_handle.contrast = ssd1309_config->contrast;
-	internal_state.ssd1309_handle.horizontal_flip = ssd1309_config->horizontal_flip;
-	internal_state.ssd1309_handle.inverse_mode = ssd1309_config->inverse_mode;
-	internal_state.ssd1309_handle.multiplex_ratio = ssd1309_config->multiplex_ratio;
-	internal_state.ssd1309_handle.page_start_addr_pam = ssd1309_config->page_start_addr_pam;
-	internal_state.ssd1309_handle.vertical_flip = ssd1309_config->vertical_flip;
-	internal_state.ssd1309_handle.offset = ssd1309_config->offset;
-	internal_state.ssd1309_handle.clk_div_ratio = ssd1309_config->clk_div_ratio;
-	internal_state.ssd1309_handle.clk_speed_lvl =ssd1309_config->clk_speed_lvl;
-	internal_state.ssd1309_handle.phase1_precharge_dclk = ssd1309_config->phase1_precharge_dclk;
-	internal_state.ssd1309_handle.phase2_precharge_dclk = ssd1309_config->phase2_precharge_dclk;
-	internal_state.ssd1309_handle.vcomh_deselect_lvl = ssd1309_config->vcomh_deselect_lvl;
+	internal_state.ssd1309_handle.i2c_instance = ssd1309_cfg->i2c_instance;
+	internal_state.ssd1309_handle.scl_gpio_port = ssd1309_cfg->scl_gpio_port;
+	internal_state.ssd1309_handle.scl_gpio_pin = ssd1309_cfg->scl_gpio_pin;
+	internal_state.ssd1309_handle.sda_gpio_port = ssd1309_cfg->sda_gpio_port;
+	internal_state.ssd1309_handle.sda_gpio_pin = ssd1309_cfg->sda_gpio_pin;
+	internal_state.ssd1309_handle.gpio_alternate_function = ssd1309_cfg->gpio_alternate_function;
+	internal_state.ssd1309_handle.low_col_start_addr_pam = ssd1309_cfg->low_col_start_addr_pam;
+	internal_state.ssd1309_handle.high_col_start_addr_pam = ssd1309_cfg->high_col_start_addr_pam;
+	internal_state.ssd1309_handle.mem_addr_mode = ssd1309_cfg->mem_addr_mode;
+	internal_state.ssd1309_handle.col_addr_start_ham_vam = ssd1309_cfg->col_addr_start_ham_vam;
+	internal_state.ssd1309_handle.col_addr_end_ham_vam = ssd1309_cfg->col_addr_end_ham_vam;
+	internal_state.ssd1309_handle.page_addr_start_ham_vam = ssd1309_cfg->page_addr_start_ham_vam;
+	internal_state.ssd1309_handle.page_addr_end_ham_vam = ssd1309_cfg->page_addr_end_ham_vam;
+	internal_state.ssd1309_handle.start_line = ssd1309_cfg->start_line;
+	internal_state.ssd1309_handle.contrast = ssd1309_cfg->contrast;
+	internal_state.ssd1309_handle.horizontal_flip = ssd1309_cfg->horizontal_flip;
+	internal_state.ssd1309_handle.inverse_mode = ssd1309_cfg->inverse_mode;
+	internal_state.ssd1309_handle.multiplex_ratio = ssd1309_cfg->multiplex_ratio;
+	internal_state.ssd1309_handle.page_start_addr_pam = ssd1309_cfg->page_start_addr_pam;
+	internal_state.ssd1309_handle.vertical_flip = ssd1309_cfg->vertical_flip;
+	internal_state.ssd1309_handle.offset = ssd1309_cfg->offset;
+	internal_state.ssd1309_handle.clk_div_ratio = ssd1309_cfg->clk_div_ratio;
+	internal_state.ssd1309_handle.clk_speed_lvl =ssd1309_cfg->clk_speed_lvl;
+	internal_state.ssd1309_handle.phase1_precharge_dclk = ssd1309_cfg->phase1_precharge_dclk;
+	internal_state.ssd1309_handle.phase2_precharge_dclk = ssd1309_cfg->phase2_precharge_dclk;
+	internal_state.ssd1309_handle.vcomh_deselect_lvl = ssd1309_cfg->vcomh_deselect_lvl;
 
-	GPIO_HANDLE_ts ssd1309_scl = { 0 };
-	GPIO_HANDLE_ts ssd1309_sda = { 0 };
+	GPIO_CFG_ts ssd1309_scl = { 0 };
+	GPIO_CFG_ts ssd1309_sda = { 0 };
 
-	ssd1309_scl.port = ssd1309_config->scl_gpio_port;
-	ssd1309_scl.pin = ssd1309_config->scl_gpio_pin;
+	ssd1309_scl.port = ssd1309_cfg->scl_gpio_port;
+	ssd1309_scl.pin = ssd1309_cfg->scl_gpio_pin;
 	ssd1309_scl.mode = GPIO_MODE_ALTERNATE_FUNCTION;
-	ssd1309_scl.alternate_function = ssd1309_config->gpio_alternate_function;
+	ssd1309_scl.alternate_function = ssd1309_cfg->gpio_alternate_function;
 	ssd1309_scl.output_type = GPIO_OUTPUT_TYPE_OPENDRAIN;
 
-	ssd1309_sda.port = ssd1309_config->sda_gpio_port;
-	ssd1309_sda.pin = ssd1309_config->sda_gpio_pin;
+	ssd1309_sda.port = ssd1309_cfg->sda_gpio_port;
+	ssd1309_sda.pin = ssd1309_cfg->sda_gpio_pin;
 	ssd1309_sda.mode = GPIO_MODE_ALTERNATE_FUNCTION;
-	ssd1309_sda.alternate_function = ssd1309_config->gpio_alternate_function;
+	ssd1309_sda.alternate_function = ssd1309_cfg->gpio_alternate_function;
 	ssd1309_sda.output_type = GPIO_OUTPUT_TYPE_OPENDRAIN;
 
 	gpio_init(&ssd1309_scl);
 	gpio_init(&ssd1309_sda);
 
-	I2C_HANDLE_ts ssd1309_i2c = { 0 };
-	ssd1309_i2c.i2c_clock_strech = I2C_CLOCK_STRETCH_ON;
-	ssd1309_i2c.i2c_instance = internal_state.ssd1309_handle.i2c_instance;
-	ssd1309_i2c.i2c_speed = I2C_SPEED_400kHz;
+	I2C_CFG_ts ssd1309_i2c = { 0 };
+	ssd1309_i2c.clock_strech = I2C_CLOCK_STRETCH_ON;
+	ssd1309_i2c.instance = internal_state.ssd1309_handle.i2c_instance;
+	ssd1309_i2c.speed = I2C_SPEED_400kHz;
 
 	i2c_init(&ssd1309_i2c); 
 
@@ -698,70 +714,70 @@ ERR_te ssd1309_init_handle(SSD1309_CONFIG_ts *ssd1309_config, SSD1309_HANDLE_ts 
 
 	// Memory addressing mode
 	cmd_buf[idx++] = 0x20;
-	cmd_buf[idx++] = ssd1309_config->mem_addr_mode;
+	cmd_buf[idx++] = ssd1309_cfg->mem_addr_mode;
 
 	// Addressing mode dependent setup
-	if (ssd1309_config->mem_addr_mode == SSD1309_MEM_ADDR_MODE_HAM ||
-		ssd1309_config->mem_addr_mode == SSD1309_MEM_ADDR_MODE_VAM) {
+	if (ssd1309_cfg->mem_addr_mode == SSD1309_MEM_ADDR_MODE_HAM ||
+		ssd1309_cfg->mem_addr_mode == SSD1309_MEM_ADDR_MODE_VAM) {
 
 		// Column start/end
 		cmd_buf[idx++] = 0x21;
-		cmd_buf[idx++] = ssd1309_config->col_addr_start_ham_vam;
-		cmd_buf[idx++] = ssd1309_config->col_addr_end_ham_vam;
+		cmd_buf[idx++] = ssd1309_cfg->col_addr_start_ham_vam;
+		cmd_buf[idx++] = ssd1309_cfg->col_addr_end_ham_vam;
 
 		// Page start/end
 		cmd_buf[idx++] = 0x22;
-		cmd_buf[idx++] = ssd1309_config->page_addr_start_ham_vam;
-		cmd_buf[idx++] = ssd1309_config->page_addr_end_ham_vam;
+		cmd_buf[idx++] = ssd1309_cfg->page_addr_start_ham_vam;
+		cmd_buf[idx++] = ssd1309_cfg->page_addr_end_ham_vam;
 	}
 	else {
 		// Page start (PAM)
-		cmd_buf[idx++] = 0xB0 | ssd1309_config->page_start_addr_pam;
+		cmd_buf[idx++] = 0xB0 | ssd1309_cfg->page_start_addr_pam;
 
 		// Column start (PAM)
-		cmd_buf[idx++] = ssd1309_config->low_col_start_addr_pam;
-		cmd_buf[idx++] = 0x10 | ssd1309_config->high_col_start_addr_pam;
+		cmd_buf[idx++] = ssd1309_cfg->low_col_start_addr_pam;
+		cmd_buf[idx++] = 0x10 | ssd1309_cfg->high_col_start_addr_pam;
 	}
 
 	// SSD1309 start line 
-	cmd_buf[idx++] = 0x40 | ssd1309_config->start_line;
+	cmd_buf[idx++] = 0x40 | ssd1309_cfg->start_line;
 
 	// Contrast
 	cmd_buf[idx++] = 0x81;
-	cmd_buf[idx++] = ssd1309_config->contrast;
+	cmd_buf[idx++] = ssd1309_cfg->contrast;
 
 	// Horizontal flip 
-	cmd_buf[idx++] = 0xA0 | ssd1309_config->horizontal_flip;
+	cmd_buf[idx++] = 0xA0 | ssd1309_cfg->horizontal_flip;
 
 	// Inverse mode
-	cmd_buf[idx++] = 0xA6 | ssd1309_config->inverse_mode;
+	cmd_buf[idx++] = 0xA6 | ssd1309_cfg->inverse_mode;
 
 	// Multiplex ratio
 	cmd_buf[idx++] = 0xA8;
-	cmd_buf[idx++] = ssd1309_config->multiplex_ratio;
+	cmd_buf[idx++] = ssd1309_cfg->multiplex_ratio;
 
 	// Vertical flip
-	cmd_buf[idx++] = 0xC0 | ssd1309_config->vertical_flip;
+	cmd_buf[idx++] = 0xC0 | ssd1309_cfg->vertical_flip;
 
 	// SSD1309 offset 
 	cmd_buf[idx++] = 0xD3;
-	cmd_buf[idx++] = ssd1309_config->offset;
+	cmd_buf[idx++] = ssd1309_cfg->offset;
 
 	// Clock divide + oscillator frequency
 	cmd_buf[idx++] = 0xD5;
 	cmd_buf[idx++] =
-		(ssd1309_config->clk_div_ratio & 0x0F) |
-		(ssd1309_config->clk_speed_lvl << 4);
+		(ssd1309_cfg->clk_div_ratio & 0x0F) |
+		(ssd1309_cfg->clk_speed_lvl << 4);
 
 	// Pre-charge period
 	cmd_buf[idx++] = 0xD9;
 	cmd_buf[idx++] =
-		(ssd1309_config->phase1_precharge_dclk & 0x0F) |
-		(ssd1309_config->phase2_precharge_dclk << 4);
+		(ssd1309_cfg->phase1_precharge_dclk & 0x0F) |
+		(ssd1309_cfg->phase2_precharge_dclk << 4);
 
 	// VCOMH deselect level
 	cmd_buf[idx++] = 0xDB;
-	cmd_buf[idx++] = ssd1309_config->vcomh_deselect_lvl;
+	cmd_buf[idx++] = ssd1309_cfg->vcomh_deselect_lvl;
 
 	// Turn on SSD1309
 	cmd_buf[idx++] = 0xAF;
@@ -786,14 +802,7 @@ ERR_te ssd1309_init_handle(SSD1309_CONFIG_ts *ssd1309_config, SSD1309_HANDLE_ts 
 	return ERR_OK;
 }
 
-/**
- * @brief Draws a text on the display.
- * 
- * @param[in] text The text to draw on the display.
- * @param[in] text_len The length of the text to draw on the display.
- * @param[in] line The line where to draw the text.
- * @return ERR_te Error generated during execution.
- */
+/** @brief Draws a text string into the framebuffer at the specified line. @see ssd1309_draw_text */
 ERR_te ssd1309_draw_text(char const *text, uint8_t text_len, uint8_t line, bool force) {
 	if((!internal_state.ssd1309_handle.initialized || !internal_state.started) && !force) {
 		LOG_ERROR(
@@ -830,15 +839,7 @@ ERR_te ssd1309_draw_text(char const *text, uint8_t text_len, uint8_t line, bool 
     return ERR_OK;
 }
 
-/**
- * @brief Draws a rectangle on the display.
- * 
- * @param[in] x_src Starting X coord.
- * @param[in] y_src Starting Y coord.
- * @param[in] x_dest Destination X coord.
- * @param[in] y_dest Destination Y coord.
- * @return ERR_te Error generated during execution. 
- */
+/** @brief Draws a filled rectangle into the framebuffer. @see ssd1309_draw_rect */
 ERR_te ssd1309_draw_rect(uint8_t x_src, uint8_t y_src, uint8_t x_dest, uint8_t y_dest, bool force) {
 	if((!internal_state.ssd1309_handle.initialized || !internal_state.started) && !force) {
 		LOG_ERROR(
@@ -896,12 +897,7 @@ ERR_te ssd1309_draw_rect(uint8_t x_src, uint8_t y_src, uint8_t x_dest, uint8_t y
 	return ERR_OK;
 }
 
-/**
- * @brief Clears a line on the display.
- * 
- * @param[in] line The line to clear. 
- * @return ERR_te Error generated during execution.
- */
+/** @brief Clears a single display line in the framebuffer. @see ssd1309_clear_line */
 ERR_te ssd1309_clear_line(uint8_t line, bool force) {
 	if((!internal_state.ssd1309_handle.initialized || !internal_state.started) && !force) {
 		LOG_ERROR(
@@ -924,12 +920,7 @@ ERR_te ssd1309_clear_line(uint8_t line, bool force) {
 	return ERR_OK;
 }
 
-/**
- * @brief Inverts the pixels in a line.
- * 
- * @param[in] line The line to invert the pixels of.
- * @return ERR_te Error generated during execution. 
- */
+/** @brief Inverts all pixels in a single display line in the framebuffer. @see ssd1309_invert_line */
 ERR_te ssd1309_invert_line(uint8_t line, bool force) {
 	if((!internal_state.ssd1309_handle.initialized || !internal_state.started) && !force) {
 		LOG_ERROR(
@@ -952,15 +943,7 @@ ERR_te ssd1309_invert_line(uint8_t line, bool force) {
 	return ERR_OK;
 }
 
-/**
- * @brief Clears a rectangle on the display.
- * 
- * @param[in] x_src Starting X coord.
- * @param[in] y_src Starting Y coord.
- * @param[in] x_dest Destination X coord.
- * @param[in] y_dest Destination Y coord.
- * @return ERR_te Error generated during execution. 
- */
+/** @brief Clears a rectangular region in the framebuffer. @see ssd1309_clear_rect */
 ERR_te ssd1309_clear_rect(uint8_t x_src, uint8_t y_src, uint8_t x_dest, uint8_t y_dest, bool force) {
 	if((!internal_state.ssd1309_handle.initialized || !internal_state.started) && !force) {
 		LOG_ERROR(
@@ -1018,15 +1001,7 @@ ERR_te ssd1309_clear_rect(uint8_t x_src, uint8_t y_src, uint8_t x_dest, uint8_t 
 	return ERR_OK;
 }
 
-/**
- * @brief Inverts a rectangle on the display.
- * 
- * @param[in] x_src Starting X coord.
- * @param[in] y_src Starting Y coord.
- * @param[in] x_dest Destination X coord.
- * @param[in] y_dest Destination Y coord.
- * @return ERR_te Error generated during execution. 
- */
+/** @brief Inverts all pixels in a rectangular region of the framebuffer. @see ssd1309_invert_rect */
 ERR_te ssd1309_invert_rect(uint8_t x_src, uint8_t y_src, uint8_t x_dest, uint8_t y_dest, bool force) {
 	if((!internal_state.ssd1309_handle.initialized || !internal_state.started) && !force) {
 		LOG_ERROR(
@@ -1085,11 +1060,7 @@ ERR_te ssd1309_invert_rect(uint8_t x_src, uint8_t y_src, uint8_t x_dest, uint8_t
 	return ERR_OK;
 }
 
-/**
- * @brief Updates the display.
- * 
- * @return ERR_te Error generated during exection,
- */
+/** @brief Flushes the internal framebuffer to the display over I2C. @see ssd1309_update */
 ERR_te ssd1309_update(bool force) {
 	if((!internal_state.ssd1309_handle.initialized || !internal_state.started) && !force) {
 		LOG_ERROR(
@@ -1119,17 +1090,23 @@ ERR_te ssd1309_update(bool force) {
 
 /** @} */
 
-  /** 
- * @defgroup SSD1309_COMMAND_HANDLERS SSD1309 COMMAND HANDLERS
+/**
+ * @defgroup ssd1309_command_handlers SSD1309 Command Handlers
  * @{
  */
 
- /**
- * @brief Command handler routine for start command.
- * 
- * @param[in] argc Number of arguments.
- * @param[in] argv Arguments.
- * @return ERR_te Error generated during execution.
+/**
+ * @brief CLI handler for the "start" command. Starts the SSD1309 subsystem at runtime.
+ *
+ * @details
+ * Expected invocation: `ssd1309 start`
+ *
+ * @param[in] argc Argument count. Must be exactly 2.
+ * @param[in] argv Argument list: argv[0] = "ssd1309", argv[1] = "start".
+ *
+ * @return
+ * - ERR_OK on success
+ * - ERR_INVALID_ARGUMENT if @p argc != 2
  */
 static ERR_te ssd1309_cmd_start_handler(uint32_t argc, char **argv) {	
 	if(argc != 2) {
@@ -1148,11 +1125,17 @@ static ERR_te ssd1309_cmd_start_handler(uint32_t argc, char **argv) {
 }
 
 /**
- * @brief Command handler routine for stop command.
- * 
- * @param[in] argc Number of arguments.
- * @param[in] argv Arguments.
- * @return ERR_te Error generated during execution.
+ * @brief CLI handler for the "stop" command. Stops the SSD1309 subsystem at runtime.
+ *
+ * @details
+ * Expected invocation: `ssd1309 stop`
+ *
+ * @param[in] argc Argument count. Must be exactly 2.
+ * @param[in] argv Argument list: argv[0] = "ssd1309", argv[1] = "stop".
+ *
+ * @return
+ * - ERR_OK on success
+ * - ERR_INVALID_ARGUMENT if @p argc != 2
  */
 static ERR_te ssd1309_cmd_stop_handler(uint32_t argc, char **argv) {
 	if(argc != 2) {
@@ -1171,11 +1154,20 @@ static ERR_te ssd1309_cmd_stop_handler(uint32_t argc, char **argv) {
 }
 
 /**
- * @brief Command handler routine for fillrect command.
- * 
- * @param[in] argc Number of arguments.
- * @param[in] argv Arguments.
- * @return ERR_te Error generated during execution.
+ * @brief CLI handler for the "fillrect" command. Fills a rectangle and updates the display.
+ *
+ * @details
+ * Expected invocation: `ssd1309 fillrect <x1> <y1> <x2> <y2>`
+ *
+ * Coordinates are 1-based. Calls @ref ssd1309_draw_rect with force=true,
+ * then @ref ssd1309_update with force=true.
+ *
+ * @param[in] argc Argument count. Must be exactly 6.
+ * @param[in] argv argv[2]–argv[5] = x1, y1, x2, y2 as decimal strings.
+ *
+ * @return
+ * - ERR_OK on success
+ * - ERR_INVALID_ARGUMENT if @p argc != 6 or coordinates are out of range
  */
 static ERR_te ssd1309_cmd_fillrect_handler(uint32_t argc, char **argv) {
 	ERR_te err;
@@ -1227,11 +1219,17 @@ static ERR_te ssd1309_cmd_fillrect_handler(uint32_t argc, char **argv) {
 }
 
 /**
- * @brief Command handler routine for clearrect command.
- * 
- * @param[in] argc Number of arguments.
- * @param[in] argv Arguments.
- * @return ERR_te Error generated during execution.
+ * @brief CLI handler for the "clearrect" command. Clears a rectangle and updates the display.
+ *
+ * @details
+ * Expected invocation: `ssd1309 clearrect <x1> <y1> <x2> <y2>`
+ *
+ * @param[in] argc Argument count. Must be exactly 6.
+ * @param[in] argv argv[2]–argv[5] = x1, y1, x2, y2 as decimal strings.
+ *
+ * @return
+ * - ERR_OK on success
+ * - ERR_INVALID_ARGUMENT if @p argc != 6 or coordinates are out of range
  */
 static ERR_te ssd1309_cmd_clearrect_handler(uint32_t argc, char **argv) {
 	ERR_te err;
@@ -1283,11 +1281,17 @@ static ERR_te ssd1309_cmd_clearrect_handler(uint32_t argc, char **argv) {
 }
 
 /**
- * @brief Command handler routine for invertrect command.
- * 
- * @param[in] argc Number of arguments.
- * @param[in] argv Arguments.
- * @return ERR_te Error generated during execution.
+ * @brief CLI handler for the "invertrect" command. Inverts a rectangle and updates the display.
+ *
+ * @details
+ * Expected invocation: `ssd1309 invertrect <x1> <y1> <x2> <y2>`
+ *
+ * @param[in] argc Argument count. Must be exactly 6.
+ * @param[in] argv argv[2]–argv[5] = x1, y1, x2, y2 as decimal strings.
+ *
+ * @return
+ * - ERR_OK on success
+ * - ERR_INVALID_ARGUMENT if @p argc != 6 or coordinates are out of range
  */
 static ERR_te ssd1309_cmd_invertrect_handler(uint32_t argc, char **argv) {
 	ERR_te err;
@@ -1339,11 +1343,18 @@ static ERR_te ssd1309_cmd_invertrect_handler(uint32_t argc, char **argv) {
 }
 
 /**
- * @brief Command handler routine for drawtext command.
- * 
- * @param[in] argc Number of arguments.
- * @param[in] argv Arguments.
- * @return ERR_te Error generated during execution.
+ * @brief CLI handler for the "drawtext" command. Draws text on a line and updates the display.
+ *
+ * @details
+ * Expected invocation: `ssd1309 drawtext <text> <line>`
+ *
+ * @param[in] argc Argument count. Must be exactly 4.
+ * @param[in] argv argv[2] = text string, argv[3] = line number (1–8) as decimal string.
+ *
+ * @return
+ * - ERR_OK on success
+ * - ERR_INVALID_ARGUMENT if @p argc != 4 or line is out of range
+ * - Propagated error from @ref ssd1309_draw_text on failure
  */
 static ERR_te ssd1309_cmd_drawtext_handler(uint32_t argc, char **argv) {
 	ERR_te err;
@@ -1380,11 +1391,18 @@ static ERR_te ssd1309_cmd_drawtext_handler(uint32_t argc, char **argv) {
 }
 
 /**
- * @brief Command handler routine for clearline command.
- * 
- * @param[in] argc Number of arguments.
- * @param[in] argv Arguments.
- * @return ERR_te Error generated during execution.
+ * @brief CLI handler for the "clearline" command. Clears a line and updates the display.
+ *
+ * @details
+ * Expected invocation: `ssd1309 clearline <line>`
+ *
+ * @param[in] argc Argument count. Must be exactly 3.
+ * @param[in] argv argv[2] = line number (1–8) as decimal string.
+ *
+ * @return
+ * - ERR_OK on success
+ * - ERR_INVALID_ARGUMENT if @p argc != 3 or line is out of range
+ * - Propagated error from @ref ssd1309_clear_line on failure
  */
 static ERR_te ssd1309_cmd_clearline_handler(uint32_t argc, char **argv) {
 	ERR_te err;
@@ -1421,11 +1439,18 @@ static ERR_te ssd1309_cmd_clearline_handler(uint32_t argc, char **argv) {
 }
 
 /**
- * @brief Command handler routine for invertline command.
- * 
- * @param[in] argc Number of arguments.
- * @param[in] argv Arguments.
- * @return ERR_te Error generated during execution.
+ * @brief CLI handler for the "invertline" command. Inverts a line and updates the display.
+ *
+ * @details
+ * Expected invocation: `ssd1309 invertline <line>`
+ *
+ * @param[in] argc Argument count. Must be exactly 3.
+ * @param[in] argv argv[2] = line number (1–8) as decimal string.
+ *
+ * @return
+ * - ERR_OK on success
+ * - ERR_INVALID_ARGUMENT if @p argc != 3 or line is out of range
+ * - Propagated error from @ref ssd1309_invert_line on failure
  */
 static ERR_te ssd1309_cmd_invertline_handler(uint32_t argc, char **argv) {
 	ERR_te err;
@@ -1434,7 +1459,7 @@ static ERR_te ssd1309_cmd_invertline_handler(uint32_t argc, char **argv) {
 		LOG_ERROR(
 			internal_state.subsys,
 			internal_state.log_level,
-			"ssd1309_cmd_clearline_handler: invalid arguments"
+			"ssd1309_cmd_invertline_handler: invalid arguments"
 		);
 
 		return ERR_INVALID_ARGUMENT;
@@ -1445,7 +1470,7 @@ static ERR_te ssd1309_cmd_invertline_handler(uint32_t argc, char **argv) {
 		LOG_ERROR(
 			internal_state.subsys,
 			internal_state.log_level,
-			"ssd1309_cmd_clearline_handler: invalid arguments"
+			"ssd1309_cmd_invertline_handler: invalid arguments"
 		);	
 
 		return ERR_INVALID_ARGUMENT;

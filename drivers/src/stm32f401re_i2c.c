@@ -1,330 +1,262 @@
 /**
- * @file stm32f401re_i2c_driver.c
+ * @file stm32f401re_i2c.c
  * @author github.com/Baksi675
- * @brief I2C driver implementation for STM32F401RE
+ * @brief I2C driver implementation for STM32F401RE.
  * @version 0.1
  * @date 2025-08-11
- * 
+ *
  * @copyright Copyright (c) 2025
- * 
+ *
  */
 
 #include "stm32f401re_i2c.h"
 #include "stm32f401re_rcc.h"
 
+/* ---- Forward declaration for internal helper ---- */
 static void i2c_set_pclk(I2C_REGDEF_ts const *i2c_instance, EN_STATUS_te en_status);
 
-/** 
- * @defgroup I2C_Public_APIs I2C Public APIs
+/**
+ * @defgroup stm32_i2c_public_apis I2C Public APIs
  * @{
  */
 
- /**
- * @brief Initializes the I2C peripheral. If no configuration is given in the application layer, then the I2C is initialized with the following defaults:
- * - Slave clock stretching is ENABLE
- * - Own address is 0
- * - SCLK speed is 100 kHz
- *
- * Comments about interface:
- * - A configuration object must be created before calling this function.
- * - In a local scoped environment it's recommended to initialize the configuration object to zero before passing it as a parameter to avoid gargabe values.
- *
- * @param[in] i2c_handle I2C configuration object.
- */
- void i2c_init(I2C_HANDLE_ts *i2c_handle) {
-	// Enable peripheral clock
-	i2c_set_pclk(i2c_handle->i2c_instance, ENABLE);
+/** @brief Initializes the I2C peripheral with the given configuration. @see i2c_init */
+void i2c_init(I2C_CFG_ts *i2c_cfg) {
+    // Enable peripheral clock
+    i2c_set_pclk(i2c_cfg->instance, ENABLE);
 
-	// Set clock stretching from slave
-	i2c_handle->i2c_instance->I2C_CR1 &= ~(0x1 << I2C_CR1_NOSTRETCH);
-	i2c_handle->i2c_instance->I2C_CR1 |= (i2c_handle->i2c_clock_strech << I2C_CR1_NOSTRETCH);
+    // Configure clock stretching (NOSTRETCH bit in CR1)
+    i2c_cfg->instance->I2C_CR1 &= ~(0x1 << I2C_CR1_NOSTRETCH);
+    i2c_cfg->instance->I2C_CR1 |= (i2c_cfg->clock_strech << I2C_CR1_NOSTRETCH);
 
-	// Set address
-	i2c_handle->i2c_instance->I2C_OAR1 &= ~(0x7F << I2C_OAR1_ADD7_1);
-	i2c_handle->i2c_instance->I2C_OAR1 |= ((i2c_handle->i2c_address & 0x7F) << I2C_OAR1_ADD7_1);
-	i2c_handle->i2c_instance->I2C_OAR1 |= (0x1 << 14);
+    // Configure own 7-bit address in OAR1; bit 14 must be kept set per reference manual
+    i2c_cfg->instance->I2C_OAR1 &= ~(0x7F << I2C_OAR1_ADD7_1);
+    i2c_cfg->instance->I2C_OAR1 |= ((i2c_cfg->address & 0x7F) << I2C_OAR1_ADD7_1);
+    i2c_cfg->instance->I2C_OAR1 |= (0x1 << 14);
 
-	// Set peripheral clock frequency
-	uint32_t i2c_clock_hz = rcc_get_apb1_clk();
-	i2c_handle->i2c_instance->I2C_CR2 &= ~(0x3F << I2C_CR2_FREQ);
-	i2c_handle->i2c_instance->I2C_CR2 |= (((i2c_clock_hz / 1000000) & 0x3F) << I2C_CR2_FREQ);
+    // Set CR2 FREQ field to the APB1 clock frequency in MHz
+    uint32_t i2c_clock_hz = rcc_get_apb1_clk();
+    i2c_cfg->instance->I2C_CR2 &= ~(0x3F << I2C_CR2_FREQ);
+    i2c_cfg->instance->I2C_CR2 |= (((i2c_clock_hz / 1000000) & 0x3F) << I2C_CR2_FREQ);
 
-	// Set speed
-	uint16_t ccr_value = 0;
-	uint8_t t_rise = 0;
-	if(i2c_handle->i2c_speed == I2C_SPEED_100kHz) {
-		// Set standard mode, 100 kHz (duty cycle = 50%)
-		i2c_handle->i2c_instance->I2C_CCR &= ~(0x1 << I2C_CCR_FS);
-		
-		ccr_value = i2c_clock_hz / (2 * 100000);
+    // Compute CCR and TRISE based on selected speed
+    uint16_t ccr_value = 0;
+    uint8_t t_rise = 0;
+    if(i2c_cfg->speed == I2C_SPEED_100kHz) {
+        // Standard mode (SM): 100 kHz, 50% duty cycle
+        // CCR = f_PCLK1 / (2 * f_SCL)
+        i2c_cfg->instance->I2C_CCR &= ~(0x1 << I2C_CCR_FS);
 
-		t_rise = (i2c_clock_hz / 1000000) + 1;
-	}
-	else if(i2c_handle->i2c_speed == I2C_SPEED_400kHz) {
-		// Set fast mode, 400 kHz (duty cycle = 9/16 (thigh / tlow))
-		i2c_handle->i2c_instance->I2C_CCR &= ~(0x1 << I2C_CCR_FS);
-		i2c_handle->i2c_instance->I2C_CCR |= (0x1 << I2C_CCR_FS);
+        ccr_value = i2c_clock_hz / (2 * 100000);
 
-		i2c_handle->i2c_instance->I2C_CCR &= ~(0x1 << I2C_CCR_DUTY);
-		i2c_handle->i2c_instance->I2C_CCR |= (0x1 << I2C_CCR_DUTY);
+        // TRISE = (t_rise_max_ns / t_PCLK1_ns) + 1 = (1000 ns / (1/f_PCLK1)) + 1
+        t_rise = (i2c_clock_hz / 1000000) + 1;
+    }
+    else if(i2c_cfg->speed == I2C_SPEED_400kHz) {
+        // Fast mode (FM): 400 kHz, DUTY = 1 gives t_low/t_high = 16/9
+        // CCR = f_PCLK1 / (25 * f_SCL)
+        i2c_cfg->instance->I2C_CCR &= ~(0x1 << I2C_CCR_FS);
+        i2c_cfg->instance->I2C_CCR |= (0x1 << I2C_CCR_FS);
 
-		ccr_value = i2c_clock_hz / (25 * 400000);
+        i2c_cfg->instance->I2C_CCR &= ~(0x1 << I2C_CCR_DUTY);
+        i2c_cfg->instance->I2C_CCR |= (0x1 << I2C_CCR_DUTY);
 
-		t_rise = ((i2c_clock_hz * 300) / 1000000000) + 1;
-	}
-	i2c_handle->i2c_instance->I2C_CCR &= ~(0xFFF);
-	i2c_handle->i2c_instance->I2C_CCR |= (ccr_value << I2C_CCR_CCR);
+        ccr_value = i2c_clock_hz / (25 * 400000);
 
-	i2c_handle->i2c_instance->I2C_TRISE &= ~(0x3F);
-	i2c_handle->i2c_instance->I2C_TRISE |= (t_rise);
- }
+        // TRISE = (t_rise_max_ns * f_PCLK1 / 1e9) + 1 = (300 ns * f_PCLK1 / 1e9) + 1
+        t_rise = ((i2c_clock_hz * 300) / 1000000000) + 1;
+    }
+    i2c_cfg->instance->I2C_CCR &= ~(0xFFF);
+    i2c_cfg->instance->I2C_CCR |= (ccr_value << I2C_CCR_CCR);
 
-/**
- * @brief Deinitializes the given I2C peripheral by setting its registers back to their reset values. It also turns of the peripherals clock.
- * 
- * @param[in] i2c_instance The I2C instance to deinitialize.
- */
+    i2c_cfg->instance->I2C_TRISE &= ~(0x3F);
+    i2c_cfg->instance->I2C_TRISE |= (t_rise);
+}
+
+/** @brief Deinitializes the I2C peripheral and disables its clock. @see i2c_deinit */
 void i2c_deinit(I2C_REGDEF_ts const *i2c_instance) {
-	if(i2c_instance == I2C1) {
-		rcc_reset_periph_apb1(RCC_APB1RSTR_I2C1RST);
-	}
-	else if(i2c_instance == I2C2) {
-		rcc_reset_periph_apb1(RCC_APB1RSTR_I2C2RST);
-	}
-	else if(i2c_instance == I2C3) {
-		rcc_reset_periph_apb1(RCC_APB1RSTR_I2C3RST);
-	}
+    if(i2c_instance == I2C1) {
+        rcc_reset_periph_apb1(RCC_APB1RSTR_I2C1RST);
+    }
+    else if(i2c_instance == I2C2) {
+        rcc_reset_periph_apb1(RCC_APB1RSTR_I2C2RST);
+    }
+    else if(i2c_instance == I2C3) {
+        rcc_reset_periph_apb1(RCC_APB1RSTR_I2C3RST);
+    }
 
-	i2c_set_pclk(i2c_instance, DISABLE);
+    i2c_set_pclk(i2c_instance, DISABLE);
 }
 
-/**
- * @brief A blocking I2C master send function. Sends data, blocks until it's completed.
- * 
- * Comments about interface:
- * - Before calling this function the peripheral must be ENABLE with \ref i2c_master_set_comm if it hasn't been done so.
- *
- * @param[in] i2c_instance The I2C instance on which to send data.
- * @param[in] slave_addr The address of the slave to send data.
- * @param[in] tx_buffer A pointer to the buffer containing the data to be sent.
- * @param[in] len The length of the buffer to be sent.
- */
+/** @brief Blocking I2C master transmit. @see i2c_master_send */
 void i2c_master_send(I2C_REGDEF_ts *i2c_instance, uint8_t slave_addr, uint8_t *tx_buffer, uint32_t len) {
-	uint16_t volatile dummy_read = 0; 
-	(void)dummy_read;
+    uint16_t volatile dummy_read = 0;
+    (void)dummy_read;
 
-	// Generate start condition
-	i2c_instance->I2C_CR1 |= (0x1 << I2C_CR1_START);
+    // Generate START condition
+    i2c_instance->I2C_CR1 |= (0x1 << I2C_CR1_START);
 
-	// Check if start condition has been generated via SB bit in SR1. Clear SB by reading SR1.
-	while(!((i2c_instance->I2C_SR1 >> I2C_SR1_SB) & 0x1));
-	dummy_read = i2c_instance->I2C_SR1;
+    // Wait for SB (start bit) flag; reading SR1 clears SB
+    while(!((i2c_instance->I2C_SR1 >> I2C_SR1_SB) & 0x1));
+    dummy_read = i2c_instance->I2C_SR1;
 
-	// Write slave address to DR register
-	i2c_instance->I2C_DR = (slave_addr << 1);
+    // Send 7-bit slave address with write bit (LSB = 0)
+    i2c_instance->I2C_DR = (slave_addr << 1);
 
-	// Wait until slave address has been sent by checking ADDR bit. Clear ADDR bit by reading SR1 and SR2.
-	while(!((i2c_instance->I2C_SR1 >> I2C_SR1_ADDR) & 0x1));
-	dummy_read = i2c_instance->I2C_SR1;
-	dummy_read = i2c_instance->I2C_SR2;
+    // Wait for ADDR flag; reading SR1 then SR2 clears ADDR
+    while(!((i2c_instance->I2C_SR1 >> I2C_SR1_ADDR) & 0x1));
+    dummy_read = i2c_instance->I2C_SR1;
+    dummy_read = i2c_instance->I2C_SR2;
 
-	// Send data until len becomes 0
-	while(len != 0) {
-		while(!((i2c_instance->I2C_SR1 >> I2C_SR1_TxE) & 0x1));
-		i2c_instance->I2C_DR = *tx_buffer;
-		tx_buffer++;
-		len--;
-	}
-	// Check if last byte has been sent 
-	while(!((i2c_instance->I2C_SR1 >> I2C_SR1_TxE) & 0x1));
-	while(!((i2c_instance->I2C_SR1 >> I2C_SR1_BTF) & 0x1));
+    // Transmit data bytes
+    while(len != 0) {
+        while(!((i2c_instance->I2C_SR1 >> I2C_SR1_TxE) & 0x1));
+        i2c_instance->I2C_DR = *tx_buffer;
+        tx_buffer++;
+        len--;
+    }
+
+    // Wait for TxE and BTF to confirm the last byte has been shifted out
+    while(!((i2c_instance->I2C_SR1 >> I2C_SR1_TxE) & 0x1));
+    while(!((i2c_instance->I2C_SR1 >> I2C_SR1_BTF) & 0x1));
 }
 
-/**
- * @brief Sends data with repeated start.
- * 
- * @param[in] i2c_instance The I2C instance used to send data.
- * @param[in] tx_buffer Pointer to a buffer of data to be sent.
- * @param[in] len Lenght of the data to be sent.
- */
+/** @brief Continues a transmission without a new START or address phase. @see i2c_master_send_continue */
 void i2c_master_send_continue(I2C_REGDEF_ts *i2c_instance, uint8_t *tx_buffer, uint32_t len) {
-	uint16_t volatile dummy_read = 0; 
-	(void)dummy_read;
+    uint16_t volatile dummy_read = 0;
+    (void)dummy_read;
 
-	// Send data until len becomes 0
-	while(len != 0) {
-		while(!((i2c_instance->I2C_SR1 >> I2C_SR1_TxE) & 0x1));
-		i2c_instance->I2C_DR = *tx_buffer;
-		tx_buffer++;
-		len--;
-	}
-	// Check if last byte has been sent 
-	while(!((i2c_instance->I2C_SR1 >> I2C_SR1_TxE) & 0x1));
-	while(!((i2c_instance->I2C_SR1 >> I2C_SR1_BTF) & 0x1));
+    // Transmit additional data bytes into the open transaction
+    while(len != 0) {
+        while(!((i2c_instance->I2C_SR1 >> I2C_SR1_TxE) & 0x1));
+        i2c_instance->I2C_DR = *tx_buffer;
+        tx_buffer++;
+        len--;
+    }
+
+    // Wait for TxE and BTF to confirm the last byte has been shifted out
+    while(!((i2c_instance->I2C_SR1 >> I2C_SR1_TxE) & 0x1));
+    while(!((i2c_instance->I2C_SR1 >> I2C_SR1_BTF) & 0x1));
 }
 
-/**
- * @brief A blocking I2C master receive function. Receives data, blocks until completed.
- *
- * Comments about interface:
- * - Before calling this function the peripheral must be ENABLE with \ref i2c_master_set_comm if it hasn't been done so.
- * 
- * @param[in] i2c_instance The I2C instance on which to receive data.
- * @param[in] slave_addr The address of the slave from which to receive data.
- * @param[out] rx_buffer A pointer to the buffer that will store the received data.
- * @param[in] len The length of the data to be received.
- */
+/** @brief Blocking I2C master receive. @see i2c_master_receive */
 void i2c_master_receive(I2C_REGDEF_ts *i2c_instance, uint8_t slave_addr, uint8_t *rx_buffer, uint32_t len) {
-	uint16_t volatile dummy_read = 0; 
-	(void)dummy_read;
-	
-	// Generate start condition
-	i2c_instance->I2C_CR1 |= (0x1 << I2C_CR1_START);
+    uint16_t volatile dummy_read = 0;
+    (void)dummy_read;
 
-	// Check if start condition has been generated via SB bit in SR1. Clear SB by reading SR1.
-	while(!((i2c_instance->I2C_SR1 >> I2C_SR1_SB) & 0x1));
-	dummy_read = i2c_instance->I2C_SR1;
+    // Generate START condition
+    i2c_instance->I2C_CR1 |= (0x1 << I2C_CR1_START);
 
-	// Write slave address to DR register (LSB is 1 ==> read sequence)
-	i2c_instance->I2C_DR = ((slave_addr << 1) | 0x1);
+    // Wait for SB flag; reading SR1 clears SB
+    while(!((i2c_instance->I2C_SR1 >> I2C_SR1_SB) & 0x1));
+    dummy_read = i2c_instance->I2C_SR1;
 
-	// Case when message is only 1 byte in lenght
-	if(len == 1) {
-		// Clear ACK bit in order to send NACK (to terminate the reception after 1 byte is received)
-		i2c_instance->I2C_CR1 &= ~(0x1 << I2C_CR1_ACK);
+    // Send 7-bit slave address with read bit (LSB = 1)
+    i2c_instance->I2C_DR = ((slave_addr << 1) | 0x1);
 
-		// Wait until slave address has been sent by checking ADDR bit. Clear ADDR bit by reading SR1 and SR2.
-		while(!((i2c_instance->I2C_SR1 >> I2C_SR1_ADDR) & 0x1));
-		dummy_read = i2c_instance->I2C_SR1;
-		dummy_read = i2c_instance->I2C_SR2;
+    if(len == 1) {
+        // Single-byte reception: disable ACK before clearing ADDR so NACK
+        // is sent immediately after the byte is received
+        i2c_instance->I2C_CR1 &= ~(0x1 << I2C_CR1_ACK);
 
-		// Receive a byte
-		while(!((i2c_instance->I2C_SR1 >> I2C_SR1_RxNE) & 0x1));
-		*rx_buffer = i2c_instance->I2C_DR;
-	}
-	// Case when message is more than 1 byte in length
-	else if(len > 1) {
-		// Wait until slave address has been sent by checking ADDR bit. Clear ADDR bit by reading SR1 and SR2.
-		while(!((i2c_instance->I2C_SR1 >> I2C_SR1_ADDR) & 0x1));
-		dummy_read = i2c_instance->I2C_SR1;
-		dummy_read = i2c_instance->I2C_SR2;
+        while(!((i2c_instance->I2C_SR1 >> I2C_SR1_ADDR) & 0x1));
+        dummy_read = i2c_instance->I2C_SR1;
+        dummy_read = i2c_instance->I2C_SR2;
 
-		while(len != 0) {
-			// When length is 2 disable the ACK bit to signal to the slave to stop transmission after the last byte has been sent
-			if(len == 2) {
-				while(!((i2c_instance->I2C_SR1 >> I2C_SR1_RxNE) & 0x1));
-				i2c_instance->I2C_CR1 &= ~(0x1 << I2C_CR1_ACK);
-				
-				*rx_buffer = i2c_instance->I2C_DR;
-				rx_buffer++;
-				len--;
-			}
-			else {
-				while(!((i2c_instance->I2C_SR1 >> I2C_SR1_RxNE) & 0x1));
-				*rx_buffer = i2c_instance->I2C_DR;
-				rx_buffer++;
-				len--;
-			}
-		}
-	}
+        while(!((i2c_instance->I2C_SR1 >> I2C_SR1_RxNE) & 0x1));
+        *rx_buffer = i2c_instance->I2C_DR;
+    }
+    else if(len > 1) {
+        // Multi-byte reception: ACK all bytes until the second-to-last
+        while(!((i2c_instance->I2C_SR1 >> I2C_SR1_ADDR) & 0x1));
+        dummy_read = i2c_instance->I2C_SR1;
+        dummy_read = i2c_instance->I2C_SR2;
 
-	// Reenable ACK 
-	i2c_instance->I2C_CR1 |= (0x1 << I2C_CR1_ACK);
+        while(len != 0) {
+            if(len == 2) {
+                // Disable ACK before reading the penultimate byte so NACK
+                // is sent after the last byte
+                while(!((i2c_instance->I2C_SR1 >> I2C_SR1_RxNE) & 0x1));
+                i2c_instance->I2C_CR1 &= ~(0x1 << I2C_CR1_ACK);
+
+                *rx_buffer = i2c_instance->I2C_DR;
+                rx_buffer++;
+                len--;
+            }
+            else {
+                while(!((i2c_instance->I2C_SR1 >> I2C_SR1_RxNE) & 0x1));
+                *rx_buffer = i2c_instance->I2C_DR;
+                rx_buffer++;
+                len--;
+            }
+        }
+    }
+
+    // Re-enable ACK for subsequent transactions
+    i2c_instance->I2C_CR1 |= (0x1 << I2C_CR1_ACK);
 }
 
-/**
- * @brief Enables or disables the peripheral communication.
- *
- * Comments about interface:
- * - This function must be called before a communication sequence is initiated in order to enable the peripheral for communication and take control of the bus.
- * - After a communication sequence is completed this function must be called in order to terminate the communication and release the bus.
- * - Between the ENABLE and DISABLE calls, the peripheral can't be taken control of via another master.
- * 
- * @param[in] i2c_instance The I2C instance to be ENABLE or DISABLE.
- * @param[in] en_status Whether to enable or disable the communication.
- */
+/** @brief Enables or disables the I2C peripheral and controls bus ownership. @see i2c_master_set_comm */
 void i2c_master_set_comm(I2C_REGDEF_ts *i2c_instance, EN_STATUS_te en_status) {
-	if(en_status == ENABLE) {
-		i2c_instance->I2C_CR1 |= (0x1 << I2C_CR1_PE);
-
-		// Set acknowledge --> must be done after PE has been ENABLE
-		i2c_instance->I2C_CR1 |= (0x1 << I2C_CR1_ACK);
-	}
-	else if(en_status == DISABLE) {
-		i2c_instance->I2C_CR1 |= (0x1 << I2C_CR1_STOP);
-		while((i2c_instance->I2C_SR2 >> I2C_SR2_BUSY) & 0x01);
-		i2c_instance->I2C_CR1 &= ~(0x1 << I2C_CR1_PE);
-	}
+    if(en_status == ENABLE) {
+        // Enable peripheral and ACK generation
+        i2c_instance->I2C_CR1 |= (0x1 << I2C_CR1_PE);
+        i2c_instance->I2C_CR1 |= (0x1 << I2C_CR1_ACK);
+    }
+    else if(en_status == DISABLE) {
+        // Generate STOP condition, wait for bus to go idle, then disable PE
+        i2c_instance->I2C_CR1 |= (0x1 << I2C_CR1_STOP);
+        while((i2c_instance->I2C_SR2 >> I2C_SR2_BUSY) & 0x01);
+        i2c_instance->I2C_CR1 &= ~(0x1 << I2C_CR1_PE);
+    }
 }
 
-/**
- * @brief Returns the name in strings of the I2C peripheral.
- * 
- * @param[in] i2c_instance The I2C peripheral.
- * @param[in] name A pointer to a buffer which will contain the name.
- */
+/** @brief Returns the name string of an I2C peripheral instance. @see i2c_get_name */
 void i2c_get_name(I2C_REGDEF_ts const *i2c_instance, char *name) {
-	const char i2c[] = "I2C";
-	uint8_t i2c_len = get_str_len(i2c);
-	uint8_t pos_counter = 0;
+    const char i2c[] = "I2C";
+    uint8_t i2c_len = get_str_len(i2c);
+    uint8_t pos_counter = 0;
 
-	while(pos_counter != i2c_len) {
-		name[pos_counter] = i2c[pos_counter];
-		pos_counter++;
-	}
-	
-	if(i2c_instance == I2C1) {
-		name[pos_counter] = '1';
-	}
-	else if(i2c_instance == I2C2) {
-		name[pos_counter] = '2';
-	}
-	else if(i2c_instance == I2C3) {
-		name[pos_counter] = '6';
-	}
-	pos_counter++;
+    while(pos_counter != i2c_len) {
+        name[pos_counter] = i2c[pos_counter];
+        pos_counter++;
+    }
 
-	name[pos_counter] = '\0';
+    if(i2c_instance == I2C1)      name[pos_counter] = '1';
+    else if(i2c_instance == I2C2) name[pos_counter] = '2';
+    else if(i2c_instance == I2C3) name[pos_counter] = '3';
+    pos_counter++;
+
+    name[pos_counter] = '\0';
 }
 
 /** @} */
 
-/** 
- * @defgroup I2C_Internal_Helper I2C Internal Helpers
+/**
+ * @defgroup stm32_i2c_internal_helpers I2C Internal Helpers
  * @{
  */
 
- /**
-  * @brief Enable or disable the peripheral clock of the given I2C instance.
-  * 
-  * @param[in] i2c_instance The I2C instance.
-  * @param[in] en_status Whether to enable or disable the peripheral clock.
-  */
+/**
+ * @brief Enables or disables the peripheral clock for an I2C instance.
+ *
+ * @details
+ * Routes to the appropriate RCC APB1 clock enable/disable call based on
+ * the instance pointer. Called by @ref i2c_init and @ref i2c_deinit.
+ *
+ * @param[in] i2c_instance Pointer to the I2C peripheral instance.
+ * @param[in] en_status    @ref ENABLE to enable the clock, @ref DISABLE to disable it.
+ */
 static void i2c_set_pclk(I2C_REGDEF_ts const *i2c_instance, EN_STATUS_te en_status) {
-	if(i2c_instance == I2C1) {
-		if(en_status == ENABLE) {
-			rcc_set_pclk_apb1(RCC_APB1ENR_I2C1EN, ENABLE);
-		}
-		else if(en_status == DISABLE){
-			rcc_set_pclk_apb1(RCC_APB1ENR_I2C1EN, DISABLE);
-		}
-	}
-	else if(i2c_instance == I2C2) {
-		if(en_status == ENABLE) {
-			rcc_set_pclk_apb1(RCC_APB1ENR_I2C2EN, ENABLE);
-		}
-		else if(en_status == DISABLE){
-			rcc_set_pclk_apb1(RCC_APB1ENR_I2C2EN, DISABLE);
-		}
-	}
-	else if(i2c_instance == I2C3) {
-		if(en_status == ENABLE) {
-			rcc_set_pclk_apb1(RCC_APB1ENR_I2C3EN, ENABLE);
-		}
-		else if(en_status == DISABLE){
-			rcc_set_pclk_apb1(RCC_APB1ENR_I2C3EN, DISABLE);		
-		}
-	}
+    if(i2c_instance == I2C1) {
+        rcc_set_pclk_apb1(RCC_APB1ENR_I2C1EN, en_status);
+    }
+    else if(i2c_instance == I2C2) {
+        rcc_set_pclk_apb1(RCC_APB1ENR_I2C2EN, en_status);
+    }
+    else if(i2c_instance == I2C3) {
+        rcc_set_pclk_apb1(RCC_APB1ENR_I2C3EN, en_status);
+    }
 }
 
 /** @} */

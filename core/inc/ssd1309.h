@@ -1,12 +1,47 @@
 /**
  * @file ssd1309.h
- * @author ygithub.com/Baksi675
- * @brief SSD1309 display driver header file.
+ * @author github.com/Baksi675
+ * @brief SSD1309 OLED display driver public API.
+ *
+ * @details
+ * This module provides an I2C-based driver for the Solomon Systech SSD1309
+ * 128×64 OLED display controller. It maintains an internal framebuffer and
+ * exposes high-level drawing operations that are flushed to the display
+ * on demand via @ref ssd1309_update.
+ *
+ * The display is organized as 8 pages of 8 rows each (64 rows total) by
+ * 128 columns. All drawing functions operate on the framebuffer in RAM;
+ * changes are not visible until @ref ssd1309_update is called.
+ *
+ * Coordinates used by drawing functions are 1-based pixel coordinates:
+ * - X: 1–128 (left to right)
+ * - Y: 1–64 (top to bottom)
+ * - Line: 1–8 (one 8-pixel-tall character row per line)
+ *
+ * A `force` parameter on each drawing function bypasses the initialized /
+ * started guard, allowing calls from CLI command handlers before the
+ * subsystem is fully started.
+ *
+ * Typical usage:
+ * - Call @ref ssd1309_get_def_cfg to obtain a sensible default configuration
+ * - Adjust any fields in @ref SSD1309_CFG_ts as needed
+ * - Initialize the subsystem with @ref ssd1309_init_subsys
+ * - Initialize the display with @ref ssd1309_init_handle
+ * - Start the subsystem with @ref ssd1309_start_subsys
+ * - Draw content using @ref ssd1309_draw_text, @ref ssd1309_draw_rect, etc.
+ * - Flush to the display with @ref ssd1309_update
+ *
  * @version 0.1
  * @date 2026-01-31
- * 
+ *
  * @copyright Copyright (c) 2026
- * 
+ *
+ */
+
+/**
+ * @defgroup ssd1309_module SSD1309 Display Module
+ * @brief I2C driver for the SSD1309 128×64 OLED display controller.
+ * @{
  */
 
 #ifndef SSD1309_H__
@@ -16,11 +51,27 @@
 #include "stm32f401re_gpio.h"
 #include "err.h"
 
-#define SSD1309_WIDTH				128
-#define SSD1309_HEIGHT				64
-#define SSD1309_CHAR_WIDTH			8
-#define SSD1309_CHAR_HEIGHT			8
-#define SSD1309_MAX_CHARS_IN_LINE	16
+/**
+ * @defgroup ssd1309_macros SSD1309 Display Dimensions
+ * @ingroup ssd1309_module
+ * @brief Physical and logical dimension constants for the SSD1309.
+ * @{
+ */
+
+#define SSD1309_WIDTH            128 /**< Display width in pixels. */
+#define SSD1309_HEIGHT            64 /**< Display height in pixels. */
+#define SSD1309_CHAR_WIDTH         8 /**< Width of one character glyph in pixels. */
+#define SSD1309_CHAR_HEIGHT        8 /**< Height of one character glyph in pixels. */
+#define SSD1309_MAX_CHARS_IN_LINE 16 /**< Maximum number of characters that fit on one display line. */
+
+/** @} */
+
+/**
+ * @defgroup ssd1309_types SSD1309 Types
+ * @ingroup ssd1309_module
+ * @brief Configuration enumerations and data types for the SSD1309 driver.
+ * @{
+ */
 
 /**
  * @brief Lower column start address (lower 4 bit part of 8 bit address) for RAM scanning of the SSD1309. 
@@ -980,52 +1031,350 @@ typedef enum {
 }SSD1309_VCOMH_DESELECT_LVL_te;
 
 /**
- * @brief 
- * 
+ * @brief Full configuration structure for initializing an SSD1309 display handle.
+ *
+ * @details
+ * Passed to @ref ssd1309_init_handle. Use @ref ssd1309_get_def_cfg to obtain
+ * a sensible default configuration and then override specific fields as needed.
+ *
+ * Fields are grouped by addressing mode relevance:
+ * - PAM fields: @ref low_col_start_addr_pam, @ref high_col_start_addr_pam,
+ *   @ref page_start_addr_pam
+ * - HAM/VAM fields: @ref col_addr_start_ham_vam, @ref col_addr_end_ham_vam,
+ *   @ref page_addr_start_ham_vam, @ref page_addr_end_ham_vam
  */
 typedef struct {
-	I2C_REGDEF_ts *i2c_instance;
-	GPIO_REGDEF_ts *scl_gpio_port;
-	GPIO_PIN_te scl_gpio_pin;
-	GPIO_REGDEF_ts *sda_gpio_port;
-	GPIO_PIN_te sda_gpio_pin;
-	GPIO_ALTERNATE_FUNCTION_te gpio_alternate_function;
-	SSD1309_LOW_COL_START_ADDR_PAM_te low_col_start_addr_pam;
-	SSD1309_HIGH_COL_START_ADDR_PAM_te high_col_start_addr_pam;
-	SSD1309_MEM_ADDR_MODE_te mem_addr_mode;
-	SSD1309_COL_ADDR_START_HAM_VAM_te col_addr_start_ham_vam;
-	SSD1309_COL_ADDR_END_HAM_VAM_te col_addr_end_ham_vam;
-	SSD1309_PAGE_ADDR_START_HAM_VAM_te page_addr_start_ham_vam;
-	SSD1309_PAGE_ADDR_END_HAM_VAM_te page_addr_end_ham_vam;
-	SSD1309_START_LINE_te start_line;
-	SSD1309_CONTRAST_te contrast;
-	SSD1309_HORIZONTAL_FLIP_te horizontal_flip;
-	SSD1309_INVERSE_MODE_te inverse_mode;
-	SSD1309_MULTIPLEX_RATIO_te multiplex_ratio;
-	SSD1309_PAGE_START_ADDR_PAM_te page_start_addr_pam;
-	SSD1309_VERTICAL_FLIP_te vertical_flip;
-	SSD1309_OFFSET_te offset;
-	SSD1309_CLK_DIV_RATIO_te clk_div_ratio;
-	SSD1309_CLK_SPEED_LVL_te clk_speed_lvl;
-	SSD1309_PHASE1_PRECHARGE_DCLK_te phase1_precharge_dclk;
-	SSD1309_PHASE2_PRECHARGE_DCLK_te phase2_precharge_dclk;
-	SSD1309_VCOMH_DESELECT_LVL_te vcomh_deselect_lvl;
-}SSD1309_CONFIG_ts;
+    /** Pointer to the I2C peripheral instance connected to the display. */
+    I2C_REGDEF_ts *i2c_instance;
 
+    /** GPIO port of the I2C SCL pin. */
+    GPIO_REGDEF_ts *scl_gpio_port;
+
+    /** GPIO pin number of the I2C SCL pin. */
+    GPIO_PIN_te scl_gpio_pin;
+
+    /** GPIO port of the I2C SDA pin. */
+    GPIO_REGDEF_ts *sda_gpio_port;
+
+    /** GPIO pin number of the I2C SDA pin. */
+    GPIO_PIN_te sda_gpio_pin;
+
+    /** Alternate function mapping for both SCL and SDA GPIO pins. */
+    GPIO_ALTERNATE_FUNCTION_te gpio_alternate_function;
+
+    /** Lower nibble of the column start address (PAM only). */
+    SSD1309_LOW_COL_START_ADDR_PAM_te low_col_start_addr_pam;
+
+    /** Upper nibble of the column start address (PAM only). */
+    SSD1309_HIGH_COL_START_ADDR_PAM_te high_col_start_addr_pam;
+
+    /** Memory addressing mode: HAM, VAM, or PAM. */
+    SSD1309_MEM_ADDR_MODE_te mem_addr_mode;
+
+    /** Column start address for RAM scanning (HAM and VAM only). */
+    SSD1309_COL_ADDR_START_HAM_VAM_te col_addr_start_ham_vam;
+
+    /** Column end address for RAM scanning (HAM and VAM only). */
+    SSD1309_COL_ADDR_END_HAM_VAM_te col_addr_end_ham_vam;
+
+    /** Page start address for RAM scanning (HAM and VAM only). */
+    SSD1309_PAGE_ADDR_START_HAM_VAM_te page_addr_start_ham_vam;
+
+    /** Page end address for RAM scanning (HAM and VAM only). */
+    SSD1309_PAGE_ADDR_END_HAM_VAM_te page_addr_end_ham_vam;
+
+    /** RAM row that maps to the top of the display. */
+    SSD1309_START_LINE_te start_line;
+
+    /** Display brightness (current control level, 0–255). */
+    SSD1309_CONTRAST_te contrast;
+
+    /** Horizontal segment re-map (left/right flip). */
+    SSD1309_HORIZONTAL_FLIP_te horizontal_flip;
+
+    /** Inverse video mode (swap on/off pixel polarity). */
+    SSD1309_INVERSE_MODE_te inverse_mode;
+
+    /** Number of active COM lines (display height in rows). */
+    SSD1309_MULTIPLEX_RATIO_te multiplex_ratio;
+
+    /** Page start address for the first displayed page (PAM only). */
+    SSD1309_PAGE_START_ADDR_PAM_te page_start_addr_pam;
+
+    /** COM output scan direction (top/bottom flip). */
+    SSD1309_VERTICAL_FLIP_te vertical_flip;
+
+    /** COM pin vertical shift (maps RAM row 0 to a different COM output). */
+    SSD1309_OFFSET_te offset;
+
+    /** Display clock divide ratio. */
+    SSD1309_CLK_DIV_RATIO_te clk_div_ratio;
+
+    /** Display oscillator frequency level. */
+    SSD1309_CLK_SPEED_LVL_te clk_speed_lvl;
+
+    /** Phase 1 (discharge) duration of the pixel drive waveform in DCLKs. */
+    SSD1309_PHASE1_PRECHARGE_DCLK_te phase1_precharge_dclk;
+
+    /** Phase 2 (charge) duration of the pixel drive waveform in DCLKs. */
+    SSD1309_PHASE2_PRECHARGE_DCLK_te phase2_precharge_dclk;
+
+    /** VCOMH deselect voltage level relative to Vcc. */
+    SSD1309_VCOMH_DESELECT_LVL_te vcomh_deselect_lvl;
+} SSD1309_CFG_ts;
+
+/**
+ * @brief Opaque handle representing an SSD1309 display instance.
+ *
+ * @details
+ * Returned by @ref ssd1309_init_handle and used for all subsequent
+ * display operations. The internal structure is hidden and must not
+ * be accessed directly.
+ *
+ * @note Only one handle instance is supported by the subsystem.
+ */
 typedef struct ssd1309_handle_s SSD1309_HANDLE_ts;
 
+/** @} */
+
+/**
+ * @defgroup ssd1309_api SSD1309 Public API
+ * @ingroup ssd1309_module
+ * @brief Public functions to interact with the SSD1309 display subsystem.
+ * @{
+ */
+
+/**
+ * @brief Initializes the SSD1309 subsystem.
+ *
+ * @details
+ * Resets the internal state, initializes the logging dependency, and
+ * registers the CLI commands.
+ *
+ * Must be called before any other SSD1309 API function.
+ *
+ * @return
+ * - ERR_OK on success
+ * - ERR_MODULE_ALREADY_INITIALIZED if the subsystem is already initialized
+ * - Propagated error from @ref cmd_register on failure
+ */
 ERR_te ssd1309_init_subsys(void);
+
+/**
+ * @brief Deinitializes the SSD1309 subsystem.
+ *
+ * @details
+ * Resets the internal state to zero and deregisters the CLI commands.
+ * The subsystem must be stopped before calling this function.
+ *
+ * @return
+ * - ERR_OK on success
+ * - ERR_DEINITIALIZATION_FAILURE if the subsystem is not initialized or still running
+ * - Propagated error from @ref cmd_deregister on failure
+ */
 ERR_te ssd1309_deinit_subsys(void);
+
+/**
+ * @brief Starts the SSD1309 subsystem.
+ *
+ * @return
+ * - ERR_OK on success
+ * - ERR_UNKNOWN if the subsystem is not initialized or already started
+ */
 ERR_te ssd1309_start_subsys(void);
+
+/**
+ * @brief Stops the SSD1309 subsystem.
+ *
+ * @return
+ * - ERR_OK on success
+ * - ERR_UNKNOWN if the subsystem is not initialized or already stopped
+ */
 ERR_te ssd1309_stop_subsys(void);
-ERR_te ssd1309_get_def_conf(SSD1309_CONFIG_ts *ssd1309_config_o);
-ERR_te ssd1309_init_handle(SSD1309_CONFIG_ts *ssd1309_config, SSD1309_HANDLE_ts **ssd1309_handle_o);
+
+/**
+ * @brief Populates a configuration structure with sensible default values.
+ *
+ * @details
+ * The default configuration uses:
+ * - Horizontal addressing mode (HAM), full 128×64 column and page range
+ * - Contrast level 10, both horizontal and vertical flip enabled
+ * - Multiplex ratio 64, no display offset, clock divide ratio 1
+ * - Clock speed level 15, phase 1 and phase 2 precharge of 2 DCLKs
+ * - VCOMH deselect level: medium (0.78 × Vcc)
+ *
+ * The I2C instance and GPIO fields are not set and must be filled in
+ * by the caller before passing to @ref ssd1309_init_handle.
+ *
+ * @param[out] ssd1309_cfg_o Pointer to the configuration structure to populate.
+ *
+ * @return
+ * - ERR_OK always
+ */
+ERR_te ssd1309_get_def_cfg(SSD1309_CFG_ts *ssd1309_cfg_o);
+
+/**
+ * @brief Initializes the SSD1309 display and sends the full configuration sequence over I2C.
+ *
+ * @details
+ * Configures the SCL and SDA GPIO pins in open-drain alternate function mode,
+ * initializes the I2C peripheral at 400 kHz, and transmits the complete
+ * SSD1309 initialization command sequence derived from @p ssd1309_cfg.
+ *
+ * The display is turned off during configuration and turned on at the end.
+ *
+ * @note Only one handle instance is supported. Calling this function a second
+ *       time without deinitialization returns an error.
+ *
+ * @param[in]  ssd1309_cfg      Pointer to the display configuration structure.
+ * @param[out] ssd1309_handle_o Pointer to a handle pointer that will be set
+ *                              to the initialized display instance.
+ *
+ * @return
+ * - ERR_OK on success
+ * - ERR_INITIALIZATION_FAILURE if a handle is already initialized, or if
+ *   the I2C or GPIO pointers in @p ssd1309_cfg are NULL
+ */
+ERR_te ssd1309_init_handle(SSD1309_CFG_ts *ssd1309_cfg, SSD1309_HANDLE_ts **ssd1309_handle_o);
+
+/**
+ * @brief Draws a text string into the framebuffer at the specified line.
+ *
+ * @details
+ * Renders characters from the built-in 8×8 font table into the framebuffer.
+ * Each character occupies 8 columns; characters wrap to the next line if they
+ * exceed the display width. The framebuffer is not flushed to the display;
+ * call @ref ssd1309_update to make the changes visible.
+ *
+ * Supports printable ASCII characters (0x20–0x7E).
+ *
+ * @param[in] text     Pointer to the text string to render.
+ * @param[in] text_len Number of characters to render from @p text.
+ * @param[in] line     Display line (1–8, top to bottom) where text begins.
+ * @param[in] force    If true, bypasses the initialized/started guard.
+ *
+ * @return
+ * - ERR_OK on success
+ * - ERR_INITIALIZATION_FAILURE if not initialized/started and @p force is false
+ * - ERR_INVALID_ARGUMENT if @p line is out of range
+ */
 ERR_te ssd1309_draw_text(char const *text, uint8_t text_len, uint8_t line, bool force);
+
+/**
+ * @brief Draws a filled rectangle into the framebuffer.
+ *
+ * @details
+ * Sets all pixels within the rectangle defined by (@p x_src, @p y_src) to
+ * (@p x_dest, @p y_dest) in the framebuffer. Coordinates are 1-based.
+ * The framebuffer is not flushed; call @ref ssd1309_update to display the result.
+ *
+ * @param[in] x_src  Left edge of the rectangle (1–128).
+ * @param[in] y_src  Top edge of the rectangle (1–64).
+ * @param[in] x_dest Right edge of the rectangle (1–128, must be ≥ @p x_src).
+ * @param[in] y_dest Bottom edge of the rectangle (1–64, must be ≥ @p y_src).
+ * @param[in] force  If true, bypasses the initialized/started guard.
+ *
+ * @return
+ * - ERR_OK on success
+ * - ERR_INITIALIZATION_FAILURE if not initialized/started and @p force is false
+ * - ERR_INVALID_ARGUMENT if coordinates are out of range or @p x_src > @p x_dest
+ */
 ERR_te ssd1309_draw_rect(uint8_t x_src, uint8_t y_src, uint8_t x_dest, uint8_t y_dest, bool force);
+
+/**
+ * @brief Clears a single display line in the framebuffer (sets all pixels off).
+ *
+ * @details
+ * Equivalent to calling @ref ssd1309_clear_rect over the full width of the
+ * given line. The framebuffer is not flushed; call @ref ssd1309_update afterwards.
+ *
+ * @param[in] line  Display line to clear (1–8).
+ * @param[in] force If true, bypasses the initialized/started guard.
+ *
+ * @return
+ * - ERR_OK on success
+ * - ERR_INITIALIZATION_FAILURE if not initialized/started and @p force is false
+ * - ERR_INVALID_ARGUMENT if @p line is out of range
+ */
 ERR_te ssd1309_clear_line(uint8_t line, bool force);
+
+/**
+ * @brief Inverts all pixels in a single display line in the framebuffer.
+ *
+ * @details
+ * Equivalent to calling @ref ssd1309_invert_rect over the full width of the
+ * given line. Used by the menu module to simulate a selection highlight.
+ * The framebuffer is not flushed; call @ref ssd1309_update afterwards.
+ *
+ * @param[in] line  Display line to invert (1–8).
+ * @param[in] force If true, bypasses the initialized/started guard.
+ *
+ * @return
+ * - ERR_OK on success
+ * - ERR_INITIALIZATION_FAILURE if not initialized/started and @p force is false
+ * - ERR_INVALID_ARGUMENT if @p line is out of range
+ */
 ERR_te ssd1309_invert_line(uint8_t line, bool force);
+
+/**
+ * @brief Clears a rectangular region in the framebuffer (sets all pixels off).
+ *
+ * @details
+ * Clears all pixels within the rectangle defined by (@p x_src, @p y_src) to
+ * (@p x_dest, @p y_dest). Coordinates are 1-based.
+ * The framebuffer is not flushed; call @ref ssd1309_update to display the result.
+ *
+ * @param[in] x_src  Left edge (1–128).
+ * @param[in] y_src  Top edge (1–64).
+ * @param[in] x_dest Right edge (1–128, must be ≥ @p x_src).
+ * @param[in] y_dest Bottom edge (1–64, must be ≥ @p y_src).
+ * @param[in] force  If true, bypasses the initialized/started guard.
+ *
+ * @return
+ * - ERR_OK on success
+ * - ERR_INITIALIZATION_FAILURE if not initialized/started and @p force is false
+ * - ERR_INVALID_ARGUMENT if coordinates are out of range or @p x_src > @p x_dest
+ */
 ERR_te ssd1309_clear_rect(uint8_t x_src, uint8_t y_src, uint8_t x_dest, uint8_t y_dest, bool force);
+
+/**
+ * @brief Inverts all pixels in a rectangular region of the framebuffer.
+ *
+ * @details
+ * XORs all pixels within the rectangle defined by (@p x_src, @p y_src) to
+ * (@p x_dest, @p y_dest). Coordinates are 1-based.
+ * The framebuffer is not flushed; call @ref ssd1309_update to display the result.
+ *
+ * @param[in] x_src  Left edge (1–128).
+ * @param[in] y_src  Top edge (1–64).
+ * @param[in] x_dest Right edge (1–128, must be ≥ @p x_src).
+ * @param[in] y_dest Bottom edge (1–64, must be ≥ @p y_src).
+ * @param[in] force  If true, bypasses the initialized/started guard.
+ *
+ * @return
+ * - ERR_OK on success
+ * - ERR_INITIALIZATION_FAILURE if not initialized/started and @p force is false
+ * - ERR_INVALID_ARGUMENT if coordinates are out of range or @p x_src > @p x_dest
+ */
 ERR_te ssd1309_invert_rect(uint8_t x_src, uint8_t y_src, uint8_t x_dest, uint8_t y_dest, bool force);
+
+/**
+ * @brief Flushes the internal framebuffer to the display over I2C.
+ *
+ * @details
+ * Transmits the full 128×8-page framebuffer to the SSD1309 over I2C,
+ * making all pending framebuffer changes visible on the display.
+ *
+ * @param[in] force If true, bypasses the initialized/started guard.
+ *
+ * @return
+ * - ERR_OK on success
+ * - ERR_INITIALIZATION_FAILURE if not initialized/started and @p force is false
+ */
 ERR_te ssd1309_update(bool force);
 
+/** @} */
+
 #endif
+
+/** @} */

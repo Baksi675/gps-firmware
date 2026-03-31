@@ -18,47 +18,51 @@
 #include "configuration.h"
 #include "modules.h"
 
+/**
+ * @brief Internal state of the command subsystem.
+ *
+ * @details
+ * Holds the registered client table and the subsystem's own log level.
+ * Statically initialized at startup; no explicit init function is required.
+ */
 struct internal_state_s {
+	/** Module identifier used for log messages. */
 	MODULES_te subsys;
+
+	/** Active log level for command subsystem messages. */
 	LOG_LEVEL_te log_level;
+
+	/** Table of pointers to registered client descriptors. NULL slots are unused. */
 	CMD_CLIENT_INFO_ts *cmd_client_info_arr[CONFIG_CMD_MAX_CLIENTS];
 };
+
+/** @brief Singleton instance of the command subsystem internal state. */
 static struct internal_state_s internal_state = { 
 	.subsys = MODULES_CMD,
 	.log_level = LOG_LEVEL_INFO
- };
+};
 
- /** 
- * @defgroup CMD_Public_APIs CMD Public APIs
+/** 
+ * @defgroup cmd_public_apis Command Public APIs
  * @{
  */
 
-/**
- * @brief Registers a command in the cmd module from the clients side.
- * 
- * @param cmd_client_info Struct containing information about client.
- */
+/** @brief Registers a client with the command subsystem. @see cmd_register */
 ERR_te cmd_register(CMD_CLIENT_INFO_ts *cmd_client_info) {
 	for(uint8_t i = 0; i < CONFIG_CMD_MAX_CLIENTS; i++) {
 		if(internal_state.cmd_client_info_arr[i] == (void*)0) {
 			internal_state.cmd_client_info_arr[i] = cmd_client_info;
 			break;
 		}
-		else if(internal_state.cmd_client_info_arr[i] != (void*)0 && i == CONFIG_CMD_MAX_CLIENTS - 1) {
+		else if(i == CONFIG_CMD_MAX_CLIENTS - 1) {
 			return ERR_NOT_ENOUGH_SPACE;
 		}
 	}
 
 	return ERR_OK;
- }
+}
 
-
- /**
-  * @brief Deregisters a client from the cmd module.
-  * 
-  * @param cmd_client_info Client info pointer.
-  * @return ERR_te Error generated during execution.
-  */
+/** @brief Deregisters a client from the command subsystem. @see cmd_deregister */
 ERR_te cmd_deregister(CMD_CLIENT_INFO_ts const *cmd_client_info) {
 	for(uint8_t i = 0; i < CONFIG_CMD_MAX_CLIENTS; i++) {
 		if(internal_state.cmd_client_info_arr[i] == cmd_client_info) {
@@ -72,14 +76,8 @@ ERR_te cmd_deregister(CMD_CLIENT_INFO_ts const *cmd_client_info) {
 
 	return ERR_OK;
 }
-	
 
- /**
-  * @brief Interprets and executes a command or calls the command handler of a client.
-  * 
-  * @param console_text The command text to process.
-  * @return int8_t Returns 0 if everything went successfully, -1 if errors occured.
-  */
+/** @brief Parses and executes a command from a console text string. @see cmd_execute */
 ERR_te cmd_execute(char *console_text) {
 	ERR_te err;
 

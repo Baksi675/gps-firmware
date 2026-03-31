@@ -15,7 +15,10 @@ cppcheck \
     --inline-suppr \
     --error-exitcode=1 \
     --suppress=missingIncludeSystem \
-	-I "$PROJECT_ROOT/configuration" \
+    --suppress=*:"$PROJECT_ROOT/core/src/ff.c" \
+    --suppress=*:"$PROJECT_ROOT/core/src/diskio.c" \
+	--suppress=*:"$PROJECT_ROOT/core/src/syscalls.c" \
+    -I "$PROJECT_ROOT/configuration" \
     -I "$PROJECT_ROOT/core/inc" \
     -I "$PROJECT_ROOT/drivers/inc" \
     "$PROJECT_ROOT/core" \

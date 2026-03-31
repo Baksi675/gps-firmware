@@ -14,16 +14,11 @@
 #include "common.h"
 
 /** 
- * @defgroup COMMON_Public_APIs COMMON Public APIs
+ * @defgroup common_public_apis Common Public APIs
  * @{
  */
 
- /**
-  * @brief Returns the length of the string given in as argument (without null terminator).
-  * 
-  * @param str The string to return the length of.
-  * @return uint32_t The length of the string without a null terminator.
-  */
+/** @brief Returns the length of a string, excluding the null terminator. @see get_str_len */
 uint32_t get_str_len(char const *str) {
 	uint32_t len = 0;
 
@@ -34,12 +29,7 @@ uint32_t get_str_len(char const *str) {
 	return len;
 }
 
-/**
- * @brief Converts an integer to a string.
- * 
- * @param num The integer to convert to a string to.
- * @param str A preinitialized string which will contain the integer as a string.
- */
+/** @brief Converts an integer to its decimal string representation. @see int_to_str */
 void int_to_str(int num, char *str) {
     char *start = str;
     bool is_negative = false;
@@ -75,12 +65,7 @@ void int_to_str(int num, char *str) {
     }
 }
 
-/**
- * @brief Converts a string containing numerical characters to an integer type.
- * 
- * @param str The string to convert to integer.
- * @return int The converted integer type.
- */
+/** @brief Converts a decimal string to an integer. @see str_to_int */
 int str_to_int(const char* str) {
 	bool negative = false;
 	uint8_t num_array[12] = { 0 };
@@ -113,13 +98,7 @@ int str_to_int(const char* str) {
 	return num;
 }
 
-/**
- * @brief Converts a double type to string type.
- * 
- * @param num The double type to convert.
- * @param str Pointer to a string buffer that will contain the converted number.
- * @param frac_digits Number of digits in the fraction part.
- */
+/** @brief Converts a double to a decimal string with a fixed number of fractional digits. @see double_to_str */
 void double_to_str(double num, char *str, int8_t frac_digits) {
 	int32_t int_part;
 	double frac_part;
@@ -192,12 +171,7 @@ void double_to_str(double num, char *str, int8_t frac_digits) {
 	} 
 }
 
-/**
- * @brief Converts a byte in hexadecimal format to a string.
- * 
- * @param byte The byte to convert.
- * @param str A pointer to a preinitialized string which will contain the byte as a string in hexadecimal format.
- */
+/** @brief Converts a single byte to a two-character uppercase hexadecimal string. @see hex_byte_to_str */
 void hex_byte_to_str(uint8_t byte, char *str) {
 	uint8_t first_part = byte / 16;
 	uint8_t second_part = byte % 16;
@@ -217,14 +191,7 @@ void hex_byte_to_str(uint8_t byte, char *str) {
 	}
 }
 
-/**
- * @brief Replaces characters in the target string with that of the host string on the given position.
- * 
- * @param target_str The string to modify.
- * @param host_str The string used to modify.
- * @param host_str_len The length of the string used to modify.
- * @param pos The position in the target string where the modification should take place from.
- */
+/** @brief Overwrites a region of a target string with the contents of a source string. @see str_set */
 void str_set(char *target_str, char const *host_str, uint32_t host_str_len, uint32_t pos) {
 	uint32_t pos_counter = 0;
 	bool pos_reached = false;
@@ -249,13 +216,7 @@ void str_set(char *target_str, char const *host_str, uint32_t host_str_len, uint
 	}
 }
 
-/**
- * @brief Power of function implementation.
- * 
- * @param base The base number.
- * @param exponent The base number raised to the power of this number.
- * @return int32_t The result of the computation.
- */
+/** @brief Computes an integer power. @see get_pow */
 int32_t get_pow(int32_t base, int32_t exponent) {
 	int32_t result = 1;
 
@@ -266,12 +227,7 @@ int32_t get_pow(int32_t base, int32_t exponent) {
 	return result;
 }
 
-/**
- * @brief Compresses the array given in the parameter.
- * 
- * @param arr A pointer to the array to be compressed.
- * @param len The length of the array to be compressed.
- */
+/** @brief Compresses an array by removing null bytes and shifting remaining elements left. @see arr_cmprs */
 void arr_cmprs(char *arr, uint8_t len) {
 	uint8_t write = 0;
 
@@ -288,13 +244,7 @@ void arr_cmprs(char *arr, uint8_t len) {
 	}
 }
 
-/**
- * @brief Compares to strings, returns true if they match.
- * 
- * @param str1 First string to compare. 
- * @param str2 Second string to compare.
- * @return bool true if they match, false if they don't.
- */
+/** @brief Compares two null-terminated strings for equality. @see str_cmp */
 bool str_cmp(const char *str1, const char *str2) {
 	while(*str1 != '\0' && *str2 != '\0') {
 		if(*str1 != *str2) {
@@ -311,13 +261,7 @@ bool str_cmp(const char *str1, const char *str2) {
 	return false;
 }
 
-/**
- * @brief Converts two ASCII characters into a single HEX ASCII character.
- * 
- * @param high Most significant half.
- * @param low Least significant half.
- * @return uint8_t The single HEX byte.
- */
+/** @brief Converts two ASCII hex characters into a single byte value. @see ascii_hex_to_byte */
 uint8_t ascii_hex_to_byte(char high, char low) {
     uint8_t value = 0;
     uint8_t nibble;
@@ -339,17 +283,7 @@ uint8_t ascii_hex_to_byte(char high, char low) {
     return value;
 }
 
-
-/**
- * @brief Converts the input text to a set of tokens.
- * 
- * @param str The input text to convert.
- * @param separator The character that separates the tokens in the original text.
- * @param max_tokens The max number of tokens allowed.
- * @param tokens The output array which contains the addresses of the tokens.
- * @param num_tokens The number of tokens (output).
- * @return int8_t Returns 0 if everything went successfully, -1 if some errors occured.
- */
+/** @brief Splits a string into tokens separated by a given delimiter. @see str_tokenize */
 int str_tokenize(char *str, const char *separator, uint16_t max_tokens, char **tokens, uint16_t *num_tokens) {
 	while(true) {
 		while(*str == ' ') {
@@ -382,12 +316,7 @@ int str_tokenize(char *str, const char *separator, uint16_t max_tokens, char **t
 	return 0;
 }
 
-/**
- * @brief Converts a bool value in string format to bool type.
- * 
- * @param str The bool in string format.
- * @return bool The converted bool.
- */
+/** @brief Converts a string representation of a boolean to a bool value. @see str_to_bool */
 bool str_to_bool(char const *str) {
 	if(str_cmp(str, "true") == true) {
 		return true;
@@ -400,14 +329,7 @@ bool str_to_bool(char const *str) {
 	return false;
 }
 
-/**
- * @brief Copies a string from source to destination.
- * 
- * @param txt_to Where to copy the string.
- * @param txt_from Where to copy the string from.
- * @param len The length of the string to copy.
- * @return int 0 if succeeded.
- */
+/** @brief Copies a null-terminated string into a destination buffer. @see str_cpy */
 int str_cpy(char *str_to, const char *str_from, uint32_t len)
 {
     if (len == 0 || str_to == (void*)0 || str_from == (void*)0) {
@@ -424,14 +346,7 @@ int str_cpy(char *str_to, const char *str_from, uint32_t len)
     return 0;
 }
 
-/**
- * @brief Copies a text from source to destination.
- * 
- * @param txt_to Where to copy the text.
- * @param txt_from Where to copy the text from.
- * @param len The length of the text to copy.
- * @return int 0 if succeeded.
- */
+/** @brief Copies a fixed-length block of text into a destination buffer. @see txt_cpy */
 int txt_cpy(char *txt_to, const char *txt_from, uint32_t len) {
     if (len == 0 || txt_to == (void*)0 || txt_from == (void*)0) {
         return -1;
@@ -445,24 +360,12 @@ int txt_cpy(char *txt_to, const char *txt_from, uint32_t len) {
     return 0;	
 }
 
-/**
- * @brief Determines whether a number is power of two.
- * 
- * @param num The input number
- * @return int Returns true if a number is 2^n, if not it returns false.
- */
+/** @brief Checks whether a number is a power of two. @see is_pow */
 bool is_pow(uint32_t num) {
     return num && !(num & (num - 1));
 }
 
-/**
- * @brief Extracts a bit range from a given data structure.
- * 
- * @param[in] data Pointer to the data structure. 
- * @param[in] start_bit Starting bit position.
- * @param[in] num_bits Number of bits to extract from starting bit position. 
- * @return uint32_t The extracted bits.
- */
+/** @brief Extracts a range of bits from a big-endian byte array. @see extract_bits */
 uint32_t extract_bits(const uint8_t *data, uint16_t start_bit, uint8_t num_bits) {
     uint32_t result = 0;
     uint16_t byte_index = start_bit / 8;
@@ -483,7 +386,5 @@ uint32_t extract_bits(const uint8_t *data, uint16_t start_bit, uint8_t num_bits)
     
     return result;
 }
-
-
 
 /** @} */

@@ -92,25 +92,25 @@ DSTATUS disk_initialize (
 	}
 	else if(pdrv == DEV_MMC) {
 		//result = MMC_disk_initialize();
-		SD_CONFIG_ts sd_config = { 0 };
-		str_cpy(sd_config.name, "sdcard", get_str_len("sdcard") + 1);
-		sd_config.spi_instance = SPI1;
-		sd_config.sclk_gpio_port = GPIOA;
-		sd_config.sclk_gpio_pin = GPIO_PIN_5;
-		sd_config.miso_gpio_port = GPIOA;
-		sd_config.miso_gpio_pin = GPIO_PIN_6;
-		sd_config.mosi_gpio_port = GPIOA;
-		sd_config.mosi_gpio_pin = GPIO_PIN_7;
-		sd_config.cs_gpio_port = GPIOB;
-		sd_config.cs_gpio_pin = GPIO_PIN_7;									// on prototype it's pin 6
-		sd_config.gpio_alternate_function = GPIO_ALTERNATE_FUNCTION_AF5;
+		SD_CFG_ts sd_cfg = { 0 };
+		str_cpy(sd_cfg.name, "sdcard", get_str_len("sdcard") + 1);
+		sd_cfg.spi_instance = SPI1;
+		sd_cfg.sclk_gpio_port = GPIOA;
+		sd_cfg.sclk_gpio_pin = GPIO_PIN_5;
+		sd_cfg.miso_gpio_port = GPIOA;
+		sd_cfg.miso_gpio_pin = GPIO_PIN_6;
+		sd_cfg.mosi_gpio_port = GPIOA;
+		sd_cfg.mosi_gpio_pin = GPIO_PIN_7;
+		sd_cfg.cs_gpio_port = GPIOB;
+		sd_cfg.cs_gpio_pin = GPIO_PIN_7;									// on prototype it's pin 6
+		sd_cfg.gpio_alternate_function = GPIO_ALTERNATE_FUNCTION_AF5;
 		
 		// translate the reslut code here
 		err = sd_init_subsys();
 		if(err != ERR_OK) {
 			return STA_NOINIT;
 		}
-		err = sd_init_handle(&sd_config, &sd_handle);
+		err = sd_init_handle(&sd_cfg, &sd_handle);
 		if(err != ERR_OK) {
 			return STA_NOINIT;
 		}

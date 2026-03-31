@@ -18,37 +18,105 @@
 #include "configuration.h"
 #include "log.h"
 #include "modules.h"
+#include "init.h"
 
+/**
+ * @brief Internal structure representing a single button instance.
+ *
+ * @details
+ * Holds all runtime state for one button, including configuration
+ * copied from @ref BUTTON_CFG_ts, debounce and hold timing state,
+ * and the current logical pressed/held flags.
+ *
+ * This structure is opaque to the caller; it is accessed only through
+ * the @ref BUTTON_HANDLE_ts pointer returned by @ref button_init_handle.
+ */
 struct button_handle_s {
+	/** Human-readable name of the button (null-terminated). */
 	char name[CONFIG_BUTTON_MAX_NAME_LEN];
+
+	/** GPIO port the button is connected to. */
 	GPIO_REGDEF_ts *gpio_port;
+
+	/** GPIO pin the button is connected to. */
 	GPIO_PIN_te gpio_pin;
+
+	/** Active level that represents a "pressed" state. */
 	BUTTON_PUSHED_TYPE_te pushed_type;
+
+	/** Debounce window in milliseconds. */
 	uint32_t debounce_limit_ms;
+
+	/** Duration in milliseconds required to register a held state. */
 	uint32_t held_limit_ms;
+
+	/** Timestamp (ms) when the current debounce window started. */
 	uint32_t debounce_started_ms;
+
+	/** Timestamp (ms) when the hold timer started. */
 	uint32_t held_started_ms;
+
+	/** True while a debounce window is in progress. */
 	bool debounce_started;
+
+	/** True while the hold timer is running. */
 	bool held_started;
+
+	/** True when the button is considered debounced and pressed. */
 	bool pushed;
+
+	/** True when the button has been held longer than @ref held_limit_ms. */
 	bool held;
+
+	/** True when this slot is occupied by an active button instance. */
 	bool in_use;
 };
 
+/**
+ * @brief Internal state of the button subsystem.
+ *
+ * @details
+ * Holds the pool of button handles, the count of registered buttons,
+ * and the subsystem lifecycle flags (initialized / started).
+ *
+ * Accessed only through the module's public API.
+ */
 struct internal_state_s {
-	struct button_handle_s buttons[CONFIG_BUTTON_MAX_OBJECTS];		
+	/** Pool of button handle instances. */
+	struct button_handle_s buttons[CONFIG_BUTTON_MAX_OBJECTS];
+
+	/** Number of currently registered (in-use) button handles. */
 	uint8_t button_num;
+
+	/** Active log level for this subsystem. */
 	LOG_LEVEL_te log_level;
+
+	/** Module identifier used for log messages. */
 	MODULES_te subsys;
+
+	/** True after @ref button_init_subsys has completed successfully. */
 	bool initialized;
-	bool started;										
+
+	/** True after @ref button_start_subsys has been called. */
+	bool started;
 };
+
+/** @brief Singleton instance of the button subsystem internal state. */
 static struct internal_state_s internal_state;
 
+/* ---- Forward declarations for command handlers ---- */
 static ERR_te button_getpushed_handler(uint32_t argc, char **argv);
 static ERR_te button_getheld_handler(uint32_t argc, char **argv);
 static ERR_te button_cmd_info_handler(uint32_t argc, char **argv);
 
+/**
+ * @brief Table of CLI commands registered by the button subsystem.
+ *
+ * @details
+ * Each entry maps a command name string to its handler and a short
+ * help string.  The table is registered with the command subsystem
+ * via @ref button_cmd_client_info during @ref button_init_subsys.
+ */
 static CMD_INFO_ts button_cmds[] = {
 	{
 		.name = "getpushed",
@@ -67,6 +135,14 @@ static CMD_INFO_ts button_cmds[] = {
 	}
 };
 
+/**
+ * @brief Registration descriptor passed to the command subsystem.
+ *
+ * @details
+ * Bundles the command table, its size, the subsystem name prefix used
+ * on the CLI, and a pointer to the runtime log-level variable so that
+ * the command subsystem can adjust verbosity at runtime.
+ */
 static CMD_CLIENT_INFO_ts button_cmd_client_info = {
 	.cmds_ptr = button_cmds,
 	.num_cmds = sizeof(button_cmds) / sizeof(button_cmds[0]),
@@ -75,25 +151,15 @@ static CMD_CLIENT_INFO_ts button_cmd_client_info = {
 };
 
  /** 
- * @defgroup BUTTON_Public_APIs BUTTON Public APIs
+ * @defgroup BUTTON_Public_APIs Button Public APIs
  * @{
  */
 
-/**
- * @brief Initializes the button subsystem internal state to a clean state and registers the subsystem commands.
- * 
- * @return ERR_te Error generated during execution.
- */
+/** @brief Initializes the button subsystem. @see button_init_subsys */
 ERR_te button_init_subsys(void) {
 	ERR_te err;
 
-	if(internal_state.initialized || internal_state.started) {
-		LOG_ERROR(
-			internal_state.subsys, 
-			internal_state.log_level,
-			"button_init_subsys: subsys is already initialized or started"
-		);
-		
+	if(internal_state.initialized) {		
 		return ERR_INITIALIZATION_FAILURE;
 	}
 
@@ -104,10 +170,8 @@ ERR_te button_init_subsys(void) {
 	internal_state.initialized = true;
 	internal_state.started = false;
 
-	SYSTICK_CFG_ts systick_cfg = { 0 };
-	systick_cfg.clk_source = SYSTICK_CLK_SOURCE_PROCESSOR;
-	systick_cfg.interrupt = SYSTICK_IT_TRUE;
-	systick_init(&systick_cfg);
+	init_log();
+	init_systick();
 	
 	err = cmd_register(&button_cmd_client_info);
 	if(err != ERR_OK) {
@@ -128,11 +192,7 @@ ERR_te button_init_subsys(void) {
 	return ERR_OK;	
 }
 
-/**
- * @brief Deinitializes the button subsystem internal state to zeroes.
- * 
- * @return ERR_te Error generated during execution.
- */
+/** @brief Deinitializes the button subsystem. @see button_deinit_subsys */
 ERR_te button_deinit_subsys(void) {
 	if(internal_state.initialized && !internal_state.started) {
 		internal_state = (struct internal_state_s){ 0 };
@@ -157,11 +217,7 @@ ERR_te button_deinit_subsys(void) {
 	return ERR_OK;
 }
 
-/**
- * @brief Starts the subsystem.
- * 
- * @return ERR_te The error generated during execution.
- */
+/** @brief Starts the button subsystem. @see button_start_subsys */
 ERR_te button_start_subsys(void) {
 	if(internal_state.initialized && !internal_state.started) {
 		internal_state.started = true;
@@ -185,11 +241,7 @@ ERR_te button_start_subsys(void) {
 	return ERR_OK;
 }
 
-/**
- * @brief Stops the subsystem.
- * 
- * @return ERR_te The error generated during execution.
- */
+/** @brief Stops the button subsystem. @see button_stop_subsys */
 ERR_te button_stop_subsys(void) {
 	if(internal_state.initialized && internal_state.started) {
 		internal_state.started = false;
@@ -213,13 +265,7 @@ ERR_te button_stop_subsys(void) {
 	return ERR_OK;
 }
 
-/**
- * @brief Registers a button to the internal state of the button module.
- * 
- * @param[in] button_cfg An input pointer to a configuration structure. 
- * @param[out] button_handle_o An output pointer to the handle of the registered and initialzied button. 
- * @return ERR_te The error generated by the function, ERR_OK means no error occured.
- */
+/** @brief Initializes and registers a button handle. @see button_init_handle */
 ERR_te button_init_handle(BUTTON_CFG_ts *button_cfg, BUTTON_HANDLE_ts **button_handle_o) {
 	if(!internal_state.initialized) {
 		LOG_INFO(
@@ -250,7 +296,7 @@ ERR_te button_init_handle(BUTTON_CFG_ts *button_cfg, BUTTON_HANDLE_ts **button_h
 		return ERR_INVALID_ARGUMENT;
 	}
 
-	GPIO_HANDLE_ts gpio = { 0 };
+	GPIO_CFG_ts gpio = { 0 };
 	gpio.port = button_cfg->gpio_port;
 	gpio.pin = button_cfg->gpio_pin;
 	gpio.output_type = GPIO_OUTPUT_TYPE_PUSHPULL;
@@ -297,12 +343,7 @@ ERR_te button_init_handle(BUTTON_CFG_ts *button_cfg, BUTTON_HANDLE_ts **button_h
 	return ERR_OK;
 }
 
-/**
- * @brief Deinitializes an button object.
- * 
- * @param[in] button_handle The button handle.
- * @return ERR_te The error code generated during execution.
- */
+/** @brief Deinitializes a button handle. @see button_deinit_handle */
 ERR_te button_deinit_handle(BUTTON_HANDLE_ts const *button_handle) {
 	if(internal_state.started) {
 		LOG_INFO(
@@ -357,12 +398,7 @@ ERR_te button_deinit_handle(BUTTON_HANDLE_ts const *button_handle) {
 	return ERR_OK;
 }
 
-/**
- * @brief Runs a button handle.
- * 
- * @param[in] button_handle The button handle to run. 
- * @return ERR_te Error generated during execution.
- */
+/** @brief Runs the state machine for a single button handle. @see button_run_handle */
 ERR_te button_run_handle(BUTTON_HANDLE_ts *button_handle) {
 	if(!internal_state.initialized || !internal_state.started) {
 		LOG_ERROR(
@@ -462,11 +498,7 @@ ERR_te button_run_handle(BUTTON_HANDLE_ts *button_handle) {
 	return ERR_OK;
 }
 
-/**
- * @brief Runs all buttons in the internal state.
- * 
- * @return ERR_te Error generated during execution.
- */
+/** @brief Runs the state machine for all registered button handles. @see button_run_handle_all */
 ERR_te button_run_handle_all(void) {
 	for(uint32_t i = 0; i < CONFIG_BUTTON_MAX_OBJECTS; i++) {
 		if(internal_state.buttons[i].in_use == true) {
@@ -480,13 +512,7 @@ ERR_te button_run_handle_all(void) {
 	return ERR_OK;
 }
 
-/**
- * @brief Gets the pushed state of the button.
- * 
- * @param[in] button_handle The button handle to get the pushed state of.
- * @param[out] pushed_state The pushed state information.
- * @return ERR_te Error generated during execution.
- */
+/** @brief Retrieves the pushed state of a button. @see button_get_pushed_state */
 ERR_te button_get_pushed_state(BUTTON_HANDLE_ts const *button_handle, bool *pushed_state_o) {
 	if(!internal_state.initialized || !internal_state.started) {
 		LOG_ERROR(
@@ -503,13 +529,7 @@ ERR_te button_get_pushed_state(BUTTON_HANDLE_ts const *button_handle, bool *push
 	return ERR_OK;
 }
 
-/**
- * @brief Gets the held state of a button.
- * 
- * @param[in] button_handle The button handle to get the held state of.
- * @param[out] held_state The held state information.
- * @return ERR_te Error generated during execution.
- */
+/** @brief Retrieves the held state of a button. @see button_get_held_state */
 ERR_te button_get_held_state(BUTTON_HANDLE_ts const *button_handle, bool *held_state_o) {
 	if(!internal_state.initialized || !internal_state.started) {
 		LOG_ERROR(
@@ -529,16 +549,27 @@ ERR_te button_get_held_state(BUTTON_HANDLE_ts const *button_handle, bool *held_s
 /** @} */
 
 /** 
- * @defgroup BUTTON_COMMAND_HANDLERS BUTTON COMMAND HANDLERS
+ * @defgroup BUTTON_COMMAND_HANDLERS Button Command Handlers
  * @{
  */
 
 /**
- * @brief Handler routine for the getheld command. Reads the button pushed state.
- * 
- * @param[in] argc Argument count.
- * @param[in] argv Argument list.
- * @return ERR_te Error generated during execution.
+ * @brief CLI handler for the "getpushed" command. Reports the debounced pushed state of a button.
+ *
+ * @details
+ * Expected invocation: `button getpushed <name>`
+ *
+ * Searches the registered button pool for a handle whose name matches
+ * @c argv[2], then calls @ref button_get_pushed_state and logs the result.
+ *
+ * @param[in] argc Argument count. Must be exactly 3.
+ * @param[in] argv Argument list: argv[0] = "button", argv[1] = "getpushed",
+ *                 argv[2] = button name.
+ *
+ * @return
+ * - ERR_OK on success
+ * - ERR_INVALID_ARGUMENT if @p argc != 3 or no button with the given name exists
+ * - Propagated error from @ref button_get_pushed_state on failure
  */
 static ERR_te button_getpushed_handler(uint32_t argc, char **argv) {
 	if(argc != 3) {
@@ -583,11 +614,22 @@ static ERR_te button_getpushed_handler(uint32_t argc, char **argv) {
 }
 
 /**
- * @brief Handler routine for the getheld command. Reads the button held state.
- * 
- * @param[in] argc Argument count.
- * @param[in] argv Argument list.
- * @return ERR_te Error generated during execution.
+ * @brief CLI handler for the "getheld" command. Reports the held state of a button.
+ *
+ * @details
+ * Expected invocation: `button getheld <name>`
+ *
+ * Searches the registered button pool for a handle whose name matches
+ * @c argv[2], then calls @ref button_get_held_state and logs the result.
+ *
+ * @param[in] argc Argument count. Must be exactly 3.
+ * @param[in] argv Argument list: argv[0] = "button", argv[1] = "getheld",
+ *                 argv[2] = button name.
+ *
+ * @return
+ * - ERR_OK on success
+ * - ERR_INVALID_ARGUMENT if @p argc != 3 or no button with the given name exists
+ * - Propagated error from @ref button_get_held_state on failure
  */
 static ERR_te button_getheld_handler(uint32_t argc, char **argv) {
 	if(argc != 3) {
@@ -632,11 +674,20 @@ static ERR_te button_getheld_handler(uint32_t argc, char **argv) {
 }
 
 /**
- * @brief Handler routine for the info command. Shows information about objects commands.
- * 
- * @param[in] argc Argument count.
- * @param[in] argv Argument list.
- * @return ERR_te Error generated during execution.
+ * @brief CLI handler for the "info" command. Logs the names of all registered buttons.
+ *
+ * @details
+ * Expected invocation: `button info`
+ *
+ * Iterates over the internal button pool and logs the name of every
+ * slot that is currently in use.
+ *
+ * @param[in] argc Argument count. Must be exactly 2.
+ * @param[in] argv Argument list: argv[0] = "button", argv[1] = "info".
+ *
+ * @return
+ * - ERR_OK on success
+ * - ERR_INVALID_ARGUMENT if @p argc != 2
  */
 static ERR_te button_cmd_info_handler(uint32_t argc, char **argv) {
 	if(argc != 2) {

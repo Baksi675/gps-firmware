@@ -13,18 +13,12 @@
 #include "err.h"
 #include <stdint.h>
 
- /** 
- * @defgroup CB_Public_APIs CB Public APIs
+/** 
+ * @defgroup cbuf_public_apis Circular Buffer Public APIs
  * @{
  */
 
-/**
- * @brief Reads the content of the circular buffer into an output buffer.
- * 
- * @param cbuf_handle The circular buffer to read from.
- * @param output_buf_o The output buffer to read to.
- * @return ERR_te Error code produced during execution
- */
+/** @brief Reads all available data from the circular buffer. @see cbuf_read */
 ERR_te cbuf_read(CBUF_HANDLE_ts *cbuf_handle, uint8_t* output_buf_o) {
 	uint8_t len = 0;
 
@@ -43,13 +37,7 @@ ERR_te cbuf_read(CBUF_HANDLE_ts *cbuf_handle, uint8_t* output_buf_o) {
 	return ERR_OK;
 }
 
-/**
- * @brief Writes data from an input buffer into a circular buffer.
- * 
- * @param cbuf_handle The circular buffer to write data into.
- * @param input_buf The input buffer to write data from.
- * @param input_len The length of the data to write from the input buffer.
- */
+/** @brief Writes data from an input buffer into the circular buffer. @see cbuf_write */
 ERR_te cbuf_write(CBUF_HANDLE_ts *cbuf_handle, uint8_t* input_buf, uint32_t input_len) {
 	uint8_t len;
 	
@@ -69,16 +57,11 @@ ERR_te cbuf_write(CBUF_HANDLE_ts *cbuf_handle, uint8_t* input_buf, uint32_t inpu
 	return ERR_OK;
 }
 
-/**
- * @brief Returns the length of the data in the circular buffer. 0 ==> empty, size - 1 ==> full.
- * 
- * @param cbuf_handle A pointer to the circular buffer object.
- * @return uint8_t  The length of the data in the circular buffer.
- */
-ERR_te cbuf_len(CBUF_HANDLE_ts const *cbuf_handle, uint8_t *len) {	
-	*len = (cbuf_handle->write_position - cbuf_handle->read_position) & (cbuf_handle->size - 1);
+/** @brief Returns the number of bytes currently stored in the circular buffer. @see cbuf_len */
+ERR_te cbuf_len(CBUF_HANDLE_ts const *cbuf_handle, uint8_t *len_o) {	
+	*len_o = (cbuf_handle->write_position - cbuf_handle->read_position) & (cbuf_handle->size - 1);
 	
 	return ERR_OK;
 }
 
-  /** @} */
+/** @} */
