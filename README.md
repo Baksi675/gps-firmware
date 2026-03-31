@@ -2,6 +2,8 @@
 
 Bare-metal firmware for a GPS tracking device built around the **STM32F401RE** Cortex-M4 microcontroller. Written entirely in C with no HAL or RTOS — all peripheral drivers and application subsystems are implemented from scratch.
 
+For the hardware repository visit gps-hardware: https://github.com/Baksi675/gps-hardware
+
 ---
 
 ## Features
@@ -22,3 +24,11 @@ Bare-metal firmware for a GPS tracking device built around the **STM32F401RE** C
 The code documentation is available here: https://baksi675.github.io/gps-firmware/
 
 ---
+
+## Demonstration playlist
+
+https://www.youtube.com/watch?v=A6QJqgy0O1o&list=PLb_bXLsinHOQtkZ2X2QlIw-E_5eapHqGd
+
+---
+
+![GPS board](images/device.jpg)
