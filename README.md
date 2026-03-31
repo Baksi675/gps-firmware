@@ -16,3 +16,9 @@ Bare-metal firmware for a GPS tracking device built around the **STM32F401RE** C
 - Fully documented with Doxygen
 
 ---
+
+## Documentation
+
+The code documentation is available here: https://baksi675.github.io/gps-firmware/
+
+---
