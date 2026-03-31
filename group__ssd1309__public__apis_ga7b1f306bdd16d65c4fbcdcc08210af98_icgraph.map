@@ -1,0 +1,5 @@
+<map id="ssd1309_draw_rect" name="ssd1309_draw_rect">
+<area shape="rect" id="Node000001" title="Draws a filled rectangle into the framebuffer." alt="" coords="212,13,359,38"/>
+<area shape="rect" id="Node000002" href="$group__ssd1309__command__handlers.html#ga31914bd6066b8c579aa42805419b00a2" title="CLI handler for the &quot;fillrect&quot; command. Fills a rectangle and updates the display." alt="" coords="5,5,164,45"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="199,28,164,28,164,23,199,23"/>
+</map>

@@ -1,0 +1,22 @@
+<map id="usart_init" name="usart_init">
+<area shape="rect" id="Node000001" title="Initializes the USART peripheral with the given configuration." alt="" coords="5,55,88,80"/>
+<area shape="rect" id="Node000002" href="$group__cortex__m4__nvic__public__apis.html#ga481ccd2a55bf1ae8969250a9610ff07f" title="Enables or disables an interrupt line in the NVIC." alt="" coords="144,5,283,31"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="87,53,156,32,157,37,89,58"/>
+<area shape="rect" id="Node000003" href="$group__stm32__usart__internal__helpers.html#ga094b122f2cdbe8470483dd387328195c" title="Computes and writes the BRR register for the configured baud rate." alt="" coords="136,55,291,80"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="88,65,122,65,122,70,88,70"/>
+<area shape="rect" id="Node000008" href="$group__stm32__usart__internal__helpers.html#ga9a4adbf02026dd1cba510991603ec9d1" title="Enables or disables the peripheral clock for a USART instance." alt="" coords="155,104,271,129"/>
+<area shape="poly" id="edge8_Node000001_Node000008" title=" " alt="" coords="89,77,157,97,156,103,87,82"/>
+<area shape="rect" id="Node000004" href="$group__stm32__rcc__public__apis.html#ga74b6e6f0373eaae18d2d4e5b0af48020" title="Returns the current APB1 (low&#45;speed) peripheral bus clock frequency in Hz." alt="" coords="342,5,477,31"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="264,52,344,32,345,37,265,57"/>
+<area shape="rect" id="Node000007" href="$group__stm32__rcc__public__apis.html#ga39d12f5557c1e27058371a38fc52c254" title="Returns the current APB2 (high&#45;speed) peripheral bus clock frequency in Hz." alt="" coords="342,55,477,80"/>
+<area shape="poly" id="edge6_Node000003_Node000007" title=" " alt="" coords="291,65,328,65,328,70,291,70"/>
+<area shape="rect" id="Node000005" href="$group__stm32__rcc__public__apis.html#gab6f0930f451e663135940ce6942e7e31" title="Returns the current AHB bus clock frequency in Hz." alt="" coords="528,31,655,56"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="477,25,515,30,514,35,477,30"/>
+<area shape="rect" id="Node000006" href="$group__stm32__rcc__public__apis.html#ga72473ebd9ae1c1fd36054e538c4ca195" title="Returns the current system clock frequency in Hz." alt="" coords="703,31,820,56"/>
+<area shape="poly" id="edge5_Node000005_Node000006" title=" " alt="" coords="655,41,689,41,689,46,655,46"/>
+<area shape="poly" id="edge7_Node000007_Node000005" title=" " alt="" coords="477,56,514,51,515,56,477,61"/>
+<area shape="rect" id="Node000009" href="$group__stm32__rcc__public__apis.html#ga5cf8b9a2e93e5658766e20a00d6b7736" title="Enables or disables the peripheral clock for an APB1 peripheral." alt="" coords="339,104,480,129"/>
+<area shape="poly" id="edge9_Node000008_Node000009" title=" " alt="" coords="272,114,325,114,325,119,272,119"/>
+<area shape="rect" id="Node000010" href="$group__stm32__rcc__public__apis.html#ga0cf8672c3f523ae19b591cbd670e0281" title="Enables or disables the peripheral clock for an APB2 peripheral." alt="" coords="339,153,480,179"/>
+<area shape="poly" id="edge10_Node000008_Node000010" title=" " alt="" coords="265,127,345,147,344,152,264,132"/>
+</map>

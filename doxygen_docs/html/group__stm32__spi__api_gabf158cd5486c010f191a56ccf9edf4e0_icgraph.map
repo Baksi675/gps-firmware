@@ -1,0 +1,14 @@
+<map id="spi_set_comm" name="spi_set_comm">
+<area shape="rect" id="Node000001" title="Enables or disables the SPI peripheral (SPE bit)." alt="" coords="355,56,471,81"/>
+<area shape="rect" id="Node000002" href="$group__sd__internal__helpers.html#ga334584c0af12a66e5bee9a1a3bc0c00e" title="Raises CS, sends two dummy bytes, and disables SPI. Optionally deinitializes the handle." alt="" coords="169,31,307,56"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="341,61,306,56,307,51,341,56"/>
+<area shape="rect" id="Node000003" href="$group__sd__public__apis.html#ga7550bc6000fa7ed68f02c0015b2bc5fe" title="Initializes an SD card handle and performs the full SPI&#45;mode power&#45;up sequence." alt="" coords="5,5,121,31"/>
+<area shape="poly" id="edge5_Node000001_Node000003" title=" " alt="" coords="379,51,345,34,306,21,258,13,209,10,122,14,122,8,210,5,259,8,307,15,347,29,382,47"/>
+<area shape="rect" id="Node000004" href="$group__sd__public__apis.html#ga5fbd9b0b984070a99c3addf991f38018" title="Reads one or more sectors from the SD card." alt="" coords="27,68,100,93"/>
+<area shape="poly" id="edge6_Node000001_Node000004" title=" " alt="" coords="341,74,100,82,100,77,341,68"/>
+<area shape="rect" id="Node000005" href="$group__sd__public__apis.html#ga6ffe386d7b21e397b8257e5b10b85dbf" title="Writes one or more sectors to the SD card." alt="" coords="25,117,102,143"/>
+<area shape="poly" id="edge7_Node000001_Node000005" title=" " alt="" coords="341,84,103,126,102,121,341,78"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="155,34,121,29,122,24,156,29"/>
+<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="165,62,101,76,100,70,164,56"/>
+<area shape="poly" id="edge4_Node000002_Node000005" title=" " alt="" coords="204,65,123,108,98,120,96,115,120,104,201,61"/>
+</map>

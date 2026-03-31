@@ -1,0 +1,11 @@
+<map id="menu_dataview_run" name="menu_dataview_run">
+<area shape="rect" id="Node000001" title="Renders a MENU_TYPE_DATA_VIEW menu to the display." alt="" coords="5,55,160,80"/>
+<area shape="rect" id="Node000002" href="$group__common__public__apis.html#ga798f9165c3390657a08f031b640020b3" title="Returns the length of a string, excluding the null terminator." alt="" coords="237,5,331,31"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="135,52,222,30,224,35,136,57"/>
+<area shape="rect" id="Node000003" href="$group__ssd1309__public__apis.html#gac40f8bf03939e49d8ff2033af5bc3513" title="Draws a text string into the framebuffer at the specified line." alt="" coords="210,55,358,80"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="160,65,196,65,196,70,160,70"/>
+<area shape="rect" id="Node000004" href="$group__ssd1309__public__apis.html#ga8615acf9628f61610b4999848d1f25ed" title="Inverts all pixels in a single display line in the framebuffer." alt="" coords="208,104,360,129"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="136,77,219,98,217,103,135,83"/>
+<area shape="rect" id="Node000005" href="$group__ssd1309__public__apis.html#gadf1aabf773babce220185873a3fefd22" title="Inverts all pixels in a rectangular region of the framebuffer." alt="" coords="408,104,561,129"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="360,114,394,114,394,119,360,119"/>
+</map>

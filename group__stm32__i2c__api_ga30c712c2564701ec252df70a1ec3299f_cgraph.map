@@ -1,0 +1,13 @@
+<map id="i2c_init" name="i2c_init">
+<area shape="rect" id="Node000001" title="Initializes the I2C peripheral with the given configuration." alt="" coords="5,31,75,56"/>
+<area shape="rect" id="Node000002" href="$group__stm32__i2c__internal__helpers.html#gae0f225e4b33e1a0371699db47bf29d22" title="Enables or disables the peripheral clock for an I2C instance." alt="" coords="139,5,241,31"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="74,35,124,26,125,32,75,40"/>
+<area shape="rect" id="Node000004" href="$group__stm32__rcc__public__apis.html#ga74b6e6f0373eaae18d2d4e5b0af48020" title="Returns the current APB1 (low&#45;speed) peripheral bus clock frequency in Hz." alt="" coords="123,55,257,80"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="75,46,109,52,108,57,74,51"/>
+<area shape="rect" id="Node000003" href="$group__stm32__rcc__public__apis.html#ga5cf8b9a2e93e5658766e20a00d6b7736" title="Enables or disables the peripheral clock for an APB1 peripheral." alt="" coords="305,5,447,31"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="241,15,291,15,291,21,241,21"/>
+<area shape="rect" id="Node000005" href="$group__stm32__rcc__public__apis.html#gab6f0930f451e663135940ce6942e7e31" title="Returns the current AHB bus clock frequency in Hz." alt="" coords="313,55,439,80"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="258,65,299,65,299,70,258,70"/>
+<area shape="rect" id="Node000006" href="$group__stm32__rcc__public__apis.html#ga72473ebd9ae1c1fd36054e538c4ca195" title="Returns the current system clock frequency in Hz." alt="" coords="495,55,612,80"/>
+<area shape="poly" id="edge5_Node000005_Node000006" title=" " alt="" coords="439,65,481,65,481,70,439,70"/>
+</map>

@@ -1,0 +1,9 @@
+<map id="io_cmd_r_handler" name="io_cmd_r_handler">
+<area shape="rect" id="Node000001" title="CLI handler for the &quot;r&quot; command. Reads and logs the logic level of a named IO pin." alt="" coords="5,31,143,56"/>
+<area shape="rect" id="Node000002" href="$group__io__public__apis.html#gacaa3103f7e3b73f2ccba1bcef836cfcc" title="Reads the current logic level of an IO pin." alt="" coords="193,5,263,31"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="143,29,179,23,180,29,143,35"/>
+<area shape="rect" id="Node000004" href="$group__common__public__apis.html#ga1b7a4f6b0c0415253f0bc32fa527405b" title="Compares two null&#45;terminated strings for equality." alt="" coords="191,55,265,80"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="143,51,178,57,177,62,143,57"/>
+<area shape="rect" id="Node000003" href="$group__stm32__gpio__public__apis.html#ga0f9c28f58629a335e6f6769f91100a9e" title="Reads the current logic level of a GPIO input pin." alt="" coords="313,5,400,31"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="264,15,300,15,300,21,264,21"/>
+</map>

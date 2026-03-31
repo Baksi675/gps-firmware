@@ -1,0 +1,27 @@
+<map id="sd_cease_comms" name="sd_cease_comms">
+<area shape="rect" id="Node000001" title="Raises CS, sends two dummy bytes, and disables SPI. Optionally deinitializes the handle." alt="" coords="5,80,143,105"/>
+<area shape="rect" id="Node000002" href="$group__stm32__gpio__public__apis.html#ga149cee41beb6f902a946750bd3b8ddd1" title="Drives a GPIO output pin high or low." alt="" coords="211,5,302,31"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="102,77,190,40,206,33,208,38,192,44,104,82"/>
+<area shape="rect" id="Node000003" href="$group__sd__public__apis.html#ga4a534628a1d25952e3c2ac541c067404" title="Deinitializes an SD card handle and resets the SPI peripheral." alt="" coords="191,55,323,80"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="142,81,177,76,178,81,143,86"/>
+<area shape="rect" id="Node000012" href="$group__stm32__spi__public__apis.html#ga39d5cb38200e88203692e5f9e7145eaf" title="Blocking SPI transmit. Sends len bytes from tx_buffer." alt="" coords="217,104,296,129"/>
+<area shape="poly" id="edge11_Node000001_Node000012" title=" " alt="" coords="143,99,204,107,204,112,143,104"/>
+<area shape="rect" id="Node000013" href="$group__stm32__spi__public__apis.html#ga20a8c04f7fd7241cb1a53b92ad3191bf" title="Enables or disables the SPI peripheral (SPE bit)." alt="" coords="199,153,315,179"/>
+<area shape="poly" id="edge12_Node000001_Node000013" title=" " alt="" coords="105,103,192,140,208,146,206,151,190,144,103,108"/>
+<area shape="rect" id="Node000004" href="$group__common__public__apis.html#ga798f9165c3390657a08f031b640020b3" title="Returns the length of a string, excluding the null terminator." alt="" coords="371,5,465,31"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="298,52,361,32,363,37,300,57"/>
+<area shape="rect" id="Node000005" href="$group__stm32__spi__public__apis.html#ga653caa0f47ade35b4560bee6e76efa39" title="Deinitializes the SPI peripheral and disables its clock." alt="" coords="375,55,461,80"/>
+<area shape="poly" id="edge4_Node000003_Node000005" title=" " alt="" coords="323,65,362,65,362,70,323,70"/>
+<area shape="rect" id="Node000011" href="$group__common__public__apis.html#ga4681e08097a4495fe5f63a433d52ea6b" title="Copies a null&#45;terminated string into a destination buffer." alt="" coords="383,104,453,129"/>
+<area shape="poly" id="edge10_Node000003_Node000011" title=" " alt="" coords="300,77,371,100,369,105,298,83"/>
+<area shape="rect" id="Node000006" href="$group__stm32__rcc__public__apis.html#ga5f8eecbc777a20fc8e3e9ece67ffedc0" title="Resets an APB1 peripheral via RCC_APB1RSTR." alt="" coords="513,5,681,31"/>
+<area shape="poly" id="edge5_Node000005_Node000006" title=" " alt="" coords="460,53,537,32,538,37,461,58"/>
+<area shape="rect" id="Node000007" href="$group__stm32__rcc__public__apis.html#ga1313da00aa9c4b8d9b57fedbad676c04" title="Resets an APB2 peripheral via RCC_APB2RSTR." alt="" coords="513,55,681,80"/>
+<area shape="poly" id="edge6_Node000005_Node000007" title=" " alt="" coords="461,65,499,65,499,70,461,70"/>
+<area shape="rect" id="Node000008" href="$group__stm32__spi__internal__helpers.html#gae2d12528fd8bc6904c771da85bb5c2b4" title="Enables or disables the peripheral clock for an SPI instance." alt="" coords="546,104,649,129"/>
+<area shape="poly" id="edge7_Node000005_Node000008" title=" " alt="" coords="461,76,538,98,537,103,460,81"/>
+<area shape="rect" id="Node000009" href="$group__stm32__rcc__public__apis.html#ga5cf8b9a2e93e5658766e20a00d6b7736" title="Enables or disables the peripheral clock for an APB1 peripheral." alt="" coords="729,79,871,104"/>
+<area shape="poly" id="edge8_Node000008_Node000009" title=" " alt="" coords="649,108,715,99,716,105,649,113"/>
+<area shape="rect" id="Node000010" href="$group__stm32__rcc__public__apis.html#ga0cf8672c3f523ae19b591cbd670e0281" title="Enables or disables the peripheral clock for an APB2 peripheral." alt="" coords="729,128,871,153"/>
+<area shape="poly" id="edge9_Node000008_Node000010" title=" " alt="" coords="649,120,716,128,715,133,649,125"/>
+</map>

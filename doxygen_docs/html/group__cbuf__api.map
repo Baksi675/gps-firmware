@@ -1,0 +1,4 @@
+<map id="Circular Buffer Public API" name="Circular Buffer Public API">
+<area shape="rect" id="Node000001" title="Public functions to interact with a circular buffer instance." alt="" coords="220,5,403,31"/>
+<area shape="rect" id="Node000002" href="$group__cbuf__module.html" title="Lightweight circular buffer for byte&#45;oriented data." alt="" coords="5,5,172,31"/>
+</map>

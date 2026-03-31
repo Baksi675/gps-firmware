@@ -1,0 +1,4 @@
+<map id="STM32F401RE RCC Driver" name="STM32F401RE RCC Driver">
+<area shape="rect" id="Node000001" title="Clock control and peripheral reset driver for the STM32F401RE." alt="" coords="5,5,196,31"/>
+<area shape="rect" id="Node000002" href="$group__stm32__rcc__api.html" title="Public functions to interact with the RCC peripheral." alt="" coords="244,5,361,31"/>
+</map>

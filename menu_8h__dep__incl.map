@@ -1,0 +1,7 @@
+<map id="core/inc/menu.h" name="core/inc/menu.h">
+<area shape="rect" id="Node000001" title="Menu module public API." alt="" coords="76,5,203,31"/>
+<area shape="rect" id="Node000002" href="$main_8c.html" title="Application entry point for the GPS tracking device." alt="" coords="5,79,127,104"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="119,42,80,80,76,77,116,38"/>
+<area shape="rect" id="Node000003" href="$menu_8c.html" title="Menu implementation file." alt="" coords="151,79,277,104"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="163,38,204,77,200,80,159,42"/>
+</map>

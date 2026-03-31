@@ -1,0 +1,5 @@
+<map id="decode_csd_v1" name="decode_csd_v1">
+<area shape="rect" id="Node000001" title="Decodes a CSD v1.0 register (SDSC cards) into a SD_CSD_INFO_ts structure." alt="" coords="5,5,127,31"/>
+<area shape="rect" id="Node000002" href="$group__common__public__apis.html#ga60e45f6d6761921372ca281d465e3fc8" title="Extracts a range of bits from a big&#45;endian byte array." alt="" coords="175,5,273,31"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="127,15,161,15,161,21,127,21"/>
+</map>

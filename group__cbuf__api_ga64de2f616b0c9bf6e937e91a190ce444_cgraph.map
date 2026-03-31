@@ -1,0 +1,5 @@
+<map id="cbuf_read" name="cbuf_read">
+<area shape="rect" id="Node000001" title="Reads all available data from the circular buffer into an output buffer." alt="" coords="5,5,92,31"/>
+<area shape="rect" id="Node000002" href="$group__cbuf__public__apis.html#ga68105339f1401896a81f6b69675796d3" title="Returns the number of bytes currently stored in the circular buffer." alt="" coords="140,5,217,31"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="92,15,126,15,126,21,92,21"/>
+</map>

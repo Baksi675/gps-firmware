@@ -1,0 +1,7 @@
+<map id="io_start_subsys" name="io_start_subsys">
+<area shape="rect" id="Node000001" title="Starts the IO subsystem." alt="" coords="169,31,292,56"/>
+<area shape="rect" id="Node000002" href="$main_8c.html#a641e966759be26411c766208d8da6ed4" title="Initializes all subsystems and hardware peripherals." alt="" coords="30,5,97,31"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="155,35,96,26,97,20,156,29"/>
+<area shape="rect" id="Node000003" href="$group__sd__public__apis.html#ga7550bc6000fa7ed68f02c0015b2bc5fe" title="Initializes an SD card handle and performs the full SPI&#45;mode power&#45;up sequence." alt="" coords="5,55,121,80"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="156,57,122,62,121,56,155,51"/>
+</map>

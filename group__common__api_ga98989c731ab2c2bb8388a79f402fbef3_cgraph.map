@@ -1,0 +1,5 @@
+<map id="str_to_bool" name="str_to_bool">
+<area shape="rect" id="Node000001" title="Converts a string representation of a boolean to a bool value." alt="" coords="5,5,100,31"/>
+<area shape="rect" id="Node000002" href="$group__common__public__apis.html#ga1b7a4f6b0c0415253f0bc32fa527405b" title="Compares two null&#45;terminated strings for equality." alt="" coords="148,5,223,31"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="100,15,134,15,134,21,100,21"/>
+</map>

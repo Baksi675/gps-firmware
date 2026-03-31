@@ -1,0 +1,9 @@
+<map id="STM32F401RE Hardware Abstraction Layer" name="STM32F401RE Hardware Abstraction Layer">
+<area shape="rect" id="Node000005" href="$group__stm32f401re__accessors.html" title="Pointer&#45;cast macros for accessing peripheral register maps by name." alt="" coords="258,5,409,45"/>
+<area shape="rect" id="Node000002" href="$group__stm32f401re__addresses.html" title="Memory&#45;mapped base addresses for all STM32F401RE peripherals." alt="" coords="236,70,431,95"/>
+<area shape="rect" id="Node000004" href="$group__stm32f401re__bitpos.html" title="Bit position enumerations for STM32F401RE peripheral registers." alt="" coords="253,119,414,145"/>
+<area shape="rect" id="Node000001" title="Peripheral register definitions and bit positions for the STM32F401RE." alt="" coords="5,141,188,181"/>
+<area shape="rect" id="Node000006" href="$group__stm32f401re__irq.html" title="IRQ position enumeration and EXTI line definitions." alt="" coords="249,169,418,209"/>
+<area shape="rect" id="Node000007" href="$group__stm32f401re__legacy__macros.html" title="Convenience macros for GPIO peripheral clock enable/disable." alt="" coords="236,234,431,259"/>
+<area shape="rect" id="Node000003" href="$group__stm32f401re__regdefs.html" title="Memory&#45;mapped register structures for STM32F401RE peripherals." alt="" coords="260,284,407,324"/>
+</map>

@@ -1,0 +1,5 @@
+<map id="io_read" name="io_read">
+<area shape="rect" id="Node000001" title="Reads the current logic level of an IO pin." alt="" coords="191,5,261,31"/>
+<area shape="rect" id="Node000002" href="$group__io__command__handlers.html#gac96e55ab62ad3a53c77a0984900fad11" title="CLI handler for the &quot;r&quot; command. Reads and logs the logic level of a named IO pin." alt="" coords="5,5,143,31"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="177,21,143,21,143,15,177,15"/>
+</map>

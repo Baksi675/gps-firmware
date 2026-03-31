@@ -1,0 +1,9 @@
+<map id="gpio_deinit" name="gpio_deinit">
+<area shape="rect" id="Node000001" title="Deinitializes a GPIO port by resetting its registers to reset values." alt="" coords="5,31,100,56"/>
+<area shape="rect" id="Node000002" href="$group__stm32__gpio__internal__helpers.html#gad6dac18a513bdb3c2e395b620b507d7c" title="Enables or disables the peripheral clock for a GPIO port." alt="" coords="177,5,287,31"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="100,34,163,25,163,30,101,39"/>
+<area shape="rect" id="Node000004" href="$group__stm32__rcc__public__apis.html#gae2058347a587fdfda5505eca7b1579cd" title="Resets an AHB1 peripheral via RCC_AHB1RSTR." alt="" coords="148,55,316,80"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="101,47,135,52,134,57,100,52"/>
+<area shape="rect" id="Node000003" href="$group__stm32__rcc__public__apis.html#ga4ce3489a40c02eaad0a9f3c398d3e6ba" title="Enables or disables the peripheral clock for an AHB1 peripheral." alt="" coords="364,5,505,31"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="287,15,350,15,350,21,287,21"/>
+</map>

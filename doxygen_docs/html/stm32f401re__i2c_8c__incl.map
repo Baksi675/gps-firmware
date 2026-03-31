@@ -1,0 +1,18 @@
+<map id="drivers/src/stm32f401re_i2c.c" name="drivers/src/stm32f401re_i2c.c">
+<area shape="rect" id="Node000001" title="I2C driver implementation for STM32F401RE." alt="" coords="71,5,248,45"/>
+<area shape="rect" id="Node000002" href="$stm32f401re__i2c_8h.html" title="STM32F401RE I2C driver public API." alt="" coords="5,93,148,119"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="141,47,101,86,97,82,137,44"/>
+<area shape="rect" id="Node000007" href="$stm32f401re__rcc_8h.html" title="STM32F401RE RCC driver public API." alt="" coords="172,93,315,119"/>
+<area shape="poly" id="edge7_Node000001_Node000007" title=" " alt="" coords="181,44,223,82,219,86,178,48"/>
+<area shape="rect" id="Node000003" href="$stm32f401re_8h.html" title="STM32F401RE MCU&#45;specific peripheral register definitions and bit position enumerations." alt="" coords="37,167,154,192"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="82,118,91,153,86,154,77,120"/>
+<area shape="rect" id="Node000005" href="$common_8h.html" title="Common utility module public API." alt="" coords="178,167,269,192"/>
+<area shape="poly" id="edge4_Node000002_Node000005" title=" " alt="" coords="101,116,188,158,186,163,99,121"/>
+<area shape="rect" id="Node000004" title=" " alt="" coords="73,240,144,265"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="100,192,107,226,101,227,95,193"/>
+<area shape="poly" id="edge5_Node000005_Node000004" title=" " alt="" coords="206,194,140,235,138,230,204,190"/>
+<area shape="rect" id="Node000006" title=" " alt="" coords="182,240,265,265"/>
+<area shape="poly" id="edge6_Node000005_Node000006" title=" " alt="" coords="226,192,226,226,221,226,221,192"/>
+<area shape="poly" id="edge8_Node000007_Node000003" title=" " alt="" coords="221,121,133,163,131,158,218,116"/>
+<area shape="poly" id="edge9_Node000007_Node000005" title=" " alt="" coords="243,120,233,154,228,153,237,118"/>
+</map>

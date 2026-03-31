@@ -1,0 +1,5 @@
+<map id="STM32F401RE USART Driver" name="STM32F401RE USART Driver">
+<area shape="rect" id="Node000001" title="Asynchronous USART driver for the STM32F401RE." alt="" coords="5,31,212,56"/>
+<area shape="rect" id="Node000003" href="$group__stm32__usart__api.html" title="Public functions to interact with the USART peripheral." alt="" coords="260,5,395,31"/>
+<area shape="rect" id="Node000002" href="$group__stm32__usart__types.html" title="Configuration enumerations and structures for the USART driver." alt="" coords="274,55,381,80"/>
+</map>

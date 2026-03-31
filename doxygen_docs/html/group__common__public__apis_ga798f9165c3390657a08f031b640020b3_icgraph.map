@@ -1,0 +1,99 @@
+<map id="get_str_len" name="get_str_len">
+<area shape="rect" id="Node000001" title="Returns the length of a string, excluding the null terminator." alt="" coords="829,677,924,703"/>
+<area shape="rect" id="Node000002" href="$group__BUTTON__Public__APIs.html#ga174c6f552501627548518b21d4b2a5f2" title="Deinitializes a button handle." alt="" coords="614,5,773,31"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="872,663,868,535,854,352,842,258,826,172,805,100,793,73,779,52,768,41,754,33,756,28,771,37,783,48,798,70,810,99,831,170,847,257,859,351,873,535,878,663"/>
+<area shape="rect" id="Node000003" href="$group__BUTTON__Public__APIs.html#gab7f54871c0e9804b4b3acb4f60150428" title="Initializes and registers a button handle." alt="" coords="622,107,765,132"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="872,664,866,552,850,396,838,317,823,244,803,185,779,145,763,133,767,129,783,142,808,183,828,243,843,316,856,396,871,552,877,664"/>
+<area shape="rect" id="Node000004" href="$main_8c.html#a641e966759be26411c766208d8da6ed4" title="Initializes all subsystems and hardware peripherals." alt="" coords="425,156,492,181"/>
+<area shape="poly" id="edge13_Node000001_Node000004" title=" " alt="" coords="873,663,870,540,859,367,847,280,831,200,808,137,795,113,780,96,762,84,743,75,702,68,659,72,615,84,573,101,535,121,478,158,476,154,532,117,571,96,613,79,658,66,702,62,745,70,765,79,783,92,799,110,813,135,836,199,852,279,864,367,876,540,878,663"/>
+<area shape="rect" id="Node000005" href="$group__datalog__public__apis.html#ga7aa7b1366619f1b5139ba2439883b802" title="Deinitializes a data log handle." alt="" coords="610,405,777,431"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="870,664,863,616,847,557,820,496,802,468,780,444,763,433,766,429,783,440,806,465,825,493,852,555,868,615,876,663"/>
+<area shape="rect" id="Node000006" href="$group__datalog__public__apis.html#ga1a209aeff506ed474d09500c41c5a7db" title="Initializes and registers a data log handle." alt="" coords="618,156,769,181"/>
+<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="871,664,864,561,847,420,835,349,820,284,801,230,779,194,765,184,769,179,783,191,806,228,825,282,840,348,852,419,869,561,877,663"/>
+<area shape="rect" id="Node000007" href="$group__datalog__public__apis.html#ga7d28bd8a43090af71e3bace7b71da98b" title="Writes a GPS data entry to the log file if the logging interval has elapsed." alt="" coords="383,677,534,703"/>
+<area shape="poly" id="edge7_Node000001_Node000007" title=" " alt="" coords="816,693,534,693,534,687,816,687"/>
+<area shape="rect" id="Node000009" href="$group__common__public__apis.html#ga8d676144b2fa271534a94fc3b8f82a0f" title="Converts a double to a decimal string with a fixed number of fractional digits." alt="" coords="403,1005,514,1031"/>
+<area shape="poly" id="edge9_Node000001_Node000009" title=" " alt="" coords="879,717,876,776,864,852,852,892,835,930,812,965,783,995,752,1015,718,1029,682,1037,646,1042,575,1041,514,1033,515,1028,575,1036,645,1037,681,1032,717,1023,750,1010,780,991,808,962,830,928,847,890,859,851,871,775,873,717"/>
+<area shape="rect" id="Node000010" href="$group__log__public__apis.html#gae82dcc89628d6a624d3f6870e40240d0" title="Prints a formatted message to the serial terminal if the severity threshold is met." alt="" coords="177,1005,255,1031"/>
+<area shape="poly" id="edge24_Node000001_Node000010" title=" " alt="" coords="875,717,865,794,846,894,819,988,802,1023,783,1047,764,1058,740,1066,681,1074,609,1075,530,1070,373,1050,255,1029,256,1023,374,1045,530,1065,609,1070,680,1069,739,1060,762,1053,780,1043,798,1020,814,986,841,893,859,793,870,716"/>
+<area shape="rect" id="Node000011" href="$group__stm32__gpio__public__apis.html#ga5672efc6006adaaf20638118d3b92e27" title="Returns the name string of a GPIO port (e.g. &quot;GPIOA&quot;)." alt="" coords="632,1107,755,1132"/>
+<area shape="poly" id="edge11_Node000001_Node000011" title=" " alt="" coords="875,717,864,800,845,911,818,1018,802,1060,783,1089,770,1101,755,1109,752,1104,767,1096,779,1086,797,1057,813,1016,839,910,858,800,870,716"/>
+<area shape="rect" id="Node000012" href="$group__stm32__i2c__public__apis.html#ga7ab0d6af71e3ae8353c41d8e85ffae41" title="Returns the name string of an I2C peripheral instance (e.g. &quot;I2C1&quot;)." alt="" coords="637,1156,750,1181"/>
+<area shape="poly" id="edge12_Node000001_Node000012" title=" " alt="" coords="876,717,867,811,850,940,837,1005,822,1064,804,1113,783,1146,768,1158,751,1165,749,1160,766,1153,779,1143,800,1110,817,1063,832,1004,844,939,862,811,871,716"/>
+<area shape="rect" id="Node000013" href="$group__io__public__apis.html#gab71118fa611585183c5c60051b530a0a" title="Deinitializes an IO handle." alt="" coords="629,1205,758,1231"/>
+<area shape="poly" id="edge14_Node000001_Node000013" title=" " alt="" coords="877,717,869,821,853,964,841,1037,825,1103,806,1158,783,1196,760,1212,757,1207,779,1192,801,1156,820,1102,835,1036,848,963,864,821,871,716"/>
+<area shape="rect" id="Node000014" href="$group__io__public__apis.html#ga56de946b9be7dbde49d9c4620d06887f" title="Initializes and registers an IO handle." alt="" coords="637,255,750,280"/>
+<area shape="poly" id="edge15_Node000001_Node000014" title=" " alt="" coords="870,664,858,582,839,473,812,369,797,329,779,301,765,289,749,281,751,276,768,285,783,298,801,326,817,368,844,472,863,581,875,663"/>
+<area shape="rect" id="Node000015" href="$group__sd__public__apis.html#ga7550bc6000fa7ed68f02c0015b2bc5fe" title="Initializes an SD card handle and performs the full SPI&#45;mode power&#45;up sequence." alt="" coords="158,305,274,331"/>
+<area shape="poly" id="edge55_Node000001_Node000015" title=" " alt="" coords="870,664,858,588,840,492,813,401,797,367,780,345,742,326,687,314,620,306,547,303,396,307,274,315,274,310,396,301,547,298,621,301,688,308,744,321,783,341,802,364,818,399,845,490,864,588,875,663"/>
+<area shape="rect" id="Node000016" href="$group__log__public__apis.html#gacf5f29fb5186e4a8c3a8a7ab872f5d08" title="Converts a LOG_LEVEL_te value to its lowercase string name." alt="" coords="617,904,770,929"/>
+<area shape="poly" id="edge18_Node000001_Node000016" title=" " alt="" coords="872,717,861,754,843,800,817,846,783,887,750,906,747,902,780,883,813,843,838,797,856,753,867,716"/>
+<area shape="rect" id="Node000019" href="$group__log__internal__helpers.html#gab7213513b94643317e1fcbb6593acc0d" title="Prints the log message prologue: timestamp, severity, and subsystem name." alt="" coords="387,955,530,980"/>
+<area shape="poly" id="edge25_Node000001_Node000019" title=" " alt="" coords="877,717,871,766,856,829,844,861,828,892,808,920,783,944,752,963,719,976,684,985,648,990,578,990,518,983,519,977,579,984,648,984,683,980,717,971,750,958,780,940,804,917,824,890,839,859,851,827,866,765,872,716"/>
+<area shape="rect" id="Node000020" href="$group__menu__internal__helpers.html#gafc26880635ca9a23475bc153e8d76c32" title="Renders a MENU_TYPE_DATA_VIEW menu to the display." alt="" coords="616,803,771,828"/>
+<area shape="poly" id="edge26_Node000001_Node000020" title=" " alt="" coords="862,715,828,755,807,776,783,794,758,805,756,800,780,789,803,772,824,752,857,712"/>
+<area shape="rect" id="Node000024" href="$group__menu__public__apis.html#gab5636d1a90001bb6948fa5055a08adce" title="Retrieves the string of the currently highlighted option." alt="" coords="360,853,557,879"/>
+<area shape="poly" id="edge31_Node000001_Node000024" title=" " alt="" coords="870,717,858,747,840,782,815,816,783,843,754,858,723,869,659,881,596,884,540,881,540,876,596,879,659,876,722,864,752,853,780,838,811,812,835,779,853,745,865,715"/>
+<area shape="rect" id="Node000025" href="$group__menu__public__apis.html#ga635a884b4ee69262e35e223dbdf81b43" title="Initializes and registers a menu handle." alt="" coords="624,205,763,231"/>
+<area shape="poly" id="edge33_Node000001_Node000025" title=" " alt="" coords="871,664,862,570,844,444,832,380,817,323,799,276,779,244,761,231,764,227,783,240,804,273,822,321,837,379,849,443,867,570,876,663"/>
+<area shape="rect" id="Node000026" href="$group__menu__internal__helpers.html#ga96e8a1deb19f4f50c4b4195fad2e559e" title="Renders a MENU_TYPE_SELECTABLE menu to the display." alt="" coords="613,753,774,779"/>
+<area shape="poly" id="edge35_Node000001_Node000026" title=" " alt="" coords="839,711,782,736,732,756,730,751,780,732,836,706"/>
+<area shape="rect" id="Node000027" href="$group__neo6__internal__helpers.html#ga2663e0d690efd2a548a8769bf7d5eb8f" title="Parses a GGA sentence and updates fix status, satellites used, orthometric height,..." alt="" coords="622,603,765,628"/>
+<area shape="poly" id="edge37_Node000001_Node000027" title=" " alt="" coords="841,673,780,643,744,631,746,626,782,638,843,668"/>
+<area shape="rect" id="Node000030" href="$group__neo6__internal__helpers.html#ga501d8b7ac58e8f54ba0da0a89ac5dd5d" title="Parses a GSA sentence and updates fix type, PDOP, HDOP, and VDOP." alt="" coords="623,652,764,677"/>
+<area shape="poly" id="edge41_Node000001_Node000030" title=" " alt="" coords="815,684,764,677,765,672,816,679"/>
+<area shape="rect" id="Node000031" href="$group__neo6__internal__helpers.html#gaec63ba2a6f6c85c085b8095506758ab7" title="Parses a GSV sentence and updates the total satellite count." alt="" coords="623,455,764,480"/>
+<area shape="poly" id="edge43_Node000001_Node000031" title=" " alt="" coords="868,665,857,626,840,580,815,533,780,493,762,482,765,478,783,489,819,530,845,578,863,625,873,663"/>
+<area shape="rect" id="Node000032" href="$group__neo6__internal__helpers.html#ga45ca33c445a15cd52e178a928a0029a6" title="Parses an RMC sentence and updates time, date, latitude, and longitude." alt="" coords="622,504,765,529"/>
+<area shape="poly" id="edge45_Node000001_Node000032" title=" " alt="" coords="864,665,832,603,809,571,780,543,760,532,762,527,783,539,813,567,837,600,868,663"/>
+<area shape="rect" id="Node000033" href="$group__neo6__internal__helpers.html#ga82c4b7653ddb353b770eb35118fb1d59" title="Parses a VTG sentence and updates movement direction and speed." alt="" coords="624,553,763,579"/>
+<area shape="poly" id="edge47_Node000001_Node000033" title=" " alt="" coords="856,668,823,629,780,594,753,581,755,576,783,589,827,625,860,664"/>
+<area shape="rect" id="Node000034" href="$group__sd__command__handlers.html#ga18f21d3f0827d39213ea2977fa94ed7c" title="CLI handler for the &quot;info&quot; command. Logs detailed information about a named SD card handle." alt="" coords="613,1255,773,1280"/>
+<area shape="poly" id="edge49_Node000001_Node000034" title=" " alt="" coords="877,717,871,830,856,988,844,1069,828,1142,808,1203,783,1245,769,1257,765,1252,779,1242,803,1201,823,1141,839,1068,851,987,866,830,872,717"/>
+<area shape="rect" id="Node000035" href="$group__sd__public__apis.html#ga4a534628a1d25952e3c2ac541c067404" title="Deinitializes an SD card handle and resets the SPI peripheral." alt="" coords="627,356,759,381"/>
+<area shape="poly" id="edge50_Node000001_Node000035" title=" " alt="" coords="872,664,868,608,854,535,842,497,826,460,805,425,780,395,758,381,761,377,783,391,810,422,831,457,847,495,859,534,873,607,878,663"/>
+<area shape="rect" id="Node000039" href="$group__ssd1309__command__handlers.html#ga8d21e90c8333c058b7e7f5c6c5754ba7" title="CLI handler for the &quot;drawtext&quot; command. Draws text on a line and updates the display." alt="" coords="605,1305,781,1345"/>
+<area shape="poly" id="edge56_Node000001_Node000039" title=" " alt="" coords="877,717,872,838,857,1010,845,1099,829,1180,809,1247,797,1274,783,1294,770,1307,766,1303,779,1291,792,1271,804,1245,824,1179,840,1098,852,1010,866,838,872,717"/>
+<area shape="rect" id="Node000040" href="$group__stm32__usart__public__apis.html#gaa1b83edcf128b68898bfa5db92dee9fb" title="Returns the name string of a USART peripheral instance (e.g. &quot;USART1&quot;)." alt="" coords="630,1369,757,1395"/>
+<area shape="poly" id="edge57_Node000001_Node000040" title=" " alt="" coords="878,716,875,849,863,1041,851,1140,834,1231,812,1306,799,1336,783,1359,758,1376,755,1371,779,1355,794,1333,807,1305,829,1230,846,1140,857,1041,870,849,873,716"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="619,138,493,164,492,159,618,132"/>
+<area shape="poly" id="edge6_Node000006_Node000004" title=" " alt="" coords="604,171,492,171,492,166,604,166"/>
+<area shape="rect" id="Node000008" href="$main_8c.html#a51cd9b9f6e3c15933fefc02c1bdc445f" title="Runs all subsystems for one iteration of the main loop." alt="" coords="5,752,72,777"/>
+<area shape="poly" id="edge8_Node000007_Node000008" title=" " alt="" coords="384,678,326,671,258,668,188,674,121,692,99,705,79,721,51,753,47,750,76,717,96,700,119,688,187,669,258,663,326,665,385,672"/>
+<area shape="poly" id="edge10_Node000009_Node000010" title=" " alt="" coords="389,1021,256,1021,256,1015,389,1015"/>
+<area shape="poly" id="edge16_Node000014_Node000004" title=" " alt="" coords="629,253,604,244,536,213,481,184,483,179,538,209,606,240,630,248"/>
+<area shape="poly" id="edge17_Node000014_Node000015" title=" " alt="" coords="623,276,360,302,275,313,274,307,360,297,623,271"/>
+<area shape="rect" id="Node000017" href="$group__cmd__public__apis.html#ga5ff882350722fedb7c072cccbf3b8f2c" title="Parses and executes a command from a console text string." alt="" coords="405,904,513,929"/>
+<area shape="poly" id="edge19_Node000016_Node000017" title=" " alt="" coords="602,919,513,919,513,914,602,914"/>
+<area shape="poly" id="edge22_Node000016_Node000019" title=" " alt="" coords="621,935,519,957,518,952,620,930"/>
+<area shape="rect" id="Node000018" href="$group__console__public__apis.html#ga5c89ef7779cd6223208d61c9913a964a" title="Runs the console state machine. Must be called periodically." alt="" coords="166,904,266,929"/>
+<area shape="poly" id="edge20_Node000017_Node000018" title=" " alt="" coords="391,919,266,919,266,914,391,914"/>
+<area shape="poly" id="edge21_Node000018_Node000008" title=" " alt="" coords="152,905,118,887,92,861,70,831,43,779,48,776,74,828,96,857,122,883,154,900"/>
+<area shape="poly" id="edge23_Node000019_Node000010" title=" " alt="" coords="384,986,256,1013,255,1007,383,980"/>
+<area shape="rect" id="Node000021" href="$group__menu__public__apis.html#ga7517f192cd8e1db5f6b7ec3c1cfddb44" title="Renders a single menu to the display." alt="" coords="389,753,528,779"/>
+<area shape="poly" id="edge27_Node000020_Node000021" title=" " alt="" coords="618,802,519,781,521,776,619,797"/>
+<area shape="poly" id="edge30_Node000021_Node000008" title=" " alt="" coords="375,768,72,767,72,762,375,763"/>
+<area shape="rect" id="Node000022" href="$group__menu__command__handlers.html#ga25b9caa8d566ef0c40f70135dcd83ecb" title="CLI handler for the &quot;scroll&quot; command. Scrolls a named menu and re&#45;renders it." alt="" coords="120,803,312,828"/>
+<area shape="poly" id="edge28_Node000021_Node000022" title=" " alt="" coords="383,784,280,805,279,800,382,779"/>
+<area shape="rect" id="Node000023" href="$group__menu__public__apis.html#gafccf13e6466b43a835e92596ff4fed51" title="Renders all registered menus to the display." alt="" coords="135,701,297,727"/>
+<area shape="poly" id="edge29_Node000021_Node000023" title=" " alt="" coords="385,753,275,729,276,724,386,748"/>
+<area shape="poly" id="edge32_Node000024_Node000008" title=" " alt="" coords="346,879,292,878,234,873,175,862,119,843,96,830,76,813,47,779,51,776,80,809,99,825,121,838,176,857,235,868,292,873,346,873"/>
+<area shape="poly" id="edge34_Node000025_Node000004" title=" " alt="" coords="618,205,492,178,493,173,619,200"/>
+<area shape="poly" id="edge36_Node000026_Node000021" title=" " alt="" coords="598,769,528,769,528,763,598,763"/>
+<area shape="rect" id="Node000028" href="$group__neo6__internal__helpers.html#gafd69e091893ce712ee6c26d2b56291c6" title="Verifies the checksum of a received NMEA sentence and dispatches it to the appropriate parser." alt="" coords="385,565,532,591"/>
+<area shape="poly" id="edge38_Node000027_Node000028" title=" " alt="" coords="608,605,532,592,532,587,609,599"/>
+<area shape="rect" id="Node000029" href="$group__neo6__public__apis.html#ga1ce70e74c8a92a791698716a7091aaa6" title="Processes received NMEA data. Must be called periodically." alt="" coords="175,588,257,613"/>
+<area shape="poly" id="edge39_Node000028_Node000029" title=" " alt="" coords="372,589,258,600,257,594,372,583"/>
+<area shape="poly" id="edge40_Node000029_Node000008" title=" " alt="" coords="164,621,122,647,97,673,76,702,48,753,43,751,71,700,92,670,118,643,161,617"/>
+<area shape="poly" id="edge42_Node000030_Node000028" title=" " alt="" coords="628,651,604,643,486,593,488,588,606,638,629,646"/>
+<area shape="poly" id="edge44_Node000031_Node000028" title=" " alt="" coords="625,487,606,494,535,531,479,567,477,563,532,527,604,489,623,482"/>
+<area shape="poly" id="edge46_Node000032_Node000028" title=" " alt="" coords="632,535,509,568,507,563,630,530"/>
+<area shape="poly" id="edge48_Node000033_Node000028" title=" " alt="" coords="610,573,532,577,532,572,610,568"/>
+<area shape="rect" id="Node000036" href="$group__sd__internal__helpers.html#ga334584c0af12a66e5bee9a1a3bc0c00e" title="Raises CS, sends two dummy bytes, and disables SPI. Optionally deinitializes the handle." alt="" coords="390,356,527,381"/>
+<area shape="poly" id="edge51_Node000035_Node000036" title=" " alt="" coords="613,371,528,371,528,366,613,366"/>
+<area shape="poly" id="edge52_Node000036_Node000015" title=" " alt="" coords="383,356,274,333,275,327,384,350"/>
+<area shape="rect" id="Node000037" href="$group__sd__public__apis.html#ga5fbd9b0b984070a99c3addf991f38018" title="Reads one or more sectors from the SD card." alt="" coords="179,355,253,380"/>
+<area shape="poly" id="edge53_Node000036_Node000037" title=" " alt="" coords="376,371,253,370,253,365,377,366"/>
+<area shape="rect" id="Node000038" href="$group__sd__public__apis.html#ga6ffe386d7b21e397b8257e5b10b85dbf" title="Writes one or more sectors to the SD card." alt="" coords="177,404,255,429"/>
+<area shape="poly" id="edge54_Node000036_Node000038" title=" " alt="" coords="381,387,255,412,254,407,380,381"/>
+</map>

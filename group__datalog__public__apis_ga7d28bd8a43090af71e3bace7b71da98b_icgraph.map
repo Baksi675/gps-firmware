@@ -1,0 +1,5 @@
+<map id="datalog_run_handle" name="datalog_run_handle">
+<area shape="rect" id="Node000001" title="Writes a GPS data entry to the log file if the logging interval has elapsed." alt="" coords="120,5,271,31"/>
+<area shape="rect" id="Node000002" href="$main_8c.html#a51cd9b9f6e3c15933fefc02c1bdc445f" title="Runs all subsystems for one iteration of the main loop." alt="" coords="5,5,72,31"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="106,21,72,21,72,15,106,15"/>
+</map>

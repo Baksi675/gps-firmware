@@ -1,0 +1,7 @@
+<map id="menu_init_handle" name="menu_init_handle">
+<area shape="rect" id="Node000001" title="Initializes and registers a menu handle." alt="" coords="5,31,144,56"/>
+<area shape="rect" id="Node000002" href="$group__common__public__apis.html#ga798f9165c3390657a08f031b640020b3" title="Returns the length of a string, excluding the null terminator." alt="" coords="192,5,287,31"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="144,30,178,25,179,30,145,35"/>
+<area shape="rect" id="Node000003" href="$group__common__public__apis.html#gacbca13b96c81704cc9e6f878dd605bbe" title="Copies a fixed&#45;length block of text into a destination buffer." alt="" coords="204,55,275,80"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="145,51,191,58,190,63,144,56"/>
+</map>

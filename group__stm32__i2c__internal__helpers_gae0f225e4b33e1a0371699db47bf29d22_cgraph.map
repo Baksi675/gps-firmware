@@ -1,0 +1,5 @@
+<map id="i2c_set_pclk" name="i2c_set_pclk">
+<area shape="rect" id="Node000001" title="Enables or disables the peripheral clock for an I2C instance." alt="" coords="5,5,108,31"/>
+<area shape="rect" id="Node000002" href="$group__stm32__rcc__public__apis.html#ga5cf8b9a2e93e5658766e20a00d6b7736" title="Enables or disables the peripheral clock for an APB1 peripheral." alt="" coords="156,5,297,31"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="108,15,142,15,142,21,108,21"/>
+</map>

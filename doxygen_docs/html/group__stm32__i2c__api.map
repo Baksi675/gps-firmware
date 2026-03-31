@@ -1,0 +1,4 @@
+<map id="I2C Public API" name="I2C Public API">
+<area shape="rect" id="Node000002" href="$group__stm32__i2c.html" title="Blocking master&#45;mode I2C driver for the STM32F401RE." alt="" coords="5,5,189,31"/>
+<area shape="rect" id="Node000001" title="Public functions to interact with the I2C peripheral." alt="" coords="237,5,348,31"/>
+</map>

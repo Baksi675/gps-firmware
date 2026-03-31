@@ -1,0 +1,15 @@
+<map id="ssd1309_cmd_clearrect_handler" name="ssd1309_cmd_clearrect_handler">
+<area shape="rect" id="Node000001" title="CLI handler for the &quot;clearrect&quot; command. Clears a rectangle and updates the display." alt="" coords="5,47,180,87"/>
+<area shape="rect" id="Node000002" href="$group__ssd1309__public__apis.html#gab1eea98bff0538dfbf4530cbcb26d9c2" title="Clears a rectangular region in the framebuffer." alt="" coords="228,5,375,31"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="177,45,233,31,234,36,178,50"/>
+<area shape="rect" id="Node000003" href="$group__ssd1309__public__apis.html#ga478ca3db06ab04e026286702d4f6a63b" title="Flushes the internal framebuffer to the display over I2C." alt="" coords="237,55,365,80"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="180,65,223,65,223,70,180,70"/>
+<area shape="rect" id="Node000007" href="$group__common__public__apis.html#ga226b065de5075e62c78bbb96d42ca796" title="Converts a decimal string to an integer." alt="" coords="260,104,343,129"/>
+<area shape="poly" id="edge6_Node000001_Node000007" title=" " alt="" coords="178,85,247,101,246,106,177,90"/>
+<area shape="rect" id="Node000004" href="$group__stm32__i2c__public__apis.html#gacfae2fbf177c78fe3d58c54657dfed42" title="Blocking I2C master transmit. Sends a start condition, address, and data." alt="" coords="454,5,586,31"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="358,52,449,31,450,36,359,57"/>
+<area shape="rect" id="Node000005" href="$group__stm32__i2c__public__apis.html#ga7cdd7d119473b9b7a91fa0cad2a16d58" title="Continues a transmission started by i2c_master_send without a new START or address phase." alt="" coords="423,55,617,80"/>
+<area shape="poly" id="edge4_Node000003_Node000005" title=" " alt="" coords="366,65,409,65,409,70,366,70"/>
+<area shape="rect" id="Node000006" href="$group__stm32__i2c__public__apis.html#ga94b6acb8f6c8a1e3d22cf8bb9bb51523" title="Enables or disables the I2C peripheral and controls bus ownership." alt="" coords="435,104,605,129"/>
+<area shape="poly" id="edge5_Node000003_Node000006" title=" " alt="" coords="359,77,450,98,449,104,358,83"/>
+</map>

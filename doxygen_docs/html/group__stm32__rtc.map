@@ -1,0 +1,5 @@
+<map id="STM32F401RE RTC Driver" name="STM32F401RE RTC Driver">
+<area shape="rect" id="Node000001" title="Calendar and time driver for the STM32F401RE RTC peripheral." alt="" coords="5,31,192,56"/>
+<area shape="rect" id="Node000003" href="$group__stm32__rtc__api.html" title="Public functions to interact with the RTC peripheral." alt="" coords="240,5,355,31"/>
+<area shape="rect" id="Node000002" href="$group__stm32__rtc__types.html" title="Data types used by the RTC driver." alt="" coords="254,55,341,80"/>
+</map>

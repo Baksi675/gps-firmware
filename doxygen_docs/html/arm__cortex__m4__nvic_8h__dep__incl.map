@@ -1,0 +1,9 @@
+<map id="drivers/inc/arm_cortex_m4_nvic.h" name="drivers/inc/arm_cortex_m4_nvic.h">
+<area shape="rect" id="Node000001" title="Arm Cortex&#45;M4 NVIC driver public API." alt="" coords="203,5,371,45"/>
+<area shape="rect" id="Node000002" href="$arm__cortex__m4__nvic_8c.html" title="Arm Cortex&#45;M4 nested vectored interrupt controller implementation." alt="" coords="5,93,173,133"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="232,53,134,96,131,91,230,48"/>
+<area shape="rect" id="Node000003" href="$stm32f401re__gpio_8c.html" title="GPIO driver implementation for STM32F401RE." alt="" coords="198,93,375,133"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="289,59,289,93,284,93,284,59"/>
+<area shape="rect" id="Node000004" href="$stm32f401re__usart_8c.html" title="USART driver implementation for STM32F401RE." alt="" coords="399,93,577,133"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="345,48,445,91,443,96,343,53"/>
+</map>

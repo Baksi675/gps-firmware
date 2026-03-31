@@ -1,0 +1,9 @@
+<map id="i2c_deinit" name="i2c_deinit">
+<area shape="rect" id="Node000001" title="Deinitializes the I2C peripheral and disables its clock." alt="" coords="5,31,91,56"/>
+<area shape="rect" id="Node000002" href="$group__stm32__i2c__internal__helpers.html#gae0f225e4b33e1a0371699db47bf29d22" title="Enables or disables the peripheral clock for an I2C instance." alt="" coords="171,5,274,31"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="91,35,157,25,158,30,91,40"/>
+<area shape="rect" id="Node000004" href="$group__stm32__rcc__public__apis.html#ga5f8eecbc777a20fc8e3e9ece67ffedc0" title="Resets an APB1 peripheral via RCC_APB1RSTR." alt="" coords="139,55,307,80"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="91,47,125,51,125,57,91,52"/>
+<area shape="rect" id="Node000003" href="$group__stm32__rcc__public__apis.html#ga5cf8b9a2e93e5658766e20a00d6b7736" title="Enables or disables the peripheral clock for an APB1 peripheral." alt="" coords="355,5,496,31"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="274,15,341,15,341,21,274,21"/>
+</map>

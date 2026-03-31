@@ -1,0 +1,7 @@
+<map id="usart_set_pclk" name="usart_set_pclk">
+<area shape="rect" id="Node000001" title="Enables or disables the peripheral clock for a USART instance." alt="" coords="5,31,121,56"/>
+<area shape="rect" id="Node000002" href="$group__stm32__rcc__public__apis.html#ga5cf8b9a2e93e5658766e20a00d6b7736" title="Enables or disables the peripheral clock for an APB1 peripheral." alt="" coords="169,5,311,31"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="121,32,155,27,156,33,122,38"/>
+<area shape="rect" id="Node000003" href="$group__stm32__rcc__public__apis.html#ga0cf8672c3f523ae19b591cbd670e0281" title="Enables or disables the peripheral clock for an APB2 peripheral." alt="" coords="169,55,311,80"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="122,49,156,53,155,58,121,54"/>
+</map>

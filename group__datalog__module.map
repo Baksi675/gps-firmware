@@ -1,0 +1,5 @@
+<map id="Data Log Module" name="Data Log Module">
+<area shape="rect" id="Node000003" href="$group__datalog__api.html" title="Public functions to interact with the data log subsystem." alt="" coords="185,5,333,31"/>
+<area shape="rect" id="Node000001" title="Periodic GPS data logging to SD card via FatFs." alt="" coords="5,31,137,56"/>
+<area shape="rect" id="Node000002" href="$group__datalog__types.html" title="Data types used by the data log module." alt="" coords="199,55,320,80"/>
+</map>

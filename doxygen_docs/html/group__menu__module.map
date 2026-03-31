@@ -1,0 +1,5 @@
+<map id="Menu Module" name="Menu Module">
+<area shape="rect" id="Node000003" href="$group__menu__api.html" title="Public functions to interact with the menu subsystem." alt="" coords="164,5,291,31"/>
+<area shape="rect" id="Node000001" title="OLED display menu system with selectable and data&#45;view modes." alt="" coords="5,31,116,56"/>
+<area shape="rect" id="Node000002" href="$group__menu__types.html" title="Data types used by the menu module." alt="" coords="178,55,277,80"/>
+</map>

@@ -1,0 +1,5 @@
+<map id="Console Module" name="Console Module">
+<area shape="rect" id="Node000003" href="$group__console__api.html" title="Public functions to interact with the console subsystem." alt="" coords="180,5,323,31"/>
+<area shape="rect" id="Node000001" title="USART&#45;based interactive console with command dispatch." alt="" coords="5,31,132,56"/>
+<area shape="rect" id="Node000002" href="$group__console__types.html" title="Data types used by the console module." alt="" coords="194,55,309,80"/>
+</map>

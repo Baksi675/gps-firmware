@@ -1,0 +1,5 @@
+<map id="acquire_datetime" name="acquire_datetime">
+<area shape="rect" id="Node000001" title="Data&#45;view callback for the date/time menu." alt="" coords="5,5,141,31"/>
+<area shape="rect" id="Node000002" href="$group__neo6__public__apis.html#gaf2643d4847a50e75aa6cc94385a992d9" title="Returns a pointer to the internal GPS data structure." alt="" coords="189,5,304,31"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="142,15,176,15,176,21,142,21"/>
+</map>

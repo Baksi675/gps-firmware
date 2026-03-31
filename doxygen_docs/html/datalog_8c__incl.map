@@ -1,0 +1,54 @@
+<map id="core/src/datalog.c" name="core/src/datalog.c">
+<area shape="rect" id="Node000001" title="Data log module implementation file. Implements the GPS data logging feature of the GPS device." alt="" coords="537,5,674,31"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="48,372,131,397"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="537,24,387,34,300,43,212,57,133,75,67,99,42,113,24,128,12,145,8,164,8,239,14,275,29,308,49,337,70,361,65,364,45,341,25,311,9,276,3,240,3,163,7,143,20,125,39,108,65,94,131,70,211,52,299,38,387,29,536,19"/>
+<area shape="rect" id="Node000003" href="$datalog_8h.html" title="Data log module public API." alt="" coords="753,152,836,177"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="644,28,690,48,736,77,764,107,785,138,780,141,760,110,733,81,688,52,642,33"/>
+<area shape="rect" id="Node000004" href="$err_8h.html" title="System&#45;wide error code definitions." alt="" coords="603,225,653,251"/>
+<area shape="poly" id="edge9_Node000001_Node000004" title=" " alt="" coords="625,29,649,49,668,78,675,115,670,152,658,186,645,215,640,212,653,184,665,151,670,115,663,80,645,53,622,33"/>
+<area shape="rect" id="Node000005" title=" " alt="" coords="793,225,911,251"/>
+<area shape="poly" id="edge8_Node000001_Node000005" title=" " alt="" coords="675,25,746,42,782,57,816,76,837,92,851,108,871,151,873,183,866,213,860,212,868,183,865,153,847,111,833,96,813,81,780,62,744,47,674,30"/>
+<area shape="rect" id="Node000006" href="$common_8h.html" title="Common utility module public API." alt="" coords="127,299,217,324"/>
+<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="537,24,429,38,366,51,301,70,237,96,178,130,125,173,103,199,84,227,80,236,80,245,90,262,109,278,132,291,129,295,106,282,86,266,75,246,75,235,79,224,99,195,122,170,175,126,235,91,299,65,365,46,428,32,536,19"/>
+<area shape="rect" id="Node000008" href="$init_8h.html" title="Common initialization public API." alt="" coords="598,79,653,104"/>
+<area shape="poly" id="edge10_Node000001_Node000008" title=" " alt="" coords="611,30,621,65,616,66,606,32"/>
+<area shape="rect" id="Node000009" href="$log_8h.html" title="Log subsystem public API." alt="" coords="359,152,414,177"/>
+<area shape="poly" id="edge12_Node000001_Node000009" title=" " alt="" coords="538,33,485,51,459,64,435,81,412,109,397,140,392,138,407,106,432,77,456,60,483,46,537,28"/>
+<area shape="rect" id="Node000013" href="$modules_8h.html" title="System module identifier definitions." alt="" coords="677,225,768,251"/>
+<area shape="poly" id="edge24_Node000001_Node000013" title=" " alt="" coords="666,28,715,44,768,68,816,103,835,125,850,151,854,164,852,177,837,197,812,213,782,225,780,220,809,209,834,194,847,175,849,165,846,153,831,128,812,107,766,73,714,49,664,33"/>
+<area shape="rect" id="Node000014" href="$cmd_8h.html" title="Command subsystem public API." alt="" coords="445,79,507,104"/>
+<area shape="poly" id="edge25_Node000001_Node000014" title=" " alt="" coords="586,33,511,74,508,69,583,28"/>
+<area shape="rect" id="Node000015" title=" " alt="" coords="961,79,1004,104"/>
+<area shape="poly" id="edge27_Node000001_Node000015" title=" " alt="" coords="675,27,800,47,943,76,948,77,947,83,942,81,799,53,674,32"/>
+<area shape="rect" id="Node000016" href="$arm__cortex__m4__systick_8h.html" title="Arm Cortex&#45;M4 SysTick driver public API." alt="" coords="439,152,628,177"/>
+<area shape="poly" id="edge28_Node000001_Node000016" title=" " alt="" coords="602,32,548,141,543,138,597,30"/>
+<area shape="rect" id="Node000017" href="$neo6_8h.html" title="NEO&#45;6M GPS module public API." alt="" coords="268,152,335,177"/>
+<area shape="poly" id="edge31_Node000001_Node000017" title=" " alt="" coords="547,33,479,52,408,81,362,112,324,144,321,140,358,108,405,76,477,47,545,28"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="769,180,667,223,665,218,767,175"/>
+<area shape="poly" id="edge4_Node000003_Node000005" title=" " alt="" coords="806,176,836,213,832,216,802,179"/>
+<area shape="poly" id="edge7_Node000006_Node000002" title=" " alt="" coords="160,326,115,365,112,361,157,322"/>
+<area shape="rect" id="Node000007" title=" " alt="" coords="315,372,386,397"/>
+<area shape="poly" id="edge6_Node000006_Node000007" title=" " alt="" coords="202,322,310,364,308,369,200,327"/>
+<area shape="poly" id="edge11_Node000008_Node000004" title=" " alt="" coords="632,104,643,152,643,184,638,213,632,212,637,183,637,152,627,105"/>
+<area shape="poly" id="edge21_Node000009_Node000004" title=" " alt="" coords="415,172,590,223,589,228,414,177"/>
+<area shape="poly" id="edge22_Node000009_Node000005" title=" " alt="" coords="415,172,427,175,524,192,600,202,779,223,778,228,600,207,523,198,426,180,413,177"/>
+<area shape="rect" id="Node000010" href="$stm32f401re_8h.html" title="STM32F401RE MCU&#45;specific peripheral register definitions and bit position enumerations." alt="" coords="292,299,409,324"/>
+<area shape="poly" id="edge13_Node000009_Node000010" title=" " alt="" coords="416,172,446,185,476,203,495,225,497,238,492,252,478,268,461,281,423,299,421,294,458,277,474,264,487,249,492,238,490,227,473,207,444,190,413,177"/>
+<area shape="rect" id="Node000011" href="$stm32f401re__usart_8h.html" title="STM32F401RE USART driver public API." alt="" coords="93,225,251,251"/>
+<area shape="poly" id="edge15_Node000009_Node000011" title=" " alt="" coords="360,178,221,223,219,218,358,173"/>
+<area shape="rect" id="Node000012" href="$stm32f401re__gpio_8h.html" title="STM32F401RE GPIO driver public API." alt="" coords="325,225,477,251"/>
+<area shape="poly" id="edge18_Node000009_Node000012" title=" " alt="" coords="392,177,399,211,394,212,386,178"/>
+<area shape="poly" id="edge23_Node000009_Node000013" title=" " alt="" coords="415,172,427,175,664,222,663,228,426,180,413,177"/>
+<area shape="poly" id="edge14_Node000010_Node000007" title=" " alt="" coords="353,324,353,358,348,358,348,324"/>
+<area shape="poly" id="edge17_Node000011_Node000006" title=" " alt="" coords="175,251,175,285,169,285,169,251"/>
+<area shape="poly" id="edge16_Node000011_Node000010" title=" " alt="" coords="202,248,310,291,308,296,200,253"/>
+<area shape="poly" id="edge19_Node000012_Node000006" title=" " alt="" coords="365,253,223,297,222,292,364,248"/>
+<area shape="poly" id="edge20_Node000012_Node000010" title=" " alt="" coords="395,253,369,289,365,286,391,249"/>
+<area shape="poly" id="edge26_Node000014_Node000009" title=" " alt="" coords="463,106,414,145,410,141,460,102"/>
+<area shape="poly" id="edge30_Node000016_Node000004" title=" " alt="" coords="550,175,603,215,600,219,547,179"/>
+<area shape="poly" id="edge29_Node000016_Node000007" title=" " alt="" coords="535,178,528,213,512,252,483,288,449,320,384,367,381,363,446,316,479,285,507,249,523,211,530,177"/>
+<area shape="poly" id="edge35_Node000017_Node000004" title=" " alt="" coords="336,172,349,175,590,226,589,231,347,180,334,177"/>
+<area shape="poly" id="edge32_Node000017_Node000010" title=" " alt="" coords="304,178,307,211,316,250,336,286,331,289,311,252,302,212,299,178"/>
+<area shape="poly" id="edge34_Node000017_Node000011" title=" " alt="" coords="282,180,207,221,204,216,279,175"/>
+<area shape="poly" id="edge33_Node000017_Node000012" title=" " alt="" coords="319,175,375,215,372,219,316,180"/>
+</map>

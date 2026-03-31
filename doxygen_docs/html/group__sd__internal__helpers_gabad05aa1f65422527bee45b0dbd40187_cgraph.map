@@ -1,0 +1,12 @@
+<map id="sd_send_op_cond" name="sd_send_op_cond">
+<area shape="rect" id="Node000001" title="Issues CMD1 to initiate MMC Ver.3 card initialization." alt="" coords="5,55,141,80"/>
+<area shape="rect" id="Node000002" href="$group__sd__internal__helpers.html#ga653572a0b7bbfad25f8cf91425a58f57" title="Transmits a single SPI&#45;mode SD command and receives the response." alt="" coords="189,55,300,80"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="142,65,175,65,175,70,142,70"/>
+<area shape="poly" id="edge2_Node000002_Node000002" title=" " alt="" coords="217,56,212,46,215,37,226,30,245,28,267,31,277,40,273,44,265,36,245,33,228,35,219,40,217,46,222,53"/>
+<area shape="rect" id="Node000003" href="$group__stm32__spi__public__apis.html#gad073bfcf995daaf341753e58fdc79762" title="Blocking SPI receive. Reads len bytes into rx_buffer." alt="" coords="361,5,457,31"/>
+<area shape="poly" id="edge3_Node000002_Node000003" title=" " alt="" coords="287,52,352,32,354,37,288,57"/>
+<area shape="rect" id="Node000004" href="$group__stm32__spi__public__apis.html#ga39d5cb38200e88203692e5f9e7145eaf" title="Blocking SPI transmit. Sends len bytes from tx_buffer." alt="" coords="370,55,449,80"/>
+<area shape="poly" id="edge4_Node000002_Node000004" title=" " alt="" coords="300,65,356,65,356,70,300,70"/>
+<area shape="rect" id="Node000005" href="$group__cortex__m4__systick__public__apis.html#gace47395205769718b2a463822269d777" title="Returns the number of milliseconds elapsed since SysTick was initialized." alt="" coords="348,104,471,129"/>
+<area shape="poly" id="edge5_Node000002_Node000005" title=" " alt="" coords="288,77,354,97,352,102,287,83"/>
+</map>

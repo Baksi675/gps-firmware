@@ -1,0 +1,4 @@
+<map id="RCC Public API" name="RCC Public API">
+<area shape="rect" id="Node000002" href="$group__stm32__rcc.html" title="Clock control and peripheral reset driver for the STM32F401RE." alt="" coords="5,5,196,31"/>
+<area shape="rect" id="Node000001" title="Public functions to interact with the RCC peripheral." alt="" coords="244,5,361,31"/>
+</map>

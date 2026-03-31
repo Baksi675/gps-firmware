@@ -1,0 +1,23 @@
+var searchData=
+[
+  ['page_5faddr_5fend_5fham_5fvam_0',['page_addr_end_ham_vam',['../structSSD1309__CFG__ts.html#a3378f95ee6495a17e91c52a467e6d1bf',1,'SSD1309_CFG_ts']]],
+  ['page_5faddr_5fstart_5fham_5fvam_1',['page_addr_start_ham_vam',['../structSSD1309__CFG__ts.html#a53684b14761732f34f85a22540b6d180',1,'SSD1309_CFG_ts']]],
+  ['page_5fstart_5faddr_5fpam_2',['page_start_addr_pam',['../structSSD1309__CFG__ts.html#a2f351e8980d76940a16dd3b19c4c0cdd',1,'SSD1309_CFG_ts']]],
+  ['parity_3',['parity',['../structUSART__CFG__ts.html#aef6d8b719b24a31fdd8e8f6d7beae178',1,'USART_CFG_ts']]],
+  ['pdop_4',['pdop',['../structNEO6__INFO__ts.html#a03eef1c137f4c6cf01588b5643808732',1,'NEO6_INFO_ts']]],
+  ['perm_5fwrite_5fprotect_5',['perm_write_protect',['../structSD__CSD__INFO__ts.html#a5ea1cf42d35603fba98b0b463f98db95',1,'SD_CSD_INFO_ts']]],
+  ['phase1_5fprecharge_5fdclk_6',['phase1_precharge_dclk',['../structSSD1309__CFG__ts.html#ac81665cc5a3463d18e36d7a6e60459b6',1,'SSD1309_CFG_ts']]],
+  ['phase2_5fprecharge_5fdclk_7',['phase2_precharge_dclk',['../structSSD1309__CFG__ts.html#a267783b73e80cd5b4a33f39affbf8dcd',1,'SSD1309_CFG_ts']]],
+  ['pin_8',['pin',['../structGPIO__CFG__ts.html#aec1f50136b4f4b8a4603d00428d811bd',1,'GPIO_CFG_ts']]],
+  ['port_9',['port',['../structGPIO__CFG__ts.html#a4a9d8c1b03f56b4cbadce9a74b52c58a',1,'GPIO_CFG_ts']]],
+  ['prev_5fmenu_10',['prev_menu',['../structmenu__handle__s.html#a9ff1a4c7ec10cd437bb5ca5e8f8eaf12',1,'menu_handle_s']]],
+  ['prev_5fmenu_5fcount_11',['prev_menu_count',['../structmenu__handle__s.html#ad186f89a2158c255ae1026aae196ddcb',1,'menu_handle_s']]],
+  ['prev_5fselected_5foption_12',['prev_selected_option',['../structmenu__handle__s.html#a5e55f315b7f87abe059b135932891675',1,'menu_handle_s']]],
+  ['ptr_13',['ptr',['../structCBUF__HANDLE__ts.html#a88468de063609cffe6cd7d1841102465',1,'CBUF_HANDLE_ts']]],
+  ['pull_5fmode_14',['pull_mode',['../structGPIO__CFG__ts.html#a6951e02507260a43e42bbbef2ffba7bf',1,'GPIO_CFG_ts']]],
+  ['pushed_15',['pushed',['../structbutton__handle__s.html#a448c6e8ad0ca360818f724db4a78d08c',1,'button_handle_s']]],
+  ['pushed_5ftype_16',['pushed_type',['../structBUTTON__CFG__ts.html#aa7f8fcdcae2ea86ea659bf3169c33cb8',1,'BUTTON_CFG_ts::pushed_type'],['../structbutton__handle__s.html#a310828cfd4c412fdf109821f6f684ba9',1,'button_handle_s::pushed_type']]],
+  ['pwr_5fcr_17',['PWR_CR',['../structPWR__REGDEF__ts.html#a17ab019f661d0905950bed154ae1c1eb',1,'PWR_REGDEF_ts']]],
+  ['pwr_5fcsr_18',['PWR_CSR',['../structPWR__REGDEF__ts.html#a808faa8b0ee255430d19151f285bdcb7',1,'PWR_REGDEF_ts']]],
+  ['pwrup_5fstatus_19',['pwrup_status',['../structsd__handle__s.html#acfa2dc36083bdbb071c7d6e8d8605801',1,'sd_handle_s']]]
+];

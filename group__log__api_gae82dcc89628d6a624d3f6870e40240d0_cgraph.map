@@ -1,0 +1,32 @@
+<map id="log_print" name="log_print">
+<area shape="rect" id="Node000001" title="Prints a formatted message to the serial terminal if the severity threshold is met." alt="" coords="5,183,84,208"/>
+<area shape="rect" id="Node000002" href="$group__common__public__apis.html#ga8d676144b2fa271534a94fc3b8f82a0f" title="Converts a double to a decimal string with a fixed number of fractional digits." alt="" coords="148,107,259,132"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="69,181,131,149,160,136,162,141,133,154,72,185"/>
+<area shape="rect" id="Node000004" href="$group__common__public__apis.html#ga798f9165c3390657a08f031b640020b3" title="Returns the length of a string, excluding the null terminator." alt="" coords="524,108,619,134"/>
+<area shape="poly" id="edge6_Node000001_Node000004" title=" " alt="" coords="52,181,83,138,105,114,130,92,179,61,221,42,265,30,322,18,401,4,436,5,477,19,503,34,525,54,558,95,553,98,521,57,500,38,475,23,435,11,401,9,323,24,266,35,223,47,182,65,134,97,109,118,87,142,56,185"/>
+<area shape="rect" id="Node000005" href="$group__common__public__apis.html#gae47bb1aab370d9f4bcef389aff1c8731" title="Converts an integer to its decimal string representation." alt="" coords="358,158,441,183"/>
+<area shape="poly" id="edge7_Node000001_Node000005" title=" " alt="" coords="84,190,344,172,344,177,84,196"/>
+<area shape="rect" id="Node000007" href="$group__log__internal__helpers.html#gab7213513b94643317e1fcbb6593acc0d" title="Prints the log message prologue: timestamp, severity, and subsystem name." alt="" coords="132,208,275,234"/>
+<area shape="poly" id="edge8_Node000001_Node000007" title=" " alt="" coords="85,199,119,205,118,210,84,205"/>
+<area shape="rect" id="Node000011" href="$group__stm32__usart__public__apis.html#ga08b4b8744fb88c36df0ac52433dfe27f" title="Blocking USART transmit. Sends len bytes from tx_buffer." alt="" coords="353,358,446,383"/>
+<area shape="poly" id="edge18_Node000001_Node000011" title=" " alt="" coords="67,206,133,243,173,257,206,265,238,275,276,295,291,308,301,320,310,332,324,344,341,353,339,358,321,349,306,336,296,324,287,311,273,299,236,280,204,271,171,263,131,247,65,211"/>
+<area shape="rect" id="Node000012" href="$group__common__public__apis.html#ga226b065de5075e62c78bbb96d42ca796" title="Converts a decimal string to an integer." alt="" coords="162,310,245,335"/>
+<area shape="poly" id="edge17_Node000001_Node000012" title=" " alt="" coords="57,207,89,246,134,288,156,302,153,306,130,293,85,250,53,211"/>
+<area shape="rect" id="Node000003" href="$group__common__public__apis.html#gaedc847b526ec18e1b985178b580438ed" title="Computes an integer power." alt="" coords="361,59,438,84"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="255,104,347,82,348,87,257,110"/>
+<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="217,105,262,72,291,56,322,44,365,33,400,28,435,32,477,44,519,67,552,96,548,100,516,72,475,49,434,37,400,34,366,38,323,49,293,61,265,77,221,109"/>
+<area shape="poly" id="edge4_Node000002_Node000005" title=" " alt="" coords="254,130,345,154,344,159,253,135"/>
+<area shape="rect" id="Node000006" href="$group__common__public__apis.html#ga6f9135dbc21bdf8f3f67ff08cde3fa03" title="Overwrites a region of a target string with the contents of a source string." alt="" coords="366,108,433,134"/>
+<area shape="poly" id="edge5_Node000002_Node000006" title=" " alt="" coords="259,117,352,118,352,123,259,123"/>
+<area shape="poly" id="edge9_Node000007_Node000004" title=" " alt="" coords="275,222,372,217,425,207,475,192,514,169,547,142,550,146,518,174,477,197,426,213,373,222,275,227"/>
+<area shape="poly" id="edge10_Node000007_Node000005" title=" " alt="" coords="253,206,344,182,345,187,254,211"/>
+<area shape="poly" id="edge15_Node000007_Node000006" title=" " alt="" coords="220,206,265,175,322,143,352,131,354,136,324,147,267,179,223,210"/>
+<area shape="rect" id="Node000008" href="$group__log__public__apis.html#gacf5f29fb5186e4a8c3a8a7ab872f5d08" title="Converts a LOG_LEVEL_te value to its lowercase string name." alt="" coords="323,259,476,284"/>
+<area shape="poly" id="edge11_Node000007_Node000008" title=" " alt="" coords="254,231,337,253,336,258,253,236"/>
+<area shape="rect" id="Node000010" href="$group__stm32__rtc__public__apis.html#ga00f0bdef48616f0ec09cea4680006bf8" title="Reads the current time from the RTC." alt="" coords="347,308,451,334"/>
+<area shape="poly" id="edge14_Node000007_Node000010" title=" " alt="" coords="239,231,276,251,300,273,324,294,339,301,337,306,321,298,297,277,273,255,237,236"/>
+<area shape="poly" id="edge16_Node000007_Node000011" title=" " alt="" coords="246,232,277,251,294,276,301,300,307,322,324,344,341,355,338,359,321,348,303,325,295,301,289,278,273,255,243,236"/>
+<area shape="poly" id="edge12_Node000008_Node000004" title=" " alt="" coords="440,257,474,238,499,216,521,191,554,144,558,147,525,194,503,219,478,242,442,261"/>
+<area shape="rect" id="Node000009" href="$group__common__public__apis.html#ga4681e08097a4495fe5f63a433d52ea6b" title="Copies a null&#45;terminated string into a destination buffer." alt="" coords="537,259,606,284"/>
+<area shape="poly" id="edge13_Node000008_Node000009" title=" " alt="" coords="476,269,523,269,523,274,476,274"/>
+</map>

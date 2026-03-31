@@ -1,0 +1,9 @@
+<map id="neo6_process_rmc" name="neo6_process_rmc">
+<area shape="rect" id="Node000001" title="Parses an RMC sentence and updates time, date, latitude, and longitude." alt="" coords="5,55,148,80"/>
+<area shape="rect" id="Node000002" href="$group__common__public__apis.html#ga798f9165c3390657a08f031b640020b3" title="Returns the length of a string, excluding the null terminator." alt="" coords="196,5,291,31"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="119,52,186,32,187,37,121,57"/>
+<area shape="rect" id="Node000003" href="$group__common__public__apis.html#ga1b7a4f6b0c0415253f0bc32fa527405b" title="Compares two null&#45;terminated strings for equality." alt="" coords="206,55,281,80"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="148,65,192,65,192,70,148,70"/>
+<area shape="rect" id="Node000004" href="$group__common__public__apis.html#ga4681e08097a4495fe5f63a433d52ea6b" title="Copies a null&#45;terminated string into a destination buffer." alt="" coords="209,104,278,129"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="121,77,196,100,194,105,119,83"/>
+</map>

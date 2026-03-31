@@ -1,0 +1,13 @@
+<map id="spi_deinit" name="spi_deinit">
+<area shape="rect" id="Node000001" title="Deinitializes the SPI peripheral and disables its clock." alt="" coords="5,55,91,80"/>
+<area shape="rect" id="Node000002" href="$group__stm32__rcc__public__apis.html#ga5f8eecbc777a20fc8e3e9ece67ffedc0" title="Resets an APB1 peripheral via RCC_APB1RSTR." alt="" coords="139,5,307,31"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="90,53,163,32,165,37,92,58"/>
+<area shape="rect" id="Node000003" href="$group__stm32__rcc__public__apis.html#ga1313da00aa9c4b8d9b57fedbad676c04" title="Resets an APB2 peripheral via RCC_APB2RSTR." alt="" coords="139,55,307,80"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="91,65,125,65,125,70,91,70"/>
+<area shape="rect" id="Node000004" href="$group__stm32__spi__internal__helpers.html#gae2d12528fd8bc6904c771da85bb5c2b4" title="Enables or disables the peripheral clock for an SPI instance." alt="" coords="171,104,274,129"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="92,77,165,98,163,103,90,82"/>
+<area shape="rect" id="Node000005" href="$group__stm32__rcc__public__apis.html#ga5cf8b9a2e93e5658766e20a00d6b7736" title="Enables or disables the peripheral clock for an APB1 peripheral." alt="" coords="355,79,496,104"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="274,108,340,99,341,105,275,113"/>
+<area shape="rect" id="Node000006" href="$group__stm32__rcc__public__apis.html#ga0cf8672c3f523ae19b591cbd670e0281" title="Enables or disables the peripheral clock for an APB2 peripheral." alt="" coords="355,128,496,153"/>
+<area shape="poly" id="edge5_Node000004_Node000006" title=" " alt="" coords="275,120,341,128,341,133,274,125"/>
+</map>

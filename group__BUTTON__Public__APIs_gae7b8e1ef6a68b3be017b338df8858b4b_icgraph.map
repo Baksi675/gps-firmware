@@ -1,0 +1,7 @@
+<map id="button_run_handle" name="button_run_handle">
+<area shape="rect" id="Node000001" title="Runs the state machine for a single button handle." alt="" coords="335,5,477,31"/>
+<area shape="rect" id="Node000002" href="$group__BUTTON__Public__APIs.html#ga0beb406bd051bc6dec203f88b71e3d2c" title="Runs the state machine for all registered buttons." alt="" coords="120,5,287,31"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="321,21,287,21,287,15,321,15"/>
+<area shape="rect" id="Node000003" href="$main_8c.html#a51cd9b9f6e3c15933fefc02c1bdc445f" title="Runs all subsystems for one iteration of the main loop." alt="" coords="5,5,72,31"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="106,21,72,21,72,15,106,15"/>
+</map>

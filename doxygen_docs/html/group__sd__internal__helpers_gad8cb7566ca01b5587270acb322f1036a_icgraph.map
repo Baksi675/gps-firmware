@@ -1,0 +1,5 @@
+<map id="sd_set_blocklen" name="sd_set_blocklen">
+<area shape="rect" id="Node000001" title="Issues CMD16 to set the block length to 512 bytes for byte&#45;addressed cards." alt="" coords="169,5,296,31"/>
+<area shape="rect" id="Node000002" href="$group__sd__public__apis.html#ga7550bc6000fa7ed68f02c0015b2bc5fe" title="Initializes an SD card handle and performs the full SPI&#45;mode power&#45;up sequence." alt="" coords="5,5,121,31"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="156,21,122,21,122,15,156,15"/>
+</map>

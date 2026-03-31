@@ -1,0 +1,54 @@
+<map id="drivers/inc/stm32f401re_usart.h" name="drivers/inc/stm32f401re_usart.h">
+<area shape="rect" id="Node000001" title="STM32F401RE USART driver public API." alt="" coords="265,5,442,45"/>
+<area shape="rect" id="Node000002" href="$console_8h.html" title="Console subsystem public API." alt="" coords="31,101,170,126"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="286,52,135,103,133,98,284,47"/>
+<area shape="rect" id="Node000003" href="$console_8c.html" title="Console module implementation." alt="" coords="18,255,156,280"/>
+<area shape="poly" id="edge31_Node000001_Node000003" title=" " alt="" coords="251,36,182,44,114,56,56,73,35,83,21,95,11,114,9,136,13,158,23,180,50,222,77,252,73,256,46,225,18,183,8,160,3,136,5,113,17,92,32,79,54,68,112,50,182,38,251,30"/>
+<area shape="rect" id="Node000005" href="$log_8h.html" title="Log subsystem public API." alt="" coords="656,101,766,126"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="446,46,664,98,663,103,444,51"/>
+<area shape="rect" id="Node000012" href="$neo6_8c.html" title="NEO&#45;6M GPS module implementation file." alt="" coords="216,255,336,280"/>
+<area shape="poly" id="edge33_Node000001_Node000012" title=" " alt="" coords="349,60,329,134,305,203,284,255,279,253,300,201,324,133,344,58"/>
+<area shape="rect" id="Node000016" href="$log_8c.html" title="Log subsystem implementation." alt="" coords="1118,181,1226,207"/>
+<area shape="poly" id="edge32_Node000001_Node000016" title=" " alt="" coords="456,26,530,31,612,43,697,62,779,91,795,101,805,111,815,122,829,131,884,147,961,162,1118,184,1118,189,960,167,883,152,827,136,811,126,801,115,791,105,776,96,695,67,611,48,529,37,456,31"/>
+<area shape="rect" id="Node000017" href="$neo6_8h.html" title="NEO&#45;6M GPS module public API." alt="" coords="194,101,316,126"/>
+<area shape="poly" id="edge26_Node000001_Node000017" title=" " alt="" coords="323,57,270,102,267,98,319,53"/>
+<area shape="rect" id="Node000018" href="$stm32f401re__usart_8c.html" title="USART driver implementation for STM32F401RE." alt="" coords="841,93,1018,133"/>
+<area shape="poly" id="edge34_Node000001_Node000018" title=" " alt="" coords="456,38,822,91,841,94,840,99,821,96,456,43"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="92,139,79,182,79,221,86,254,81,255,74,222,74,181,87,138"/>
+<area shape="rect" id="Node000004" href="$main_8c.html" title="Application entry point for the GPS tracking device." alt="" coords="89,181,210,207"/>
+<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="117,136,144,180,140,183,112,139"/>
+<area shape="poly" id="edge17_Node000005_Node000003" title=" " alt="" coords="669,133,553,184,532,197,509,209,441,225,347,240,157,262,156,257,347,235,440,220,507,204,529,193,551,179,667,129"/>
+<area shape="rect" id="Node000006" href="$cmd_8h.html" title="Command subsystem public API." alt="" coords="774,181,891,207"/>
+<area shape="poly" id="edge5_Node000005_Node000006" title=" " alt="" coords="742,132,816,179,813,183,739,136"/>
+<area shape="rect" id="Node000007" href="$button_8c.html" title="Button module implementation file." alt="" coords="523,255,654,280"/>
+<area shape="poly" id="edge15_Node000005_Node000007" title=" " alt="" coords="701,139,681,173,656,208,630,235,605,256,602,252,626,231,651,205,677,170,696,137"/>
+<area shape="rect" id="Node000008" href="$cmd_8c.html" title="CMD subsystem implementation." alt="" coords="678,255,794,280"/>
+<area shape="poly" id="edge16_Node000005_Node000008" title=" " alt="" coords="718,139,737,254,732,255,712,140"/>
+<area shape="rect" id="Node000009" href="$datalog_8c.html" title="Data log module implementation file. Implements the GPS data logging feature of the GPS device." alt="" coords="361,255,498,280"/>
+<area shape="poly" id="edge18_Node000005_Node000009" title=" " alt="" coords="692,138,653,174,604,209,540,238,479,257,477,252,538,233,602,204,650,170,689,134"/>
+<area shape="rect" id="Node000010" href="$io_8c.html" title="This module implements a digital IO module." alt="" coords="818,255,918,280"/>
+<area shape="poly" id="edge20_Node000005_Node000010" title=" " alt="" coords="765,127,851,155,886,168,905,180,911,200,906,221,882,256,878,253,901,219,906,200,901,183,884,173,850,160,763,132"/>
+<area shape="rect" id="Node000011" href="$menu_8c.html" title="Menu implementation file." alt="" coords="943,255,1068,280"/>
+<area shape="poly" id="edge22_Node000005_Node000011" title=" " alt="" coords="765,127,863,156,927,179,950,196,971,217,1000,253,996,256,967,220,947,201,924,184,861,161,764,132"/>
+<area shape="poly" id="edge23_Node000005_Node000012" title=" " alt="" coords="682,136,613,178,553,209,456,234,337,258,336,253,455,229,551,204,611,173,680,131"/>
+<area shape="rect" id="Node000013" href="$sd_8c.html" title="SD card driver implementation file." alt="" coords="1093,255,1196,280"/>
+<area shape="poly" id="edge24_Node000005_Node000013" title=" " alt="" coords="769,127,961,179,1052,217,1124,252,1121,257,1050,222,959,184,767,132"/>
+<area shape="rect" id="Node000014" href="$ssd1309_8c.html" title="SSD1309 display driver implementation file." alt="" coords="1220,255,1362,280"/>
+<area shape="poly" id="edge25_Node000005_Node000014" title=" " alt="" coords="768,127,785,131,898,154,1012,179,1148,218,1257,252,1256,257,1147,223,1010,184,897,159,784,136,767,132"/>
+<area shape="rect" id="Node000015" href="$init_8c.html" title="Common initialization implementation file." alt="" coords="387,181,496,207"/>
+<area shape="poly" id="edge19_Node000005_Node000015" title=" " alt="" coords="659,132,481,184,480,179,658,127"/>
+<area shape="poly" id="edge21_Node000005_Node000016" title=" " alt="" coords="766,127,785,131,941,157,1099,179,1119,182,1118,187,1098,184,941,162,784,136,765,132"/>
+<area shape="poly" id="edge8_Node000006_Node000003" title=" " alt="" coords="760,205,204,257,157,262,156,257,204,252,760,199"/>
+<area shape="poly" id="edge6_Node000006_Node000007" title=" " alt="" coords="781,213,628,257,627,252,779,208"/>
+<area shape="poly" id="edge7_Node000006_Node000008" title=" " alt="" coords="807,217,753,257,750,252,804,213"/>
+<area shape="poly" id="edge9_Node000006_Node000009" title=" " alt="" coords="760,211,495,257,494,252,759,205"/>
+<area shape="poly" id="edge10_Node000006_Node000010" title=" " alt="" coords="847,218,865,253,860,256,842,220"/>
+<area shape="poly" id="edge11_Node000006_Node000011" title=" " alt="" coords="874,209,978,252,976,257,872,214"/>
+<area shape="poly" id="edge12_Node000006_Node000012" title=" " alt="" coords="760,206,349,257,337,259,336,254,348,252,760,201"/>
+<area shape="poly" id="edge13_Node000006_Node000013" title=" " alt="" coords="896,207,1094,252,1093,257,895,212"/>
+<area shape="poly" id="edge14_Node000006_Node000014" title=" " alt="" coords="905,204,1220,252,1219,258,904,209"/>
+<area shape="poly" id="edge29_Node000017_Node000004" title=" " alt="" coords="230,136,167,183,164,179,227,132"/>
+<area shape="poly" id="edge27_Node000017_Node000009" title=" " alt="" coords="280,133,418,252,414,257,277,137"/>
+<area shape="poly" id="edge30_Node000017_Node000012" title=" " alt="" coords="261,139,277,254,272,255,256,140"/>
+<area shape="poly" id="edge28_Node000017_Node000015" title=" " alt="" coords="296,129,415,179,413,184,293,134"/>
+</map>

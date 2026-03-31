@@ -1,0 +1,28 @@
+<map id="menu_run_handle" name="menu_run_handle">
+<area shape="rect" id="Node000001" title="Renders a single menu to the display." alt="" coords="5,129,144,155"/>
+<area shape="rect" id="Node000002" href="$group__menu__internal__helpers.html#gafc26880635ca9a23475bc153e8d76c32" title="Renders a MENU_TYPE_DATA_VIEW menu to the display." alt="" coords="195,55,350,80"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="102,127,191,89,212,82,213,87,193,94,104,132"/>
+<area shape="rect" id="Node000007" href="$group__menu__internal__helpers.html#ga96e8a1deb19f4f50c4b4195fad2e559e" title="Renders a MENU_TYPE_SELECTABLE menu to the display." alt="" coords="192,104,353,129"/>
+<area shape="poly" id="edge6_Node000001_Node000007" title=" " alt="" coords="144,130,178,126,179,131,145,136"/>
+<area shape="rect" id="Node000008" href="$group__ssd1309__public__apis.html#gab1eea98bff0538dfbf4530cbcb26d9c2" title="Clears a rectangular region in the framebuffer (sets all pixels off)." alt="" coords="199,153,346,179"/>
+<area shape="poly" id="edge10_Node000001_Node000008" title=" " alt="" coords="145,148,186,153,185,158,144,153"/>
+<area shape="rect" id="Node000009" href="$group__ssd1309__public__apis.html#ga478ca3db06ab04e026286702d4f6a63b" title="Flushes the internal framebuffer to the display over I2C." alt="" coords="209,203,337,228"/>
+<area shape="poly" id="edge11_Node000001_Node000009" title=" " alt="" coords="105,152,193,189,214,196,212,201,191,194,103,157"/>
+<area shape="rect" id="Node000003" href="$group__common__public__apis.html#ga798f9165c3390657a08f031b640020b3" title="Returns the length of a string, excluding the null terminator." alt="" coords="451,5,546,31"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="331,52,438,28,439,34,332,57"/>
+<area shape="rect" id="Node000004" href="$group__ssd1309__public__apis.html#gac40f8bf03939e49d8ff2033af5bc3513" title="Draws a text string into the framebuffer at the specified line." alt="" coords="425,55,573,80"/>
+<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="350,65,411,65,411,70,350,70"/>
+<area shape="rect" id="Node000005" href="$group__ssd1309__public__apis.html#ga8615acf9628f61610b4999848d1f25ed" title="Inverts all pixels in a single display line in the framebuffer." alt="" coords="423,104,575,129"/>
+<area shape="poly" id="edge4_Node000002_Node000005" title=" " alt="" coords="332,77,427,98,426,104,331,83"/>
+<area shape="rect" id="Node000006" href="$group__ssd1309__public__apis.html#gadf1aabf773babce220185873a3fefd22" title="Inverts all pixels in a rectangular region of the framebuffer." alt="" coords="644,104,797,129"/>
+<area shape="poly" id="edge5_Node000005_Node000006" title=" " alt="" coords="575,114,630,114,630,119,575,119"/>
+<area shape="poly" id="edge7_Node000007_Node000003" title=" " alt="" coords="325,102,352,89,366,77,375,65,384,52,400,40,437,25,439,30,403,44,388,56,379,68,370,81,355,94,328,106"/>
+<area shape="poly" id="edge8_Node000007_Node000004" title=" " alt="" coords="331,101,426,80,427,86,332,107"/>
+<area shape="poly" id="edge9_Node000007_Node000005" title=" " alt="" coords="353,114,409,114,409,119,353,119"/>
+<area shape="rect" id="Node000010" href="$group__stm32__i2c__public__apis.html#gacfae2fbf177c78fe3d58c54657dfed42" title="Blocking I2C master transmit. Sends a start condition, address, and data." alt="" coords="433,153,565,179"/>
+<area shape="poly" id="edge12_Node000009_Node000010" title=" " alt="" coords="331,200,426,179,427,184,332,205"/>
+<area shape="rect" id="Node000011" href="$group__stm32__i2c__public__apis.html#ga7cdd7d119473b9b7a91fa0cad2a16d58" title="Continues a transmission started by i2c_master_send without a new START or address phase." alt="" coords="401,203,596,228"/>
+<area shape="poly" id="edge13_Node000009_Node000011" title=" " alt="" coords="337,213,388,213,388,218,337,218"/>
+<area shape="rect" id="Node000012" href="$group__stm32__i2c__public__apis.html#ga94b6acb8f6c8a1e3d22cf8bb9bb51523" title="Enables or disables the I2C peripheral and controls bus ownership." alt="" coords="414,252,583,277"/>
+<area shape="poly" id="edge14_Node000009_Node000012" title=" " alt="" coords="332,225,427,246,426,252,331,231"/>
+</map>

@@ -1,0 +1,5 @@
+<map id="menu_deinit_subsys" name="menu_deinit_subsys">
+<area shape="rect" id="Node000001" title="Deinitializes the menu subsystem." alt="" coords="5,5,160,31"/>
+<area shape="rect" id="Node000002" href="$group__cmd__public__apis.html#ga0d8e6b9d66cc6b41d34ecace57871296" title="Deregisters a client from the command subsystem." alt="" coords="208,5,331,31"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="160,15,194,15,194,21,160,21"/>
+</map>

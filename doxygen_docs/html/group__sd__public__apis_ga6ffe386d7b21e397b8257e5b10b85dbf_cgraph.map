@@ -1,0 +1,42 @@
+<map id="sd_write" name="sd_write">
+<area shape="rect" id="Node000001" title="Writes one or more sectors to the SD card." alt="" coords="5,156,83,181"/>
+<area shape="rect" id="Node000002" href="$group__stm32__gpio__public__apis.html#ga149cee41beb6f902a946750bd3b8ddd1" title="Drives a GPIO output pin high or low." alt="" coords="337,5,427,31"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="47,155,75,98,99,66,129,40,177,19,228,9,279,6,323,8,323,13,279,11,229,14,179,24,132,44,102,69,79,100,52,157"/>
+<area shape="rect" id="Node000003" href="$group__sd__internal__helpers.html#ga334584c0af12a66e5bee9a1a3bc0c00e" title="Raises CS, sends two dummy bytes, and disables SPI. Optionally deinitializes the handle." alt="" coords="131,55,268,80"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="57,154,89,126,129,97,153,84,156,88,132,102,92,131,61,158"/>
+<area shape="rect" id="Node000013" href="$group__stm32__spi__public__apis.html#ga39d5cb38200e88203692e5f9e7145eaf" title="Blocking SPI transmit. Sends len bytes from tx_buffer." alt="" coords="343,156,421,181"/>
+<area shape="poly" id="edge21_Node000001_Node000013" title=" " alt="" coords="83,166,329,166,329,171,83,171"/>
+<area shape="rect" id="Node000014" href="$group__stm32__spi__public__apis.html#ga20a8c04f7fd7241cb1a53b92ad3191bf" title="Enables or disables the SPI peripheral (SPE bit)." alt="" coords="324,105,440,131"/>
+<area shape="poly" id="edge22_Node000001_Node000014" title=" " alt="" coords="82,157,130,147,310,123,311,128,131,153,84,162"/>
+<area shape="rect" id="Node000015" href="$group__sd__internal__helpers.html#ga653572a0b7bbfad25f8cf91425a58f57" title="Transmits a single SPI&#45;mode SD command and receives the response." alt="" coords="144,231,255,256"/>
+<area shape="poly" id="edge15_Node000001_Node000015" title=" " alt="" coords="73,179,161,222,159,227,70,184"/>
+<area shape="rect" id="Node000016" href="$group__stm32__spi__public__apis.html#gad073bfcf995daaf341753e58fdc79762" title="Blocking SPI receive. Reads len bytes into rx_buffer." alt="" coords="334,256,430,281"/>
+<area shape="poly" id="edge20_Node000001_Node000016" title=" " alt="" coords="54,180,83,225,105,249,132,266,179,281,229,287,277,285,320,280,321,285,278,290,228,292,178,286,130,271,102,253,79,228,49,183"/>
+<area shape="rect" id="Node000017" href="$group__cortex__m4__systick__public__apis.html#gace47395205769718b2a463822269d777" title="Returns the number of milliseconds elapsed since SysTick was initialized." alt="" coords="321,305,443,331"/>
+<area shape="poly" id="edge23_Node000001_Node000017" title=" " alt="" coords="52,180,79,236,103,267,132,292,174,310,219,321,265,325,307,324,307,329,265,330,218,326,172,315,129,296,99,271,75,239,47,183"/>
+<area shape="poly" id="edge3_Node000003_Node000002" title=" " alt="" coords="246,52,323,31,324,36,248,57"/>
+<area shape="rect" id="Node000004" href="$group__sd__public__apis.html#ga4a534628a1d25952e3c2ac541c067404" title="Deinitializes an SD card handle and resets the SPI peripheral." alt="" coords="316,55,448,80"/>
+<area shape="poly" id="edge4_Node000003_Node000004" title=" " alt="" coords="268,65,302,65,302,70,268,70"/>
+<area shape="poly" id="edge13_Node000003_Node000013" title=" " alt="" coords="220,78,263,108,317,140,335,148,333,153,315,144,260,112,217,82"/>
+<area shape="poly" id="edge14_Node000003_Node000014" title=" " alt="" coords="247,78,323,99,322,104,245,83"/>
+<area shape="rect" id="Node000005" href="$group__common__public__apis.html#ga798f9165c3390657a08f031b640020b3" title="Returns the length of a string, excluding the null terminator." alt="" coords="496,5,591,31"/>
+<area shape="poly" id="edge5_Node000004_Node000005" title=" " alt="" coords="423,52,487,32,488,37,425,57"/>
+<area shape="rect" id="Node000006" href="$group__stm32__spi__public__apis.html#ga653caa0f47ade35b4560bee6e76efa39" title="Deinitializes the SPI peripheral and disables its clock." alt="" coords="501,55,586,80"/>
+<area shape="poly" id="edge6_Node000004_Node000006" title=" " alt="" coords="448,65,487,65,487,70,448,70"/>
+<area shape="rect" id="Node000012" href="$group__common__public__apis.html#ga4681e08097a4495fe5f63a433d52ea6b" title="Copies a null&#45;terminated string into a destination buffer." alt="" coords="509,104,578,129"/>
+<area shape="poly" id="edge12_Node000004_Node000012" title=" " alt="" coords="425,77,496,100,495,105,423,83"/>
+<area shape="rect" id="Node000007" href="$group__stm32__rcc__public__apis.html#ga5f8eecbc777a20fc8e3e9ece67ffedc0" title="Resets an APB1 peripheral via RCC_APB1RSTR." alt="" coords="639,5,807,31"/>
+<area shape="poly" id="edge7_Node000006_Node000007" title=" " alt="" coords="585,53,662,32,663,37,587,58"/>
+<area shape="rect" id="Node000008" href="$group__stm32__rcc__public__apis.html#ga1313da00aa9c4b8d9b57fedbad676c04" title="Resets an APB2 peripheral via RCC_APB2RSTR." alt="" coords="639,55,807,80"/>
+<area shape="poly" id="edge8_Node000006_Node000008" title=" " alt="" coords="586,65,625,65,625,70,586,70"/>
+<area shape="rect" id="Node000009" href="$group__stm32__spi__internal__helpers.html#gae2d12528fd8bc6904c771da85bb5c2b4" title="Enables or disables the peripheral clock for an SPI instance." alt="" coords="671,104,774,129"/>
+<area shape="poly" id="edge9_Node000006_Node000009" title=" " alt="" coords="587,76,663,98,662,103,585,81"/>
+<area shape="rect" id="Node000010" href="$group__stm32__rcc__public__apis.html#ga5cf8b9a2e93e5658766e20a00d6b7736" title="Enables or disables the peripheral clock for an APB1 peripheral." alt="" coords="855,79,996,104"/>
+<area shape="poly" id="edge10_Node000009_Node000010" title=" " alt="" coords="774,108,840,99,841,105,775,113"/>
+<area shape="rect" id="Node000011" href="$group__stm32__rcc__public__apis.html#ga0cf8672c3f523ae19b591cbd670e0281" title="Enables or disables the peripheral clock for an APB2 peripheral." alt="" coords="855,128,996,153"/>
+<area shape="poly" id="edge11_Node000009_Node000011" title=" " alt="" coords="775,120,841,128,841,133,774,125"/>
+<area shape="poly" id="edge18_Node000015_Node000013" title=" " alt="" coords="231,228,337,184,339,189,233,233"/>
+<area shape="poly" id="edge16_Node000015_Node000015" title=" " alt="" coords="173,232,168,222,171,213,182,206,199,204,221,207,230,216,226,220,218,212,199,209,183,211,175,216,173,222,178,229"/>
+<area shape="poly" id="edge17_Node000015_Node000016" title=" " alt="" coords="255,248,320,257,320,263,254,254"/>
+<area shape="poly" id="edge19_Node000015_Node000017" title=" " alt="" coords="229,254,317,292,333,298,331,303,315,296,227,259"/>
+</map>

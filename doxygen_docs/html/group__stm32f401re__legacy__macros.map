@@ -1,0 +1,4 @@
+<map id="Legacy GPIO Clock Macros" name="Legacy GPIO Clock Macros">
+<area shape="rect" id="Node000002" href="$group__stm32f401re__hal.html" title="Peripheral register definitions and bit positions for the STM32F401RE." alt="" coords="5,5,188,45"/>
+<area shape="rect" id="Node000001" title="Convenience macros for GPIO peripheral clock enable/disable." alt="" coords="236,13,431,38"/>
+</map>

@@ -1,0 +1,6 @@
+<map id="Common Utility Module" name="Common Utility Module">
+<area shape="rect" id="Node000004" href="$group__common__api.html" title="Public utility functions available to all modules." alt="" coords="231,5,380,31"/>
+<area shape="rect" id="Node000002" href="$group__common__macros.html" title="Convenience macros used across the project." alt="" coords="239,55,371,80"/>
+<area shape="rect" id="Node000001" title="General&#45;purpose utilities shared across all modules." alt="" coords="5,55,183,80"/>
+<area shape="rect" id="Node000003" href="$group__common__types.html" title="Common enumeration types used across modules." alt="" coords="244,104,367,129"/>
+</map>

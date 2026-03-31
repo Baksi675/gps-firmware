@@ -1,0 +1,8 @@
+<map id="Cortex&#45;M4 Core Peripherals" name="Cortex&#45;M4 Core Peripherals">
+<area shape="rect" id="Node000002" href="$group__cortex__m4__addresses.html" title="Fixed memory&#45;mapped base addresses for Cortex&#45;M4 core peripherals." alt="" coords="277,5,437,45"/>
+<area shape="rect" id="Node000001" title="Register definitions for NVIC and SysTick core peripherals." alt="" coords="5,119,207,145"/>
+<area shape="rect" id="Node000005" href="$group__cortex__m4__nvic__api.html" title="Public API for enabling and disabling NVIC interrupt lines." alt="" coords="281,70,432,95"/>
+<area shape="rect" id="Node000003" href="$group__cortex__m4__nvic__regs.html" title="Memory&#45;mapped register structures for the NVIC." alt="" coords="263,119,450,145"/>
+<area shape="rect" id="Node000006" href="$group__cortex__m4__systick.html" title="Millisecond tick counter driven by the Cortex&#45;M4 SysTick timer." alt="" coords="299,169,415,194"/>
+<area shape="rect" id="Node000004" href="$group__cortex__m4__systick__regs.html" title="Memory&#45;mapped register structure and bit positions for the SysTick timer." alt="" coords="255,218,459,243"/>
+</map>

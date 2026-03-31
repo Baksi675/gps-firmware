@@ -1,0 +1,47 @@
+<map id="usart_set_pclk" name="usart_set_pclk">
+<area shape="rect" id="Node000001" title="Enables or disables the peripheral clock for a USART instance." alt="" coords="1093,131,1209,156"/>
+<area shape="rect" id="Node000002" href="$group__stm32__usart__public__apis.html#ga344baf5d2e76a03f75f3010a8a8354c8" title="Deinitializes the USART peripheral, disables its NVIC interrupt, and disables its clock." alt="" coords="947,92,1045,117"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="1086,130,1045,119,1046,114,1087,125"/>
+<area shape="rect" id="Node000004" href="$group__stm32__usart__public__apis.html#ga68e802a1bf16ec5ee62fdb99fa28026f" title="Initializes the USART peripheral with the given configuration." alt="" coords="955,155,1037,180"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="1080,157,1038,164,1037,158,1080,152"/>
+<area shape="rect" id="Node000003" href="$group__log__public__apis.html#ga439534f7f20e8cb43767bdf18d97d98d" title="Deinitializes the log subsystem." alt="" coords="812,79,899,104"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="933,101,898,98,899,93,933,96"/>
+<area shape="rect" id="Node000005" href="$group__console__public__apis.html#ga5471b04df5d93085fd57b8203d653a37" title="Initializes the console subsystem." alt="" coords="528,5,628,31"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="941,157,811,118,727,82,644,44,615,33,617,28,646,40,729,77,813,113,942,152"/>
+<area shape="rect" id="Node000007" href="$group__log__public__apis.html#gac5a6ad869c721ef936d998dde621cc23" title="Initializes the log subsystem." alt="" coords="820,180,891,205"/>
+<area shape="poly" id="edge6_Node000004_Node000007" title=" " alt="" coords="942,180,891,189,890,184,941,175"/>
+<area shape="rect" id="Node000018" href="$group__neo6__public__apis.html#ga4027cec349579528b54d5125caede98a" title="Initializes the NEO&#45;6 hardware handle." alt="" coords="511,408,645,433"/>
+<area shape="poly" id="edge25_Node000004_Node000018" title=" " alt="" coords="969,190,834,286,742,344,647,398,618,410,616,406,644,393,740,339,831,281,966,186"/>
+<area shape="rect" id="Node000006" href="$main_8c.html#a641e966759be26411c766208d8da6ed4" title="Initializes all subsystems and hardware peripherals." alt="" coords="5,231,72,256"/>
+<area shape="poly" id="edge5_Node000005_Node000006" title=" " alt="" coords="514,19,430,22,327,36,274,49,220,66,169,88,122,116,93,143,72,175,46,232,42,230,67,172,89,139,118,112,166,83,218,61,272,43,326,31,429,17,514,14"/>
+<area shape="rect" id="Node000008" href="$group__init__public__apis.html#ga642e613f18443a5c6dc64376441c6bd7" title="Initializes the logging subsystem." alt="" coords="693,180,764,205"/>
+<area shape="poly" id="edge7_Node000007_Node000008" title=" " alt="" coords="806,195,764,195,764,190,806,190"/>
+<area shape="poly" id="edge10_Node000008_Node000005" title=" " alt="" coords="699,172,691,162,675,129,670,99,663,72,643,44,627,33,630,28,647,40,668,69,675,98,681,127,696,159,703,169"/>
+<area shape="rect" id="Node000009" href="$group__BUTTON__Public__APIs.html#ga051b85b96e6b8219bd729dc58ca2e01d" title="Initializes the button subsystem." alt="" coords="126,256,270,281"/>
+<area shape="poly" id="edge8_Node000008_Node000009" title=" " alt="" coords="680,205,646,211,442,241,271,263,270,258,441,236,645,206,679,200"/>
+<area shape="rect" id="Node000010" href="$group__datalog__public__apis.html#gaf2e0571a2c63a98562ae92284cae186e" title="Initializes the data log subsystem." alt="" coords="123,408,273,433"/>
+<area shape="poly" id="edge11_Node000008_Node000010" title=" " alt="" coords="692,214,646,236,410,339,233,410,231,405,408,334,644,232,690,209"/>
+<area shape="rect" id="Node000011" href="$group__io__public__apis.html#gae35ba2f63bf87c52330cec6520909889" title="Initializes the IO subsystem." alt="" coords="521,104,635,129"/>
+<area shape="poly" id="edge13_Node000008_Node000011" title=" " alt="" coords="691,176,644,151,605,132,608,127,647,146,693,171"/>
+<area shape="rect" id="Node000013" href="$group__menu__public__apis.html#gadde1d41b39a1be92d67ee291e8d5d446" title="Initializes the menu subsystem." alt="" coords="324,155,463,180"/>
+<area shape="poly" id="edge16_Node000008_Node000013" title=" " alt="" coords="679,192,463,175,463,170,680,186"/>
+<area shape="rect" id="Node000014" href="$group__neo6__public__apis.html#gaa4a084c6546903e9443ff4c3480de3ef" title="Initializes the NEO&#45;6 subsystem." alt="" coords="511,357,645,383"/>
+<area shape="poly" id="edge18_Node000008_Node000014" title=" " alt="" coords="721,220,693,279,672,311,647,340,617,360,614,355,644,336,668,308,688,276,716,217"/>
+<area shape="rect" id="Node000016" href="$group__sd__public__apis.html#ga517df26adac7c91a827a66e14139d499" title="Initializes the SD card subsystem." alt="" coords="519,55,637,80"/>
+<area shape="poly" id="edge22_Node000008_Node000016" title=" " alt="" coords="701,173,691,162,677,142,669,125,660,109,644,93,625,82,627,78,647,89,664,106,674,123,682,140,695,159,705,169"/>
+<area shape="rect" id="Node000017" href="$group__ssd1309__public__apis.html#ga9406861fe93518d7605917df6f7abf7d" title="Initializes the SSD1309 subsystem." alt="" coords="120,205,276,231"/>
+<area shape="poly" id="edge23_Node000008_Node000017" title=" " alt="" coords="679,198,276,217,276,212,679,192"/>
+<area shape="poly" id="edge9_Node000009_Node000006" title=" " alt="" coords="112,258,72,251,73,246,113,252"/>
+<area shape="poly" id="edge12_Node000010_Node000006" title=" " alt="" coords="138,404,118,391,89,357,67,320,41,257,46,255,72,317,94,354,122,387,141,400"/>
+<area shape="poly" id="edge14_Node000011_Node000006" title=" " alt="" coords="513,104,462,95,393,89,324,95,264,106,218,117,174,134,122,164,81,199,51,232,47,229,77,195,118,160,172,129,216,112,263,100,324,90,393,84,463,90,514,98"/>
+<area shape="rect" id="Node000012" href="$group__sd__public__apis.html#ga7550bc6000fa7ed68f02c0015b2bc5fe" title="Initializes an SD card handle and performs the full SPI&#45;mode power&#45;up sequence." alt="" coords="335,105,451,131"/>
+<area shape="poly" id="edge15_Node000011_Node000012" title=" " alt="" coords="507,120,452,120,451,115,507,115"/>
+<area shape="poly" id="edge17_Node000013_Node000006" title=" " alt="" coords="310,168,218,174,168,182,121,195,86,212,57,233,54,228,83,208,119,190,167,177,217,169,310,162"/>
+<area shape="poly" id="edge19_Node000014_Node000006" title=" " alt="" coords="497,369,416,362,320,348,218,327,119,296,84,278,55,258,58,254,86,274,121,292,220,322,321,343,417,356,497,364"/>
+<area shape="rect" id="Node000015" href="$group__init__public__apis.html#ga6f65da3052b2987110e7868f73603a21" title="Initializes the NEO&#45;6 GPS module." alt="" coords="352,408,435,433"/>
+<area shape="poly" id="edge20_Node000014_Node000015" title=" " alt="" coords="519,389,436,412,434,407,517,384"/>
+<area shape="poly" id="edge21_Node000015_Node000010" title=" " alt="" coords="338,423,274,423,274,418,338,418"/>
+<area shape="poly" id="edge24_Node000017_Node000006" title=" " alt="" coords="107,235,73,241,72,235,106,230"/>
+<area shape="poly" id="edge26_Node000018_Node000006" title=" " alt="" coords="535,441,452,469,400,481,343,490,285,494,226,489,170,475,119,448,96,428,78,404,64,377,54,349,42,296,38,257,43,256,47,295,59,348,69,375,82,401,100,425,121,444,172,470,227,484,285,488,343,485,399,476,451,464,534,436"/>
+<area shape="poly" id="edge27_Node000018_Node000015" title=" " alt="" coords="498,423,435,423,435,418,498,418"/>
+</map>

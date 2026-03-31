@@ -1,0 +1,4 @@
+<map id="USART Public API" name="USART Public API">
+<area shape="rect" id="Node000002" href="$group__stm32__usart.html" title="Asynchronous USART driver for the STM32F401RE." alt="" coords="5,5,212,31"/>
+<area shape="rect" id="Node000001" title="Public functions to interact with the USART peripheral." alt="" coords="260,5,395,31"/>
+</map>

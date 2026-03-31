@@ -1,0 +1,36 @@
+<map id="core/inc/log.h" name="core/inc/log.h">
+<area shape="rect" id="Node000001" title="Log subsystem public API." alt="" coords="724,5,833,31"/>
+<area shape="rect" id="Node000002" href="$cmd_8h.html" title="Command subsystem public API." alt="" coords="599,79,716,104"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="748,40,679,81,676,76,746,35"/>
+<area shape="rect" id="Node000003" href="$button_8c.html" title="Button module implementation file." alt="" coords="5,152,136,177"/>
+<area shape="poly" id="edge11_Node000001_Node000003" title=" " alt="" coords="711,31,569,52,405,81,241,120,111,155,110,149,240,114,403,76,568,46,710,26"/>
+<area shape="rect" id="Node000004" href="$cmd_8c.html" title="CMD subsystem implementation." alt="" coords="161,152,277,177"/>
+<area shape="poly" id="edge12_Node000001_Node000004" title=" " alt="" coords="711,34,608,55,493,81,359,120,252,155,251,149,357,115,491,76,607,49,710,29"/>
+<area shape="rect" id="Node000005" href="$console_8c.html" title="Console module implementation." alt="" coords="301,152,440,177"/>
+<area shape="poly" id="edge13_Node000001_Node000005" title=" " alt="" coords="716,36,641,56,561,81,468,119,395,154,392,149,466,114,559,76,639,51,714,31"/>
+<area shape="rect" id="Node000006" href="$datalog_8c.html" title="Data log module implementation file. Implements the GPS data logging feature of the GPS device." alt="" coords="465,152,602,177"/>
+<area shape="poly" id="edge14_Node000001_Node000006" title=" " alt="" coords="711,31,648,49,617,63,588,81,571,97,558,117,540,153,535,150,553,114,567,94,585,77,614,58,646,44,710,26"/>
+<area shape="rect" id="Node000007" href="$io_8c.html" title="This module implements a digital IO module." alt="" coords="626,152,726,177"/>
+<area shape="poly" id="edge16_Node000001_Node000007" title=" " alt="" coords="769,44,730,106,689,153,685,150,726,102,764,41"/>
+<area shape="rect" id="Node000008" href="$menu_8c.html" title="Menu implementation file." alt="" coords="751,152,876,177"/>
+<area shape="poly" id="edge18_Node000001_Node000008" title=" " alt="" coords="787,44,813,151,808,152,782,45"/>
+<area shape="rect" id="Node000009" href="$neo6_8c.html" title="NEO&#45;6M GPS module implementation file." alt="" coords="900,152,1020,177"/>
+<area shape="poly" id="edge19_Node000001_Node000009" title=" " alt="" coords="806,38,947,150,944,154,803,42"/>
+<area shape="rect" id="Node000010" href="$sd_8c.html" title="SD card driver implementation file." alt="" coords="1045,152,1147,177"/>
+<area shape="poly" id="edge20_Node000001_Node000010" title=" " alt="" coords="812,35,938,102,1062,149,1060,154,936,106,810,40"/>
+<area shape="rect" id="Node000011" href="$ssd1309_8c.html" title="SSD1309 display driver implementation file." alt="" coords="1171,152,1314,177"/>
+<area shape="poly" id="edge21_Node000001_Node000011" title=" " alt="" coords="825,33,933,76,958,90,982,102,1080,130,1171,149,1170,155,1079,136,980,106,955,94,931,81,823,38"/>
+<area shape="rect" id="Node000012" href="$init_8c.html" title="Common initialization implementation file." alt="" coords="993,79,1103,104"/>
+<area shape="poly" id="edge15_Node000001_Node000012" title=" " alt="" coords="836,32,1005,76,1004,81,834,37"/>
+<area shape="rect" id="Node000013" href="$log_8c.html" title="Log subsystem implementation." alt="" coords="1127,79,1235,104"/>
+<area shape="poly" id="edge17_Node000001_Node000013" title=" " alt="" coords="847,29,1127,78,1126,83,846,34"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="585,103,148,155,136,156,136,151,148,149,585,98"/>
+<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="586,107,277,157,276,151,585,102"/>
+<area shape="poly" id="edge4_Node000002_Node000005" title=" " alt="" coords="599,110,418,154,416,149,598,105"/>
+<area shape="poly" id="edge5_Node000002_Node000006" title=" " alt="" coords="627,113,555,154,552,149,624,108"/>
+<area shape="poly" id="edge6_Node000002_Node000007" title=" " alt="" coords="666,117,676,151,670,153,661,118"/>
+<area shape="poly" id="edge7_Node000002_Node000008" title=" " alt="" coords="696,107,789,149,787,154,694,112"/>
+<area shape="poly" id="edge8_Node000002_Node000009" title=" " alt="" coords="720,104,912,149,910,154,718,110"/>
+<area shape="poly" id="edge9_Node000002_Node000010" title=" " alt="" coords="730,101,1032,149,1045,152,1044,157,1032,155,730,106"/>
+<area shape="poly" id="edge10_Node000002_Node000011" title=" " alt="" coords="730,98,1160,149,1171,151,1171,156,1160,155,730,103"/>
+</map>

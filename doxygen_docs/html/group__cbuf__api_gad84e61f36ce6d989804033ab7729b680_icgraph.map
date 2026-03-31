@@ -1,0 +1,18 @@
+<map id="cbuf_write" name="cbuf_write">
+<area shape="rect" id="Node000001" title="Writes data from an input buffer into the circular buffer." alt="" coords="415,84,505,109"/>
+<area shape="rect" id="Node000002" href="$group__console__public__apis.html#ga5c89ef7779cd6223208d61c9913a964a" title="Runs the console state machine. Must be called periodically." alt="" coords="237,5,337,31"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="428,79,366,44,335,33,337,28,368,40,430,74"/>
+<area shape="rect" id="Node000004" href="$group__neo6__public__apis.html#ga1ce70e74c8a92a791698716a7091aaa6" title="Processes received NMEA data. Must be called periodically." alt="" coords="246,55,329,80"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="401,89,329,77,330,72,401,84"/>
+<area shape="rect" id="Node000005" href="$group__stm32__usart__api.html#gaba34e3f03e156a70056f62e0688882b9" title="RXNE callback for USART1. Called by USART1_IRQHandler on each received byte." alt="" coords="208,105,367,145"/>
+<area shape="poly" id="edge5_Node000001_Node000005" title=" " alt="" coords="401,109,367,114,366,109,401,104"/>
+<area shape="rect" id="Node000007" href="$group__stm32__usart__api.html#ga52f20bb21f8ee4a506183c14073189be" title="RXNE callback for USART6. Called by USART6_IRQHandler on each received byte." alt="" coords="208,169,367,209"/>
+<area shape="poly" id="edge7_Node000001_Node000007" title=" " alt="" coords="431,120,368,159,342,171,340,166,365,154,428,115"/>
+<area shape="rect" id="Node000003" href="$main_8c.html#a51cd9b9f6e3c15933fefc02c1bdc445f" title="Runs all subsystems for one iteration of the main loop." alt="" coords="49,31,116,56"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="224,28,116,42,116,37,224,23"/>
+<area shape="poly" id="edge4_Node000004_Node000003" title=" " alt="" coords="232,64,116,50,117,45,232,58"/>
+<area shape="rect" id="Node000006" href="$stm32f401re__usart_8c.html#a7139cd4baabbbcbab0c1fe6d7d4ae1cc" title="USART1 interrupt handler. Dispatches RXNE events to usart1_irq_data_recv_callback." alt="" coords="5,112,160,137"/>
+<area shape="poly" id="edge6_Node000005_Node000006" title=" " alt="" coords="194,127,161,127,161,122,194,122"/>
+<area shape="rect" id="Node000008" href="$stm32f401re__usart_8c.html#a12c827857d907ad0cccd586fd934d446" title="USART6 interrupt handler. Dispatches RXNE events to usart6_irq_data_recv_callback." alt="" coords="5,176,160,201"/>
+<area shape="poly" id="edge8_Node000007_Node000008" title=" " alt="" coords="194,191,161,191,161,186,194,186"/>
+</map>

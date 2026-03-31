@@ -1,0 +1,9 @@
+<map id="drivers/inc/stm32f401re_rtc.h" name="drivers/inc/stm32f401re_rtc.h">
+<area shape="rect" id="Node000001" title="STM32F401RE RTC driver public API." alt="" coords="105,5,282,45"/>
+<area shape="rect" id="Node000002" href="$init_8c.html" title="Common initialization implementation file." alt="" coords="5,101,115,126"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="154,55,79,103,77,98,151,51"/>
+<area shape="rect" id="Node000003" href="$log_8c.html" title="Log subsystem implementation." alt="" coords="139,101,247,126"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="196,59,196,100,191,100,191,59"/>
+<area shape="rect" id="Node000004" href="$stm32f401re__rtc_8c.html" title="RTC driver implementation." alt="" coords="271,93,449,133"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="243,49,325,91,322,96,241,54"/>
+</map>

@@ -1,0 +1,29 @@
+<map id="cmd_register" name="cmd_register">
+<area shape="rect" id="Node000001" title="Registers a client with the command subsystem." alt="" coords="693,208,800,233"/>
+<area shape="rect" id="Node000002" href="$group__BUTTON__Public__APIs.html#ga051b85b96e6b8219bd729dc58ca2e01d" title="Initializes the button subsystem." alt="" coords="126,5,270,31"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="731,197,696,145,672,118,644,96,598,73,549,55,499,41,448,31,351,20,270,18,270,12,352,14,449,25,500,35,551,49,600,68,647,92,676,114,701,141,735,194"/>
+<area shape="rect" id="Node000004" href="$group__datalog__public__apis.html#gaf2e0571a2c63a98562ae92284cae186e" title="Initializes the data log subsystem." alt="" coords="123,208,273,233"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="691,207,645,198,555,189,485,186,414,189,324,198,250,211,249,205,324,193,414,184,485,181,556,183,646,193,692,202"/>
+<area shape="rect" id="Node000005" href="$group__io__public__apis.html#gae35ba2f63bf87c52330cec6520909889" title="Initializes the IO subsystem." alt="" coords="521,107,635,132"/>
+<area shape="poly" id="edge5_Node000001_Node000005" title=" " alt="" coords="716,202,644,154,607,134,609,130,647,149,719,197"/>
+<area shape="rect" id="Node000007" href="$group__menu__public__apis.html#gadde1d41b39a1be92d67ee291e8d5d446" title="Initializes the menu subsystem." alt="" coords="324,309,463,335"/>
+<area shape="poly" id="edge8_Node000001_Node000007" title=" " alt="" coords="689,240,440,312,438,307,688,235"/>
+<area shape="rect" id="Node000008" href="$group__neo6__public__apis.html#gaa4a084c6546903e9443ff4c3480de3ef" title="Initializes the NEO&#45;6 subsystem." alt="" coords="511,208,645,233"/>
+<area shape="poly" id="edge10_Node000001_Node000008" title=" " alt="" coords="680,223,646,223,646,218,680,218"/>
+<area shape="rect" id="Node000010" href="$group__sd__public__apis.html#ga517df26adac7c91a827a66e14139d499" title="Initializes the SD card subsystem." alt="" coords="519,309,637,335"/>
+<area shape="poly" id="edge14_Node000001_Node000010" title=" " alt="" coords="719,244,647,292,609,312,607,307,644,288,716,240"/>
+<area shape="rect" id="Node000011" href="$group__ssd1309__public__apis.html#ga9406861fe93518d7605917df6f7abf7d" title="Initializes the SSD1309 subsystem." alt="" coords="120,360,276,385"/>
+<area shape="poly" id="edge15_Node000001_Node000011" title=" " alt="" coords="736,247,702,301,677,328,647,350,599,370,549,384,497,393,446,398,349,397,268,388,268,383,349,391,446,392,497,388,548,379,597,365,644,345,673,324,697,298,731,245"/>
+<area shape="rect" id="Node000003" href="$main_8c.html#a641e966759be26411c766208d8da6ed4" title="Initializes all subsystems and hardware peripherals." alt="" coords="5,233,72,259"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="139,39,122,52,104,74,88,98,65,150,51,198,44,234,39,233,46,197,60,148,84,95,99,70,118,48,136,35"/>
+<area shape="poly" id="edge4_Node000004_Node000003" title=" " alt="" coords="110,237,73,243,72,238,109,232"/>
+<area shape="poly" id="edge6_Node000005_Node000003" title=" " alt="" coords="520,106,477,97,428,91,376,90,325,97,283,109,242,125,166,164,102,204,58,235,55,231,99,199,163,159,240,120,281,104,323,91,375,84,428,86,478,92,521,101"/>
+<area shape="rect" id="Node000006" href="$group__sd__public__apis.html#ga7550bc6000fa7ed68f02c0015b2bc5fe" title="Initializes an SD card handle and performs the full SPI&#45;mode power&#45;up sequence." alt="" coords="335,107,451,132"/>
+<area shape="poly" id="edge7_Node000005_Node000006" title=" " alt="" coords="507,122,452,122,452,117,507,117"/>
+<area shape="poly" id="edge9_Node000007_Node000003" title=" " alt="" coords="310,323,217,314,168,305,119,293,86,278,57,261,60,257,88,273,121,287,169,300,218,309,311,318"/>
+<area shape="poly" id="edge11_Node000008_Node000003" title=" " alt="" coords="514,239,463,247,351,255,240,256,72,251,73,245,240,251,350,250,462,242,513,234"/>
+<area shape="rect" id="Node000009" href="$group__init__public__apis.html#ga6f65da3052b2987110e7868f73603a21" title="Initializes the NEO&#45;6 GPS module." alt="" coords="352,208,435,233"/>
+<area shape="poly" id="edge12_Node000008_Node000009" title=" " alt="" coords="497,223,435,223,435,218,497,218"/>
+<area shape="poly" id="edge13_Node000009_Node000004" title=" " alt="" coords="338,223,274,223,274,218,338,218"/>
+<area shape="poly" id="edge16_Node000011_Node000003" title=" " alt="" coords="143,357,118,343,95,323,75,300,46,260,50,257,79,297,99,319,122,338,145,352"/>
+</map>

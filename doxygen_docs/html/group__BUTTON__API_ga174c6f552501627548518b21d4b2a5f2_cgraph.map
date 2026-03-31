@@ -1,0 +1,7 @@
+<map id="button_deinit_handle" name="button_deinit_handle">
+<area shape="rect" id="Node000001" title="Deinitializes a button handle." alt="" coords="5,31,164,56"/>
+<area shape="rect" id="Node000002" href="$group__common__public__apis.html#ga798f9165c3390657a08f031b640020b3" title="Returns the length of a string, excluding the null terminator." alt="" coords="212,5,307,31"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="164,29,198,24,199,29,165,34"/>
+<area shape="rect" id="Node000003" href="$group__common__public__apis.html#ga4681e08097a4495fe5f63a433d52ea6b" title="Copies a null&#45;terminated string into a destination buffer." alt="" coords="225,55,294,80"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="165,52,212,58,211,63,164,57"/>
+</map>

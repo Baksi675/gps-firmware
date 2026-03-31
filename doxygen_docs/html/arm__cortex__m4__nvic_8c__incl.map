@@ -1,0 +1,19 @@
+<map id="drivers/src/arm_cortex_m4_nvic.c" name="drivers/src/arm_cortex_m4_nvic.c">
+<area shape="rect" id="Node000001" title="Arm Cortex&#45;M4 nested vectored interrupt controller implementation." alt="" coords="156,5,324,45"/>
+<area shape="rect" id="Node000002" href="$arm__cortex__m4__nvic_8h.html" title="Arm Cortex&#45;M4 NVIC driver public API." alt="" coords="216,93,387,119"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="257,44,286,81,282,84,253,47"/>
+<area shape="rect" id="Node000003" href="$stm32f401re_8h.html" title="STM32F401RE MCU&#45;specific peripheral register definitions and bit position enumerations." alt="" coords="120,167,237,192"/>
+<area shape="poly" id="edge10_Node000001_Node000003" title=" " alt="" coords="231,47,206,94,187,154,182,152,202,92,226,44"/>
+<area shape="rect" id="Node000005" href="$common_8h.html" title="Common utility module public API." alt="" coords="261,167,352,192"/>
+<area shape="poly" id="edge9_Node000001_Node000005" title=" " alt="" coords="325,40,367,60,386,74,401,92,406,103,406,114,395,133,375,150,351,163,348,158,372,145,391,130,401,113,400,104,396,95,382,78,364,64,323,45"/>
+<area shape="rect" id="Node000007" href="$arm__cortex__m4_8h.html" title="Register definitions and bit position enumerations for the Arm Cortex&#45;M4 core peripherals." alt="" coords="5,93,141,119"/>
+<area shape="poly" id="edge7_Node000001_Node000007" title=" " alt="" coords="201,48,111,90,109,85,199,43"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="283,121,212,162,209,157,280,116"/>
+<area shape="poly" id="edge4_Node000002_Node000005" title=" " alt="" coords="305,119,307,153,302,153,300,119"/>
+<area shape="rect" id="Node000004" title=" " alt="" coords="143,240,214,265"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="181,192,181,226,176,226,176,192"/>
+<area shape="poly" id="edge5_Node000005_Node000004" title=" " alt="" coords="287,194,213,235,211,231,285,190"/>
+<area shape="rect" id="Node000006" title=" " alt="" coords="265,240,348,265"/>
+<area shape="poly" id="edge6_Node000005_Node000006" title=" " alt="" coords="309,192,309,226,304,226,304,192"/>
+<area shape="poly" id="edge8_Node000007_Node000004" title=" " alt="" coords="79,118,90,152,110,190,129,212,151,230,147,234,126,216,106,194,85,154,74,120"/>
+</map>

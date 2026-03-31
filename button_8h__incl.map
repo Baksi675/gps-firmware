@@ -1,0 +1,24 @@
+<map id="core/inc/button.h" name="core/inc/button.h">
+<area shape="rect" id="Node000001" title="Button module public API." alt="" coords="104,5,235,31"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="44,299,114,324"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="155,33,129,54,102,80,46,148,27,181,11,226,8,238,11,250,27,272,47,289,44,293,23,275,6,252,3,238,6,225,22,178,41,145,99,77,126,50,152,29"/>
+<area shape="rect" id="Node000003" href="$io_8h.html" title="Digital IO module public API." alt="" coords="257,79,304,104"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="189,28,252,69,249,73,186,33"/>
+<area shape="rect" id="Node000004" href="$err_8h.html" title="System&#45;wide error code definitions." alt="" coords="414,152,464,177"/>
+<area shape="poly" id="edge13_Node000001_Node000004" title=" " alt="" coords="205,28,258,49,316,76,370,109,415,141,412,146,367,114,314,81,256,54,203,33"/>
+<area shape="rect" id="Node000005" href="$stm32f401re__gpio_8h.html" title="STM32F401RE GPIO driver public API." alt="" coords="94,152,246,177"/>
+<area shape="poly" id="edge12_Node000001_Node000005" title=" " alt="" coords="172,31,172,138,167,138,167,31"/>
+<area shape="rect" id="Node000008" href="$stm32f401re_8h.html" title="STM32F401RE MCU&#45;specific peripheral register definitions and bit position enumerations." alt="" coords="20,225,138,251"/>
+<area shape="poly" id="edge11_Node000001_Node000008" title=" " alt="" coords="161,33,121,82,100,116,84,153,79,183,79,211,74,211,74,182,79,151,95,114,117,79,157,29"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="305,101,402,144,400,149,303,106"/>
+<area shape="poly" id="edge4_Node000003_Node000005" title=" " alt="" coords="264,106,201,147,198,142,261,102"/>
+<area shape="rect" id="Node000009" title=" " alt="" coords="270,152,389,177"/>
+<area shape="poly" id="edge10_Node000003_Node000009" title=" " alt="" coords="291,103,316,139,312,142,286,106"/>
+<area shape="rect" id="Node000006" href="$common_8h.html" title="Common utility module public API." alt="" coords="162,225,252,251"/>
+<area shape="poly" id="edge5_Node000005_Node000006" title=" " alt="" coords="178,176,197,212,192,215,174,179"/>
+<area shape="poly" id="edge8_Node000005_Node000008" title=" " alt="" coords="157,179,107,219,103,214,154,175"/>
+<area shape="poly" id="edge6_Node000006_Node000002" title=" " alt="" coords="188,253,114,294,111,289,185,248"/>
+<area shape="rect" id="Node000007" title=" " alt="" coords="166,299,248,324"/>
+<area shape="poly" id="edge7_Node000006_Node000007" title=" " alt="" coords="210,251,210,285,204,285,204,251"/>
+<area shape="poly" id="edge9_Node000008_Node000002" title=" " alt="" coords="82,251,82,285,76,285,76,251"/>
+</map>

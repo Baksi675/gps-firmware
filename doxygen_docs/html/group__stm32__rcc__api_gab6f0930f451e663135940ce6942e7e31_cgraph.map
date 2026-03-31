@@ -1,0 +1,5 @@
+<map id="rcc_get_ahb_clk" name="rcc_get_ahb_clk">
+<area shape="rect" id="Node000001" title="Returns the current AHB bus clock frequency in Hz." alt="" coords="5,5,132,31"/>
+<area shape="rect" id="Node000002" href="$group__stm32__rcc__public__apis.html#ga72473ebd9ae1c1fd36054e538c4ca195" title="Returns the current system clock frequency in Hz." alt="" coords="180,5,297,31"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="132,15,166,15,166,21,132,21"/>
+</map>

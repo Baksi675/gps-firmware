@@ -1,0 +1,5 @@
+<map id="STM32F401RE I2C Driver" name="STM32F401RE I2C Driver">
+<area shape="rect" id="Node000001" title="Blocking master&#45;mode I2C driver for the STM32F401RE." alt="" coords="5,31,189,56"/>
+<area shape="rect" id="Node000003" href="$group__stm32__i2c__api.html" title="Public functions to interact with the I2C peripheral." alt="" coords="237,5,348,31"/>
+<area shape="rect" id="Node000002" href="$group__stm32__i2c__types.html" title="Configuration enumerations and structures for the I2C driver." alt="" coords="251,55,335,80"/>
+</map>

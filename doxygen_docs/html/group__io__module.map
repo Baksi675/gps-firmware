@@ -1,0 +1,5 @@
+<map id="IO Module" name="IO Module">
+<area shape="rect" id="Node000003" href="$group__io__api.html" title="Public functions to interact with the IO subsystem." alt="" coords="141,5,245,31"/>
+<area shape="rect" id="Node000001" title="Named digital IO abstraction over GPIO pins." alt="" coords="5,31,93,56"/>
+<area shape="rect" id="Node000002" href="$group__io__types.html" title="Data types used by the IO module." alt="" coords="155,55,232,80"/>
+</map>

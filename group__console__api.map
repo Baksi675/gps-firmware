@@ -1,0 +1,4 @@
+<map id="Console Public API" name="Console Public API">
+<area shape="rect" id="Node000001" title="Public functions to interact with the console subsystem." alt="" coords="180,5,323,31"/>
+<area shape="rect" id="Node000002" href="$group__console__module.html" title="USART&#45;based interactive console with command dispatch." alt="" coords="5,5,132,31"/>
+</map>

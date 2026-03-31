@@ -1,0 +1,7 @@
+<map id="core/inc/datalog.h" name="core/inc/datalog.h">
+<area shape="rect" id="Node000001" title="Data log module public API." alt="" coords="81,5,219,31"/>
+<area shape="rect" id="Node000002" href="$datalog_8c.html" title="Data log module implementation file. Implements the GPS data logging feature of the GPS device." alt="" coords="5,79,143,104"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="130,42,88,80,85,76,126,38"/>
+<area shape="rect" id="Node000003" href="$main_8c.html" title="Application entry point for the GPS tracking device." alt="" coords="167,79,288,104"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="174,38,216,76,213,80,171,42"/>
+</map>

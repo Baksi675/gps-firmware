@@ -1,0 +1,9 @@
+<map id="button_run_handle_all" name="button_run_handle_all">
+<area shape="rect" id="Node000001" title="Runs the state machine for all registered buttons." alt="" coords="5,31,172,56"/>
+<area shape="rect" id="Node000002" href="$group__BUTTON__Public__APIs.html#gae7b8e1ef6a68b3be017b338df8858b4b" title="Runs the state machine for a single button handle." alt="" coords="220,31,363,56"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="173,41,206,41,206,46,173,46"/>
+<area shape="rect" id="Node000003" href="$group__stm32__gpio__public__apis.html#ga0f9c28f58629a335e6f6769f91100a9e" title="Reads the current logic level of a GPIO input pin." alt="" coords="429,5,515,31"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="363,31,415,23,415,29,363,36"/>
+<area shape="rect" id="Node000004" href="$group__cortex__m4__systick__public__apis.html#gace47395205769718b2a463822269d777" title="Returns the number of milliseconds elapsed since SysTick was initialized." alt="" coords="411,55,533,80"/>
+<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="363,50,397,55,397,60,363,55"/>
+</map>

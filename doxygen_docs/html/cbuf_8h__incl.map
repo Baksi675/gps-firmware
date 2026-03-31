@@ -1,0 +1,7 @@
+<map id="core/inc/cbuf.h" name="core/inc/cbuf.h">
+<area shape="rect" id="Node000001" title="Circular buffer module public API." alt="" coords="15,5,131,31"/>
+<area shape="rect" id="Node000002" href="$err_8h.html" title="System&#45;wide error code definitions." alt="" coords="5,79,56,104"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="69,32,47,68,42,66,64,30"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="81,79,151,104"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="83,30,104,66,100,68,78,32"/>
+</map>

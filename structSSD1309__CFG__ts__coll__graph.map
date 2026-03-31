@@ -1,0 +1,7 @@
+<map id="SSD1309_CFG_ts" name="SSD1309_CFG_ts">
+<area shape="rect" id="Node000001" title="Full configuration structure for initializing an SSD1309 display handle." alt="" coords="76,121,209,147"/>
+<area shape="rect" id="Node000002" href="$structI2C__REGDEF__ts.html" title="I2C peripheral register map." alt="" coords="5,5,128,31"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="76,43,87,70,102,96,127,119,123,123,98,99,82,72,71,45"/>
+<area shape="rect" id="Node000003" href="$structGPIO__REGDEF__ts.html" title="GPIO peripheral register map." alt="" coords="152,5,285,31"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="216,45,206,72,191,99,164,123,161,119,187,96,202,70,211,43"/>
+</map>

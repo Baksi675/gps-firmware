@@ -1,0 +1,9 @@
+<map id="core/inc/cbuf.h" name="core/inc/cbuf.h">
+<area shape="rect" id="Node000001" title="Circular buffer module public API." alt="" coords="155,5,271,31"/>
+<area shape="rect" id="Node000002" href="$cbuf_8c.html" title="Circular buffer implementation." alt="" coords="5,79,120,104"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="178,39,88,81,86,76,176,34"/>
+<area shape="rect" id="Node000003" href="$console_8c.html" title="Console module implementation." alt="" coords="144,79,283,104"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="216,44,216,79,211,79,211,44"/>
+<area shape="rect" id="Node000004" href="$neo6_8c.html" title="NEO&#45;6M GPS module implementation file." alt="" coords="307,79,427,104"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="251,34,343,76,340,81,249,39"/>
+</map>

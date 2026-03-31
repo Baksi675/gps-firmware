@@ -1,0 +1,9 @@
+<map id="neo6_process_gsv" name="neo6_process_gsv">
+<area shape="rect" id="Node000001" title="Parses a GSV sentence and updates the total satellite count." alt="" coords="445,5,587,31"/>
+<area shape="rect" id="Node000002" href="$group__neo6__internal__helpers.html#gafd69e091893ce712ee6c26d2b56291c6" title="Verifies the checksum of a received NMEA sentence and dispatches it to the appropriate parser." alt="" coords="251,5,397,31"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="432,21,398,21,398,15,432,15"/>
+<area shape="rect" id="Node000003" href="$group__neo6__public__apis.html#ga1ce70e74c8a92a791698716a7091aaa6" title="Processes received NMEA data. Must be called periodically." alt="" coords="120,5,203,31"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="237,21,203,21,203,15,237,15"/>
+<area shape="rect" id="Node000004" href="$main_8c.html#a51cd9b9f6e3c15933fefc02c1bdc445f" title="Runs all subsystems for one iteration of the main loop." alt="" coords="5,5,72,31"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="106,21,72,21,72,15,106,15"/>
+</map>

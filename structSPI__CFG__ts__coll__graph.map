@@ -1,0 +1,5 @@
+<map id="SPI_CFG_ts" name="SPI_CFG_ts">
+<area shape="rect" id="Node000001" title="Configuration structure for initializing an SPI peripheral." alt="" coords="19,101,113,127"/>
+<area shape="rect" id="Node000002" href="$structSPI__REGDEF__ts.html" title="SPI peripheral register map." alt="" coords="5,5,127,31"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="69,45,69,101,63,101,63,45"/>
+</map>

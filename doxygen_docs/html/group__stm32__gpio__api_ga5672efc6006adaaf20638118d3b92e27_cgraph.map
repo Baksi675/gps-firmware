@@ -1,0 +1,5 @@
+<map id="gpio_get_name" name="gpio_get_name">
+<area shape="rect" id="Node000001" title="Returns the name string of a GPIO port (e.g. &quot;GPIOA&quot;)." alt="" coords="5,5,128,31"/>
+<area shape="rect" id="Node000002" href="$group__common__public__apis.html#ga798f9165c3390657a08f031b640020b3" title="Returns the length of a string, excluding the null terminator." alt="" coords="176,5,271,31"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="128,15,162,15,162,21,128,21"/>
+</map>

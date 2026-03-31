@@ -1,0 +1,11 @@
+<map id="datalog_run_handle" name="datalog_run_handle">
+<area shape="rect" id="Node000001" title="Writes a GPS data entry to the log file if the logging interval has elapsed." alt="" coords="5,80,156,105"/>
+<area shape="rect" id="Node000002" href="$group__common__public__apis.html#ga798f9165c3390657a08f031b640020b3" title="Returns the length of a string, excluding the null terminator." alt="" coords="218,5,313,31"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="112,77,203,40,218,33,220,38,205,44,114,82"/>
+<area shape="rect" id="Node000003" href="$group__neo6__public__apis.html#gaf2643d4847a50e75aa6cc94385a992d9" title="Returns a pointer to the internal GPS data structure." alt="" coords="208,55,323,80"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="156,80,194,74,195,80,156,85"/>
+<area shape="rect" id="Node000004" href="$group__common__public__apis.html#ga4681e08097a4495fe5f63a433d52ea6b" title="Copies a null&#45;terminated string into a destination buffer." alt="" coords="231,104,300,129"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="156,100,217,108,217,113,156,105"/>
+<area shape="rect" id="Node000005" href="$group__cortex__m4__systick__public__apis.html#gace47395205769718b2a463822269d777" title="Returns the number of milliseconds elapsed since SysTick was initialized." alt="" coords="204,153,327,179"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="115,103,221,146,219,151,113,108"/>
+</map>

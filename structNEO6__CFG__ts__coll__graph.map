@@ -1,0 +1,7 @@
+<map id="NEO6_CFG_ts" name="NEO6_CFG_ts">
+<area shape="rect" id="Node000001" title="Configuration structure for initializing a NEO&#45;6 handle." alt="" coords="104,121,215,147"/>
+<area shape="rect" id="Node000002" href="$structUSART__REGDEF__ts.html" title="USART peripheral register map." alt="" coords="5,5,151,31"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="86,43,96,70,111,96,139,119,136,123,107,99,91,72,81,45"/>
+<area shape="rect" id="Node000003" href="$structGPIO__REGDEF__ts.html" title="GPIO peripheral register map." alt="" coords="175,5,309,31"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="239,45,230,72,215,99,200,113,185,123,182,119,197,109,211,96,225,70,234,44"/>
+</map>

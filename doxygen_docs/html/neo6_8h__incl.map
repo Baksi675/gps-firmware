@@ -1,0 +1,21 @@
+<map id="core/inc/neo6.h" name="core/inc/neo6.h">
+<area shape="rect" id="Node000001" title="NEO&#45;6M GPS module public API." alt="" coords="128,5,249,31"/>
+<area shape="rect" id="Node000002" href="$stm32f401re_8h.html" title="STM32F401RE MCU&#45;specific peripheral register definitions and bit position enumerations." alt="" coords="40,152,158,177"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="128,25,97,31,65,41,36,57,13,80,9,89,8,97,18,114,36,130,60,144,57,148,33,135,14,118,3,99,4,88,9,77,33,53,63,36,95,26,127,20"/>
+<area shape="rect" id="Node000004" href="$stm32f401re__gpio_8h.html" title="STM32F401RE GPIO driver public API." alt="" coords="23,79,175,104"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="176,33,126,72,123,68,172,29"/>
+<area shape="rect" id="Node000007" href="$stm32f401re__usart_8h.html" title="STM32F401RE USART driver public API." alt="" coords="199,79,356,104"/>
+<area shape="poly" id="edge8_Node000001_Node000007" title=" " alt="" coords="204,29,254,68,250,72,201,33"/>
+<area shape="rect" id="Node000008" href="$err_8h.html" title="System&#45;wide error code definitions." alt="" coords="380,79,431,104"/>
+<area shape="poly" id="edge11_Node000001_Node000008" title=" " alt="" coords="224,28,368,75,366,80,222,33"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="77,225,148,251"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="104,177,110,211,105,212,98,178"/>
+<area shape="poly" id="edge7_Node000004_Node000002" title=" " alt="" coords="102,104,102,138,96,138,96,104"/>
+<area shape="rect" id="Node000005" href="$common_8h.html" title="Common utility module public API." alt="" coords="182,152,272,177"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="121,102,195,143,192,147,118,106"/>
+<area shape="poly" id="edge5_Node000005_Node000003" title=" " alt="" coords="210,180,144,220,141,216,207,175"/>
+<area shape="rect" id="Node000006" title=" " alt="" coords="186,225,268,251"/>
+<area shape="poly" id="edge6_Node000005_Node000006" title=" " alt="" coords="230,178,230,212,224,212,224,178"/>
+<area shape="poly" id="edge9_Node000007_Node000002" title=" " alt="" coords="250,107,142,149,140,144,248,102"/>
+<area shape="poly" id="edge10_Node000007_Node000005" title=" " alt="" coords="271,106,245,142,241,139,267,103"/>
+</map>

@@ -1,0 +1,4 @@
+<map id="Cortex&#45;M4 NVIC API" name="Cortex&#45;M4 NVIC API">
+<area shape="rect" id="Node000002" href="$group__cortex__m4__core.html" title="Register definitions for NVIC and SysTick core peripherals." alt="" coords="5,5,207,31"/>
+<area shape="rect" id="Node000001" title="Public API for enabling and disabling NVIC interrupt lines." alt="" coords="255,5,405,31"/>
+</map>

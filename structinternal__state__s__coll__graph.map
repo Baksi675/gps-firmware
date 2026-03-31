@@ -1,0 +1,41 @@
+<map id="internal_state_s" name="internal_state_s">
+<area shape="rect" id="Node000001" title="Internal state of the SysTick driver." alt="" coords="979,337,1105,362"/>
+<area shape="rect" id="Node000002" href="$structbutton__handle__s.html" title="Internal structure representing a single button instance." alt="" coords="465,655,595,681"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="592,681,673,694,720,698,770,698,820,692,868,681,913,661,953,633,980,602,1001,566,1016,527,1027,487,1037,414,1038,362,1044,363,1042,414,1032,488,1021,528,1006,568,984,605,956,637,916,666,870,686,821,698,770,703,720,703,673,700,591,686"/>
+<area shape="rect" id="Node000003" href="$structGPIO__REGDEF__ts.html" title="GPIO peripheral register map." alt="" coords="5,494,139,519"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="88,530,118,576,139,598,164,616,201,634,240,648,321,665,399,671,465,671,465,676,399,676,320,670,239,653,199,639,161,621,136,602,114,579,83,533"/>
+<area shape="rect" id="Node000010" href="$structGPIO__CFG__ts.html" title="Configuration structure for initializing a GPIO pin." alt="" coords="315,150,422,175"/>
+<area shape="poly" id="edge10_Node000010_Node000003" title=" " alt="" coords="78,480,108,406,131,364,161,326,189,305,217,294,243,285,270,264,278,251,282,238,285,225,294,210,317,189,341,173,344,178,320,193,298,214,290,227,287,240,283,253,274,267,246,289,219,299,192,309,165,330,136,367,113,409,83,482"/>
+<area shape="rect" id="Node000012" href="$structneo6__handle__s.html" title="Internal structure representing the NEO&#45;6 hardware instance." alt="" coords="641,494,760,519"/>
+<area shape="poly" id="edge15_Node000012_Node000003" title=" " alt="" coords="153,504,641,504,641,509,153,509"/>
+<area shape="rect" id="Node000014" href="$structsd__handle__s.html" title="Internal structure representing a single SD card handle instance." alt="" coords="317,225,420,250"/>
+<area shape="poly" id="edge19_Node000014_Node000003" title=" " alt="" coords="131,487,202,457,238,435,270,409,279,398,284,387,294,362,357,249,362,251,298,364,289,389,284,400,274,413,241,439,205,461,133,492"/>
+<area shape="rect" id="Node000016" href="$structssd1309__handle__s.html" title="Internal structure representing the SSD1309 hardware instance." alt="" coords="298,579,439,605"/>
+<area shape="poly" id="edge22_Node000016_Node000003" title=" " alt="" coords="99,526,129,548,164,566,232,583,298,589,297,595,231,588,162,570,126,552,96,531"/>
+<area shape="rect" id="Node000004" href="$structCMD__CLIENT__INFO__ts.html" title="Describes a subsystem client registering with the command module." alt="" coords="619,25,783,50"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="796,25,837,26,879,33,920,47,956,70,984,100,1006,136,1021,174,1032,213,1042,286,1044,336,1038,336,1037,286,1027,214,1016,176,1001,138,980,103,953,74,918,52,878,38,837,31,796,30"/>
+<area shape="rect" id="Node000005" href="$structCMD__INFO__ts.html" title="Describes a single command exposed by a client." alt="" coords="313,25,424,50"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="438,35,618,35,618,40,438,40"/>
+<area shape="rect" id="Node000006" href="$structCBUF__HANDLE__ts.html" title="Handle representing a circular buffer instance." alt="" coords="631,155,770,181"/>
+<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="784,177,890,194,932,203,956,211,987,240,1012,275,1039,335,1034,337,1007,277,983,243,953,216,931,208,889,199,783,182"/>
+<area shape="rect" id="Node000007" href="$structUSART__REGDEF__ts.html" title="USART peripheral register map." alt="" coords="296,375,441,401"/>
+<area shape="poly" id="edge6_Node000001_Node000007" title=" " alt="" coords="455,380,978,350,978,356,456,386"/>
+<area shape="poly" id="edge14_Node000012_Node000007" title=" " alt="" coords="416,403,620,479,658,491,656,496,618,484,414,408"/>
+<area shape="rect" id="Node000008" href="$structdatalog__handle__s.html" title="Internal structure representing a single data log instance." alt="" coords="633,277,769,302"/>
+<area shape="poly" id="edge7_Node000001_Node000008" title=" " alt="" coords="783,299,955,328,985,334,984,339,954,333,782,304"/>
+<area shape="rect" id="Node000009" href="$structio__handle__s.html" title="Internal structure representing a single IO instance." alt="" coords="651,91,750,117"/>
+<area shape="poly" id="edge8_Node000001_Node000009" title=" " alt="" coords="764,98,873,99,922,105,956,118,981,141,1001,170,1016,201,1027,233,1039,293,1043,336,1038,337,1034,294,1022,234,1011,203,996,172,977,145,953,122,921,110,872,104,764,103"/>
+<area shape="poly" id="edge9_Node000009_Node000010" title=" " alt="" coords="435,148,651,110,652,115,436,154"/>
+<area shape="rect" id="Node000011" href="$structmenu__handle__s.html" title="Internal structure representing a single menu instance." alt="" coords="639,445,763,470"/>
+<area shape="poly" id="edge11_Node000001_Node000011" title=" " alt="" coords="775,439,862,417,954,388,1016,360,1018,365,956,393,863,423,777,444"/>
+<area shape="poly" id="edge12_Node000011_Node000011" title=" " alt="" coords="667,430,677,421,701,418,720,420,732,427,735,436,729,446,725,443,730,436,728,430,719,425,701,423,680,426,671,434"/>
+<area shape="poly" id="edge13_Node000001_Node000012" title=" " alt="" coords="774,505,817,501,863,493,910,480,953,459,981,437,1003,410,1032,361,1037,364,1008,413,984,441,956,464,912,485,864,498,817,506,774,510"/>
+<area shape="rect" id="Node000013" href="$structNEO6__INFO__ts.html" title="Holds all GPS data fields parsed from incoming NMEA sentences." alt="" coords="643,543,759,569"/>
+<area shape="poly" id="edge16_Node000001_Node000013" title=" " alt="" coords="773,565,817,567,864,563,911,552,953,531,973,514,990,492,1015,444,1029,397,1036,362,1042,363,1035,398,1020,446,995,495,977,517,956,536,913,557,865,569,817,572,772,570"/>
+<area shape="poly" id="edge17_Node000001_Node000014" title=" " alt="" coords="433,227,537,219,669,220,741,226,814,236,887,253,956,276,979,288,1000,304,1031,334,1028,338,996,308,976,293,954,281,885,258,813,242,741,231,669,225,537,225,434,232"/>
+<area shape="rect" id="Node000015" href="$structSPI__REGDEF__ts.html" title="SPI peripheral register map." alt="" coords="11,225,133,250"/>
+<area shape="poly" id="edge18_Node000014_Node000015" title=" " alt="" coords="146,235,317,235,317,240,146,240"/>
+<area shape="poly" id="edge20_Node000001_Node000016" title=" " alt="" coords="453,599,581,610,729,614,801,612,864,605,917,593,953,574,976,551,995,523,1009,493,1020,462,1033,404,1037,362,1043,362,1038,405,1025,463,1014,495,999,526,980,554,956,578,918,598,865,610,801,617,729,620,581,615,453,604"/>
+<area shape="rect" id="Node000017" href="$structI2C__REGDEF__ts.html" title="I2C peripheral register map." alt="" coords="11,683,133,709"/>
+<area shape="poly" id="edge21_Node000016_Node000017" title=" " alt="" coords="147,706,209,707,241,702,271,692,300,674,325,650,358,603,362,606,329,653,303,678,273,697,242,707,210,712,147,712"/>
+</map>

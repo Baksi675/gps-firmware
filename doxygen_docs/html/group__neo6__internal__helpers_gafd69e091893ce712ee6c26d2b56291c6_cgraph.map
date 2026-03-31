@@ -1,0 +1,36 @@
+<map id="neo6_process_msg" name="neo6_process_msg">
+<area shape="rect" id="Node000001" title="Verifies the checksum of a received NMEA sentence and dispatches it to the appropriate parser." alt="" coords="5,203,152,228"/>
+<area shape="rect" id="Node000002" href="$group__common__public__apis.html#ga7887cb1e49e2af7dcb6eef20c922678b" title="Converts two ASCII hex characters into a single byte value." alt="" coords="211,5,349,31"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="83,201,98,169,123,125,157,79,198,40,207,34,210,39,202,44,161,83,128,128,103,171,88,203"/>
+<area shape="rect" id="Node000003" href="$group__neo6__internal__helpers.html#ga7b8a41b6bc8895ec7fc34b9107cc00d2" title="Computes the NMEA checksum of a sentence by XORing all bytes between &#39;$&#39; and &#39;*&#39;." alt="" coords="200,55,360,80"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="87,201,131,147,163,116,199,89,210,83,212,88,201,94,166,120,135,151,91,204"/>
+<area shape="rect" id="Node000004" href="$group__neo6__internal__helpers.html#ga2663e0d690efd2a548a8769bf7d5eb8f" title="Parses a GGA sentence and updates fix status, satellites used, orthometric height,..." alt="" coords="209,203,351,228"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="152,213,195,213,195,218,152,218"/>
+<area shape="rect" id="Node000006" href="$group__common__public__apis.html#ga1b7a4f6b0c0415253f0bc32fa527405b" title="Compares two null&#45;terminated strings for equality." alt="" coords="418,277,493,303"/>
+<area shape="poly" id="edge21_Node000001_Node000006" title=" " alt="" coords="90,227,107,252,131,284,163,314,201,337,243,351,279,353,315,348,359,337,393,324,423,308,426,312,395,329,361,342,316,353,279,359,242,356,199,342,160,318,128,287,102,255,85,230"/>
+<area shape="rect" id="Node000008" href="$group__neo6__internal__helpers.html#ga501d8b7ac58e8f54ba0da0a89ac5dd5d" title="Parses a GSA sentence and updates fix type, PDOP, HDOP, and VDOP." alt="" coords="209,252,351,277"/>
+<area shape="poly" id="edge7_Node000001_Node000008" title=" " alt="" coords="132,225,215,246,213,251,131,231"/>
+<area shape="rect" id="Node000009" href="$group__neo6__internal__helpers.html#gaec63ba2a6f6c85c085b8095506758ab7" title="Parses a GSV sentence and updates the total satellite count." alt="" coords="209,153,351,179"/>
+<area shape="poly" id="edge11_Node000001_Node000009" title=" " alt="" coords="131,200,213,179,215,185,132,205"/>
+<area shape="rect" id="Node000010" href="$group__neo6__internal__helpers.html#ga45ca33c445a15cd52e178a928a0029a6" title="Parses an RMC sentence and updates time, date, latitude, and longitude." alt="" coords="209,301,351,327"/>
+<area shape="poly" id="edge14_Node000001_Node000010" title=" " alt="" coords="99,226,144,256,201,288,218,294,216,299,199,292,141,261,96,230"/>
+<area shape="rect" id="Node000011" href="$group__neo6__internal__helpers.html#ga82c4b7653ddb353b770eb35118fb1d59" title="Parses a VTG sentence and updates movement direction and speed." alt="" coords="211,104,349,129"/>
+<area shape="poly" id="edge18_Node000001_Node000011" title=" " alt="" coords="96,200,141,170,199,138,216,131,218,136,201,143,144,174,99,205"/>
+<area shape="rect" id="Node000012" href="$group__common__public__apis.html#gaa5f00e6b4dfb2c2431f7627837d73c57" title="Splits a string into tokens separated by a given delimiter." alt="" coords="229,403,331,428"/>
+<area shape="poly" id="edge22_Node000001_Node000012" title=" " alt="" coords="88,227,129,299,162,343,202,381,224,395,221,399,198,385,158,346,125,302,84,229"/>
+<area shape="rect" id="Node000005" href="$group__common__public__apis.html#ga798f9165c3390657a08f031b640020b3" title="Returns the length of a string, excluding the null terminator." alt="" coords="408,228,503,253"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="352,223,395,229,394,235,351,228"/>
+<area shape="poly" id="edge5_Node000004_Node000006" title=" " alt="" coords="330,226,361,237,409,264,418,269,416,273,407,268,359,242,328,231"/>
+<area shape="rect" id="Node000007" href="$group__common__public__apis.html#ga4681e08097a4495fe5f63a433d52ea6b" title="Copies a null&#45;terminated string into a destination buffer." alt="" coords="421,179,490,204"/>
+<area shape="poly" id="edge6_Node000004_Node000007" title=" " alt="" coords="351,203,406,195,407,201,352,208"/>
+<area shape="poly" id="edge8_Node000008_Node000005" title=" " alt="" coords="351,252,394,246,395,252,351,258"/>
+<area shape="poly" id="edge9_Node000008_Node000006" title=" " alt="" coords="351,272,405,280,404,285,351,278"/>
+<area shape="poly" id="edge10_Node000008_Node000007" title=" " alt="" coords="324,249,359,237,416,208,419,213,361,242,326,254"/>
+<area shape="poly" id="edge12_Node000009_Node000005" title=" " alt="" coords="329,176,361,188,420,219,418,224,359,192,328,181"/>
+<area shape="poly" id="edge13_Node000009_Node000007" title=" " alt="" coords="351,174,408,182,407,187,351,179"/>
+<area shape="poly" id="edge15_Node000010_Node000005" title=" " alt="" coords="328,299,359,288,418,258,420,262,361,292,329,304"/>
+<area shape="poly" id="edge16_Node000010_Node000006" title=" " alt="" coords="351,302,404,294,405,300,352,307"/>
+<area shape="poly" id="edge17_Node000010_Node000007" title=" " alt="" coords="339,299,358,288,374,271,382,253,390,234,406,213,411,209,414,214,410,217,395,236,387,255,379,274,362,292,341,304"/>
+<area shape="poly" id="edge19_Node000011_Node000005" title=" " alt="" coords="341,127,362,139,379,157,387,176,395,194,410,213,416,218,413,223,406,217,390,197,383,178,374,160,358,143,339,132"/>
+<area shape="poly" id="edge20_Node000011_Node000007" title=" " alt="" coords="329,127,361,138,423,169,420,174,359,143,328,132"/>
+</map>

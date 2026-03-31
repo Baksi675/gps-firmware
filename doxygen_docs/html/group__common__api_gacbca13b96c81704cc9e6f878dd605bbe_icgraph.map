@@ -1,0 +1,13 @@
+<map id="txt_cpy" name="txt_cpy">
+<area shape="rect" id="Node000001" title="Copies a fixed&#45;length block of text into a destination buffer." alt="" coords="356,24,427,50"/>
+<area shape="rect" id="Node000002" href="$main_8c.html#a641e966759be26411c766208d8da6ed4" title="Initializes all subsystems and hardware peripherals." alt="" coords="30,24,97,50"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="343,23,308,14,239,8,170,14,97,30,96,25,169,9,239,3,308,9,344,18"/>
+<area shape="rect" id="Node000003" href="$group__io__public__apis.html#ga56de946b9be7dbde49d9c4620d06887f" title="Initializes and registers an IO handle." alt="" coords="182,74,295,99"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="344,55,279,76,278,71,342,50"/>
+<area shape="rect" id="Node000005" href="$group__menu__public__apis.html#ga635a884b4ee69262e35e223dbdf81b43" title="Initializes and registers a menu handle." alt="" coords="169,24,308,50"/>
+<area shape="poly" id="edge5_Node000001_Node000005" title=" " alt="" coords="342,40,308,40,308,34,342,34"/>
+<area shape="poly" id="edge3_Node000003_Node000002" title=" " alt="" coords="179,73,96,49,98,44,180,67"/>
+<area shape="rect" id="Node000004" href="$group__sd__public__apis.html#ga7550bc6000fa7ed68f02c0015b2bc5fe" title="Initializes an SD card handle and performs the full SPI&#45;mode power&#45;up sequence." alt="" coords="5,74,121,99"/>
+<area shape="poly" id="edge4_Node000003_Node000004" title=" " alt="" coords="168,89,122,89,122,84,168,84"/>
+<area shape="poly" id="edge6_Node000005_Node000002" title=" " alt="" coords="156,40,97,40,97,34,156,34"/>
+</map>

@@ -1,0 +1,9 @@
+<map id="init_systick" name="init_systick">
+<area shape="rect" id="Node000001" title="Initializes the SysTick timer." alt="" coords="5,5,101,31"/>
+<area shape="rect" id="Node000002" href="$group__cortex__m4__systick__public__apis.html#gab9e896690cb35a9bce265bc9dbea2f9e" title="Initializes and starts the SysTick timer." alt="" coords="149,5,245,31"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="101,15,135,15,135,21,101,21"/>
+<area shape="rect" id="Node000003" href="$group__stm32__rcc__public__apis.html#gab6f0930f451e663135940ce6942e7e31" title="Returns the current AHB bus clock frequency in Hz." alt="" coords="293,5,420,31"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="246,15,280,15,280,21,246,21"/>
+<area shape="rect" id="Node000004" href="$group__stm32__rcc__public__apis.html#ga72473ebd9ae1c1fd36054e538c4ca195" title="Returns the current system clock frequency in Hz." alt="" coords="468,5,585,31"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="420,15,454,15,454,21,420,21"/>
+</map>

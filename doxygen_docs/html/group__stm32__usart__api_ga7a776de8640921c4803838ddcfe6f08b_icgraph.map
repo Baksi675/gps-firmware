@@ -1,0 +1,15 @@
+<map id="usart_set_reception" name="usart_set_reception">
+<area shape="rect" id="Node000001" title="Enables or disables the USART receiver (RE bit)." alt="" coords="648,31,799,56"/>
+<area shape="rect" id="Node000002" href="$group__console__public__apis.html#ga5471b04df5d93085fd57b8203d653a37" title="Initializes the console subsystem." alt="" coords="319,5,419,31"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="634,40,419,24,419,19,634,34"/>
+<area shape="rect" id="Node000004" href="$group__neo6__public__apis.html#ga4027cec349579528b54d5125caede98a" title="Initializes the NEO&#45;6 hardware handle." alt="" coords="467,56,600,81"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="635,58,601,62,600,57,634,53"/>
+<area shape="rect" id="Node000003" href="$main_8c.html#a641e966759be26411c766208d8da6ed4" title="Initializes all subsystems and hardware peripherals." alt="" coords="5,56,72,81"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="305,27,120,53,73,63,72,58,120,47,304,22"/>
+<area shape="poly" id="edge4_Node000004_Node000003" title=" " alt="" coords="453,71,72,71,72,66,453,66"/>
+<area shape="rect" id="Node000005" href="$group__init__public__apis.html#ga6f65da3052b2987110e7868f73603a21" title="Initializes the NEO&#45;6 GPS module." alt="" coords="327,107,410,132"/>
+<area shape="poly" id="edge5_Node000004_Node000005" title=" " alt="" coords="479,88,411,109,410,104,477,83"/>
+<area shape="rect" id="Node000006" href="$group__datalog__public__apis.html#gaf2e0571a2c63a98562ae92284cae186e" title="Initializes the data log subsystem." alt="" coords="120,107,271,132"/>
+<area shape="poly" id="edge6_Node000005_Node000006" title=" " alt="" coords="314,122,271,122,271,117,314,117"/>
+<area shape="poly" id="edge7_Node000006_Node000003" title=" " alt="" coords="141,105,71,82,73,77,143,100"/>
+</map>

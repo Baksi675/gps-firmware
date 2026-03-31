@@ -1,0 +1,13 @@
+<map id="gpio_init" name="gpio_init">
+<area shape="rect" id="Node000001" title="Initializes a GPIO pin according to the given configuration." alt="" coords="5,80,84,105"/>
+<area shape="rect" id="Node000002" href="$group__stm32__gpio__internal__helpers.html#gab59f316737cdd9d0ca8c9b00efcc027c" title="Returns the IRQ number for the EXTI line corresponding to a GPIO pin." alt="" coords="134,5,269,31"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="64,78,131,40,146,33,148,38,133,44,67,82"/>
+<area shape="rect" id="Node000003" href="$group__stm32__gpio__internal__helpers.html#ga97fd11a2b2c1ebb87b9e3286bb804e6a" title="Returns the SYSCFG port code for a GPIO port instance." alt="" coords="136,55,267,80"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="84,84,122,78,123,83,85,89"/>
+<area shape="rect" id="Node000004" href="$group__stm32__gpio__internal__helpers.html#gad6dac18a513bdb3c2e395b620b507d7c" title="Enables or disables the peripheral clock for a GPIO port." alt="" coords="146,104,257,129"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="84,96,132,103,132,109,84,101"/>
+<area shape="rect" id="Node000006" href="$group__cortex__m4__nvic__public__apis.html#ga481ccd2a55bf1ae8969250a9610ff07f" title="Enables or disables an interrupt line in the NVIC." alt="" coords="132,153,271,179"/>
+<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="68,103,133,138,151,146,149,151,131,143,65,108"/>
+<area shape="rect" id="Node000005" href="$group__stm32__rcc__public__apis.html#ga4ce3489a40c02eaad0a9f3c398d3e6ba" title="Enables or disables the peripheral clock for an AHB1 peripheral." alt="" coords="319,104,460,129"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="257,114,305,114,305,119,257,119"/>
+</map>

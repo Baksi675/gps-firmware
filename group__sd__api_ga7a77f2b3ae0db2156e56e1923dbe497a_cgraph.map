@@ -1,0 +1,5 @@
+<map id="sd_deinit_subsys" name="sd_deinit_subsys">
+<area shape="rect" id="Node000001" title="Deinitializes the SD card subsystem." alt="" coords="5,5,139,31"/>
+<area shape="rect" id="Node000002" href="$group__cmd__public__apis.html#ga0d8e6b9d66cc6b41d34ecace57871296" title="Deregisters a client from the command subsystem." alt="" coords="187,5,309,31"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="139,15,173,15,173,21,139,21"/>
+</map>

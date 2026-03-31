@@ -1,0 +1,18 @@
+<map id="log_print_prologue" name="log_print_prologue">
+<area shape="rect" id="Node000001" title="Prints the log message prologue: timestamp, severity, and subsystem name." alt="" coords="5,110,148,135"/>
+<area shape="rect" id="Node000002" href="$group__common__public__apis.html#ga798f9165c3390657a08f031b640020b3" title="Returns the length of a string, excluding the null terminator." alt="" coords="397,10,492,35"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="86,108,129,62,160,38,195,20,243,8,293,3,341,4,383,8,383,14,341,9,293,8,244,13,197,25,163,42,133,66,90,111"/>
+<area shape="rect" id="Node000003" href="$group__common__public__apis.html#gae47bb1aab370d9f4bcef389aff1c8731" title="Converts an integer to its decimal string representation." alt="" coords="231,35,314,60"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="106,107,195,71,218,62,220,67,197,76,108,112"/>
+<area shape="rect" id="Node000004" href="$group__log__public__apis.html#gacf5f29fb5186e4a8c3a8a7ab872f5d08" title="Converts a LOG_LEVEL_te value to its lowercase string name." alt="" coords="196,84,349,110"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="148,111,182,106,183,111,149,116"/>
+<area shape="rect" id="Node000006" href="$group__stm32__rtc__public__apis.html#ga00f0bdef48616f0ec09cea4680006bf8" title="Reads the current time from the RTC." alt="" coords="221,134,325,159"/>
+<area shape="poly" id="edge6_Node000001_Node000006" title=" " alt="" coords="149,129,207,136,207,141,148,134"/>
+<area shape="rect" id="Node000007" href="$group__common__public__apis.html#ga6f9135dbc21bdf8f3f67ff08cde3fa03" title="Overwrites a region of a target string with the contents of a source string." alt="" coords="239,183,306,208"/>
+<area shape="poly" id="edge7_Node000001_Node000007" title=" " alt="" coords="107,133,197,169,227,180,226,185,195,174,105,138"/>
+<area shape="rect" id="Node000008" href="$group__stm32__usart__public__apis.html#ga08b4b8744fb88c36df0ac52433dfe27f" title="Blocking USART transmit. Sends len bytes from tx_buffer." alt="" coords="226,232,319,258"/>
+<area shape="poly" id="edge8_Node000001_Node000008" title=" " alt="" coords="92,133,136,175,165,198,197,219,214,227,212,231,195,223,162,203,132,179,88,137"/>
+<area shape="poly" id="edge4_Node000004_Node000002" title=" " alt="" coords="318,82,348,71,409,40,411,45,350,76,320,87"/>
+<area shape="rect" id="Node000005" href="$group__common__public__apis.html#ga4681e08097a4495fe5f63a433d52ea6b" title="Copies a null&#45;terminated string into a destination buffer." alt="" coords="410,84,479,110"/>
+<area shape="poly" id="edge5_Node000004_Node000005" title=" " alt="" coords="350,94,396,94,396,100,350,100"/>
+</map>

@@ -1,0 +1,9 @@
+<map id="spi_init" name="spi_init">
+<area shape="rect" id="Node000001" title="Initializes the SPI peripheral with the given configuration." alt="" coords="5,31,75,56"/>
+<area shape="rect" id="Node000002" href="$group__stm32__spi__internal__helpers.html#gae2d12528fd8bc6904c771da85bb5c2b4" title="Enables or disables the peripheral clock for an SPI instance." alt="" coords="123,31,225,56"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="75,41,109,41,109,46,75,46"/>
+<area shape="rect" id="Node000003" href="$group__stm32__rcc__public__apis.html#ga5cf8b9a2e93e5658766e20a00d6b7736" title="Enables or disables the peripheral clock for an APB1 peripheral." alt="" coords="273,5,415,31"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="225,33,260,28,260,33,226,38"/>
+<area shape="rect" id="Node000004" href="$group__stm32__rcc__public__apis.html#ga0cf8672c3f523ae19b591cbd670e0281" title="Enables or disables the peripheral clock for an APB2 peripheral." alt="" coords="273,55,415,80"/>
+<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="226,48,260,53,260,58,225,53"/>
+</map>

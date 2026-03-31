@@ -1,0 +1,12 @@
+<map id="usart_send" name="usart_send">
+<area shape="rect" id="Node000001" title="Blocking USART transmit. Sends len bytes from tx_buffer." alt="" coords="323,56,416,81"/>
+<area shape="rect" id="Node000002" href="$group__console__public__apis.html#ga5c89ef7779cd6223208d61c9913a964a" title="Runs the console state machine. Must be called periodically." alt="" coords="153,5,253,31"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="313,54,245,33,247,28,314,49"/>
+<area shape="rect" id="Node000004" href="$group__log__public__apis.html#gae82dcc89628d6a624d3f6870e40240d0" title="Prints a formatted message to the serial terminal if the severity threshold is met." alt="" coords="5,81,84,107"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="309,76,84,94,84,88,309,71"/>
+<area shape="rect" id="Node000005" href="$group__log__internal__helpers.html#gab7213513b94643317e1fcbb6593acc0d" title="Prints the log message prologue: timestamp, severity, and subsystem name." alt="" coords="132,107,275,132"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="314,88,247,109,245,104,313,83"/>
+<area shape="rect" id="Node000003" href="$main_8c.html#a51cd9b9f6e3c15933fefc02c1bdc445f" title="Runs all subsystems for one iteration of the main loop." alt="" coords="11,5,78,31"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="140,21,78,21,78,15,140,15"/>
+<area shape="poly" id="edge5_Node000005_Node000004" title=" " alt="" coords="118,108,84,103,85,98,119,103"/>
+</map>

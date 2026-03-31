@@ -1,0 +1,12 @@
+<map id="sd_send_if_cond" name="sd_send_if_cond">
+<area shape="rect" id="Node000001" title="Issues CMD8 to determine whether the card is SD Ver.2 or older." alt="" coords="5,55,135,80"/>
+<area shape="rect" id="Node000002" href="$group__sd__internal__helpers.html#ga653572a0b7bbfad25f8cf91425a58f57" title="Transmits a single SPI&#45;mode SD command and receives the response." alt="" coords="183,55,293,80"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="135,65,169,65,169,70,135,70"/>
+<area shape="poly" id="edge2_Node000002_Node000002" title=" " alt="" coords="211,56,205,46,208,37,219,30,238,28,260,31,270,40,266,44,258,36,238,33,221,35,212,40,210,46,215,53"/>
+<area shape="rect" id="Node000003" href="$group__stm32__spi__public__apis.html#gad073bfcf995daaf341753e58fdc79762" title="Blocking SPI receive. Reads len bytes into rx_buffer." alt="" coords="355,5,451,31"/>
+<area shape="poly" id="edge3_Node000002_Node000003" title=" " alt="" coords="280,52,346,32,347,37,282,57"/>
+<area shape="rect" id="Node000004" href="$group__stm32__spi__public__apis.html#ga39d5cb38200e88203692e5f9e7145eaf" title="Blocking SPI transmit. Sends len bytes from tx_buffer." alt="" coords="363,55,442,80"/>
+<area shape="poly" id="edge4_Node000002_Node000004" title=" " alt="" coords="294,65,349,65,349,70,294,70"/>
+<area shape="rect" id="Node000005" href="$group__cortex__m4__systick__public__apis.html#gace47395205769718b2a463822269d777" title="Returns the number of milliseconds elapsed since SysTick was initialized." alt="" coords="341,104,464,129"/>
+<area shape="poly" id="edge5_Node000002_Node000005" title=" " alt="" coords="282,77,347,97,346,102,280,83"/>
+</map>

@@ -1,0 +1,7 @@
+<map id="button_getheld_handler" name="button_getheld_handler">
+<area shape="rect" id="Node000001" title="CLI handler for the &quot;getheld&quot; command. Reports the held state of a button." alt="" coords="5,31,181,56"/>
+<area shape="rect" id="Node000002" href="$group__BUTTON__Public__APIs.html#gae588b39650f1d914a3c55f2f72fa10f5" title="Retrieves the held state of a button." alt="" coords="229,5,396,31"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="181,31,215,27,216,32,182,36"/>
+<area shape="rect" id="Node000003" href="$group__common__public__apis.html#ga1b7a4f6b0c0415253f0bc32fa527405b" title="Compares two null&#45;terminated strings for equality." alt="" coords="275,55,350,80"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="182,50,262,59,262,65,181,56"/>
+</map>

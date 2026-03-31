@@ -1,0 +1,24 @@
+<map id="core/inc/menu.h" name="core/inc/menu.h">
+<area shape="rect" id="Node000001" title="Menu module public API." alt="" coords="213,5,339,31"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="47,299,118,324"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="229,33,174,52,119,81,97,97,83,113,54,154,17,201,9,223,14,250,30,272,51,289,47,293,26,275,10,252,3,222,12,198,50,150,79,110,94,94,116,76,172,47,227,28"/>
+<area shape="rect" id="Node000003" href="$common_8h.html" title="Common utility module public API." alt="" coords="165,225,256,251"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="286,30,303,57,319,95,326,137,324,159,316,179,293,204,264,222,261,217,289,200,311,176,318,157,321,138,314,97,298,60,282,32"/>
+<area shape="rect" id="Node000005" href="$ssd1309_8h.html" title="SSD1309 OLED display driver public API." alt="" coords="129,79,217,104"/>
+<area shape="poly" id="edge5_Node000001_Node000005" title=" " alt="" coords="261,33,203,73,200,68,258,28"/>
+<area shape="rect" id="Node000008" href="$err_8h.html" title="System&#45;wide error code definitions." alt="" coords="251,152,301,177"/>
+<area shape="poly" id="edge12_Node000001_Node000008" title=" " alt="" coords="279,31,279,138,273,138,273,31"/>
+<area shape="rect" id="Node000009" title=" " alt="" coords="377,79,495,104"/>
+<area shape="poly" id="edge13_Node000001_Node000009" title=" " alt="" coords="303,28,399,71,396,75,301,33"/>
+<area shape="poly" id="edge3_Node000003_Node000002" title=" " alt="" coords="191,253,117,294,115,289,189,248"/>
+<area shape="rect" id="Node000004" title=" " alt="" coords="169,299,252,324"/>
+<area shape="poly" id="edge4_Node000003_Node000004" title=" " alt="" coords="213,251,213,285,208,285,208,251"/>
+<area shape="rect" id="Node000006" href="$stm32f401re_8h.html" title="STM32F401RE MCU&#45;specific peripheral register definitions and bit position enumerations." alt="" coords="24,225,141,251"/>
+<area shape="poly" id="edge6_Node000005_Node000006" title=" " alt="" coords="131,107,94,125,78,137,65,153,60,167,61,182,71,212,66,214,55,183,55,166,60,151,74,134,91,120,128,102"/>
+<area shape="rect" id="Node000007" href="$stm32f401re__gpio_8h.html" title="STM32F401RE GPIO driver public API." alt="" coords="75,152,227,177"/>
+<area shape="poly" id="edge8_Node000005_Node000007" title=" " alt="" coords="172,105,161,140,156,138,167,104"/>
+<area shape="poly" id="edge11_Node000005_Node000008" title=" " alt="" coords="191,102,249,142,246,146,188,106"/>
+<area shape="poly" id="edge7_Node000006_Node000002" title=" " alt="" coords="85,251,85,285,80,285,80,251"/>
+<area shape="poly" id="edge9_Node000007_Node000003" title=" " alt="" coords="163,176,194,213,190,217,159,179"/>
+<area shape="poly" id="edge10_Node000007_Node000006" title=" " alt="" coords="141,180,105,217,101,213,138,176"/>
+</map>

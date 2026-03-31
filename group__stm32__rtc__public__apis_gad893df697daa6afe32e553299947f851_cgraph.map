@@ -1,0 +1,5 @@
+<map id="rtc_set_time" name="rtc_set_time">
+<area shape="rect" id="Node000001" title="Sets the RTC time (hours, minutes, seconds)." alt="" coords="5,5,108,31"/>
+<area shape="rect" id="Node000002" href="$group__stm32__rtc__internal__helpers.html#ga42d873a65788a72c95b24183c28cecb2" title="Enables or disables write protection of the RTC registers." alt="" coords="156,5,335,31"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="108,15,143,15,143,21,108,21"/>
+</map>

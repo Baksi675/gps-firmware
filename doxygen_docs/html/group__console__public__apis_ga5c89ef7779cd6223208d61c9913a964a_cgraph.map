@@ -1,0 +1,32 @@
+<map id="console_run" name="console_run">
+<area shape="rect" id="Node000001" title="Runs the console state machine." alt="" coords="5,156,105,181"/>
+<area shape="rect" id="Node000002" href="$group__common__public__apis.html#gaff514ccacc7420ed21791db68d7c591e" title="Compresses an array by removing null bytes and shifting remaining elements left." alt="" coords="191,5,278,31"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="62,154,97,104,122,74,152,48,177,33,180,38,155,52,126,78,101,107,66,157"/>
+<area shape="rect" id="Node000003" href="$group__cbuf__public__apis.html#ga68105339f1401896a81f6b69675796d3" title="Returns the number of bytes currently stored in the circular buffer." alt="" coords="402,107,479,132"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="66,154,102,121,126,104,152,91,183,83,215,79,279,79,339,88,390,100,389,105,338,93,279,85,216,84,184,89,154,97,129,109,105,125,70,157"/>
+<area shape="rect" id="Node000004" href="$group__cbuf__public__apis.html#ga64de2f616b0c9bf6e937e91a190ce444" title="Reads all available data from the circular buffer into an output buffer." alt="" coords="191,107,278,132"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="101,153,177,132,179,137,103,159"/>
+<area shape="rect" id="Node000005" href="$group__cbuf__public__apis.html#gad84e61f36ce6d989804033ab7729b680" title="Writes data from an input buffer into the circular buffer." alt="" coords="189,156,280,181"/>
+<area shape="poly" id="edge5_Node000001_Node000005" title=" " alt="" coords="105,166,175,166,175,171,105,171"/>
+<area shape="rect" id="Node000006" href="$group__cmd__public__apis.html#ga5ff882350722fedb7c072cccbf3b8f2c" title="Parses and executes a command from a console text string." alt="" coords="181,205,289,231"/>
+<area shape="poly" id="edge7_Node000001_Node000006" title=" " alt="" coords="103,179,175,199,173,204,101,184"/>
+<area shape="rect" id="Node000013" href="$group__log__public__apis.html#gabd1b23ae3419e269df167a766d1a8504" title="Enables or disables forced suppression of all log output." alt="" coords="153,255,316,280"/>
+<area shape="poly" id="edge15_Node000001_Node000013" title=" " alt="" coords="72,180,108,210,155,240,172,248,170,252,152,244,105,214,69,184"/>
+<area shape="rect" id="Node000014" href="$group__stm32__usart__public__apis.html#ga08b4b8744fb88c36df0ac52433dfe27f" title="Blocking USART transmit. Sends len bytes from tx_buffer." alt="" coords="188,304,281,329"/>
+<area shape="poly" id="edge16_Node000001_Node000014" title=" " alt="" coords="66,180,99,233,125,263,155,289,176,300,174,305,152,294,121,267,95,236,61,183"/>
+<area shape="poly" id="edge4_Node000004_Node000003" title=" " alt="" coords="278,117,388,117,388,122,278,122"/>
+<area shape="poly" id="edge6_Node000005_Node000003" title=" " alt="" coords="279,155,388,129,389,134,281,161"/>
+<area shape="rect" id="Node000007" href="$group__log__public__apis.html#gacf5f29fb5186e4a8c3a8a7ab872f5d08" title="Converts a LOG_LEVEL_te value to its lowercase string name." alt="" coords="364,156,517,181"/>
+<area shape="poly" id="edge8_Node000006_Node000007" title=" " alt="" coords="288,203,373,182,374,187,289,208"/>
+<area shape="rect" id="Node000010" href="$group__log__public__apis.html#ga09de2ea809bef55fe38e67114fcf6c6a" title="Converts a log level name string to its LOG_LEVEL_te value." alt="" coords="378,205,503,231"/>
+<area shape="poly" id="edge11_Node000006_Node000010" title=" " alt="" coords="289,215,364,215,364,221,289,221"/>
+<area shape="rect" id="Node000011" href="$group__common__public__apis.html#ga1b7a4f6b0c0415253f0bc32fa527405b" title="Compares two null&#45;terminated strings for equality." alt="" coords="575,231,650,256"/>
+<area shape="poly" id="edge13_Node000006_Node000011" title=" " alt="" coords="290,228,364,239,469,244,561,243,561,248,469,250,364,245,289,233"/>
+<area shape="rect" id="Node000012" href="$group__common__public__apis.html#gaa5f00e6b4dfb2c2431f7627837d73c57" title="Splits a string into tokens separated by a given delimiter." alt="" coords="390,307,491,332"/>
+<area shape="poly" id="edge14_Node000006_Node000012" title=" " alt="" coords="290,228,317,240,333,251,342,262,352,274,365,285,391,299,388,303,363,290,348,277,338,266,329,255,315,244,288,232"/>
+<area shape="rect" id="Node000008" href="$group__common__public__apis.html#ga798f9165c3390657a08f031b640020b3" title="Returns the length of a string, excluding the null terminator." alt="" coords="565,132,660,157"/>
+<area shape="poly" id="edge9_Node000007_Node000008" title=" " alt="" coords="517,155,551,150,552,156,518,161"/>
+<area shape="rect" id="Node000009" href="$group__common__public__apis.html#ga4681e08097a4495fe5f63a433d52ea6b" title="Copies a null&#45;terminated string into a destination buffer." alt="" coords="578,181,647,207"/>
+<area shape="poly" id="edge10_Node000007_Node000009" title=" " alt="" coords="518,177,565,184,564,190,517,183"/>
+<area shape="poly" id="edge12_Node000010_Node000011" title=" " alt="" coords="504,225,562,233,561,239,503,230"/>
+</map>

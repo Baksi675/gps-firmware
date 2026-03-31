@@ -1,0 +1,5 @@
+<map id="neo6_dumpnmea_handler" name="neo6_dumpnmea_handler">
+<area shape="rect" id="Node000001" title="CLI handler for the &quot;dumpnmea&quot; command. Enables or disables raw NMEA logging." alt="" coords="5,5,196,31"/>
+<area shape="rect" id="Node000002" href="$group__common__public__apis.html#ga1b7a4f6b0c0415253f0bc32fa527405b" title="Compares two null&#45;terminated strings for equality." alt="" coords="244,5,319,31"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="196,15,230,15,230,21,196,21"/>
+</map>

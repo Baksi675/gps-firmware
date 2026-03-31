@@ -1,0 +1,5 @@
+<map id="usart1_irq_data_recv_callback" name="usart1_irq_data_recv_callback">
+<area shape="rect" id="Node000001" title="RXNE callback for USART1. Called by USART1_IRQHandler on each received byte." alt="" coords="208,5,367,45"/>
+<area shape="rect" id="Node000002" href="$stm32f401re__usart_8c.html#a7139cd4baabbbcbab0c1fe6d7d4ae1cc" title="USART1 interrupt handler. Dispatches RXNE events to usart1_irq_data_recv_callback." alt="" coords="5,13,160,38"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="194,28,161,28,161,23,194,23"/>
+</map>

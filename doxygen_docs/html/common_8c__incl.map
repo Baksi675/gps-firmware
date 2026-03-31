@@ -1,0 +1,10 @@
+<map id="core/src/common.c" name="core/src/common.c">
+<area shape="rect" id="Node000001" title="A module that contains code common to all other modules." alt="" coords="15,5,161,31"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="5,152,88,177"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="87,32,56,139,51,138,82,30"/>
+<area shape="rect" id="Node000003" href="$common_8h.html" title="Common utility module public API." alt="" coords="84,79,175,104"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="97,30,118,65,113,68,93,32"/>
+<area shape="poly" id="edge4_Node000003_Node000002" title=" " alt="" coords="118,106,72,145,69,141,114,102"/>
+<area shape="rect" id="Node000004" title=" " alt="" coords="113,152,183,177"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="135,104,144,138,139,140,130,105"/>
+</map>

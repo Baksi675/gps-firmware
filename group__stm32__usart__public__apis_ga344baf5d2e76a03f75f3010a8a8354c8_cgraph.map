@@ -1,0 +1,15 @@
+<map id="usart_deinit" name="usart_deinit">
+<area shape="rect" id="Node000001" title="Deinitializes the USART peripheral, disables its NVIC interrupt, and disables its clock." alt="" coords="5,80,104,105"/>
+<area shape="rect" id="Node000002" href="$group__cortex__m4__nvic__public__apis.html#ga481ccd2a55bf1ae8969250a9610ff07f" title="Enables or disables an interrupt line in the NVIC." alt="" coords="167,5,305,31"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="76,78,151,40,171,32,173,37,153,44,78,82"/>
+<area shape="rect" id="Node000003" href="$group__stm32__rcc__public__apis.html#ga5f8eecbc777a20fc8e3e9ece67ffedc0" title="Resets an APB1 peripheral via RCC_APB1RSTR." alt="" coords="152,55,320,80"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="104,83,138,78,139,84,105,88"/>
+<area shape="rect" id="Node000004" href="$group__stm32__rcc__public__apis.html#ga1313da00aa9c4b8d9b57fedbad676c04" title="Resets an APB2 peripheral via RCC_APB2RSTR." alt="" coords="152,104,320,129"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="105,97,139,101,138,106,104,102"/>
+<area shape="rect" id="Node000005" href="$group__stm32__usart__internal__helpers.html#ga9a4adbf02026dd1cba510991603ec9d1" title="Enables or disables the peripheral clock for a USART instance." alt="" coords="178,153,294,179"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="80,103,153,138,176,147,174,152,151,143,78,108"/>
+<area shape="rect" id="Node000006" href="$group__stm32__rcc__public__apis.html#ga5cf8b9a2e93e5658766e20a00d6b7736" title="Enables or disables the peripheral clock for an APB1 peripheral." alt="" coords="368,128,509,153"/>
+<area shape="poly" id="edge5_Node000005_Node000006" title=" " alt="" coords="294,156,354,149,354,154,294,161"/>
+<area shape="rect" id="Node000007" href="$group__stm32__rcc__public__apis.html#ga0cf8672c3f523ae19b591cbd670e0281" title="Enables or disables the peripheral clock for an APB2 peripheral." alt="" coords="368,177,509,203"/>
+<area shape="poly" id="edge6_Node000005_Node000007" title=" " alt="" coords="294,170,354,177,354,183,294,175"/>
+</map>

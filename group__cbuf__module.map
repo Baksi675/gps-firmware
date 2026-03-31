@@ -1,0 +1,5 @@
+<map id="Circular Buffer Module" name="Circular Buffer Module">
+<area shape="rect" id="Node000003" href="$group__cbuf__api.html" title="Public functions to interact with a circular buffer instance." alt="" coords="220,5,403,31"/>
+<area shape="rect" id="Node000001" title="Lightweight circular buffer for byte&#45;oriented data." alt="" coords="5,31,172,56"/>
+<area shape="rect" id="Node000002" href="$group__cbuf__types.html" title="Data types used by the circular buffer module." alt="" coords="233,55,389,80"/>
+</map>

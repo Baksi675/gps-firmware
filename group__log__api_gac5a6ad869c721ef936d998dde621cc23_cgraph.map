@@ -1,0 +1,50 @@
+<map id="log_init" name="log_init">
+<area shape="rect" id="Node000001" title="Initializes the log subsystem." alt="" coords="5,252,76,277"/>
+<area shape="rect" id="Node000002" href="$group__stm32__gpio__public__apis.html#ga783e4cd6131193170ca81d17fa146b4d" title="Initializes a GPIO pin according to the given configuration." alt="" coords="171,104,250,129"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="55,250,183,137,186,141,59,254"/>
+<area shape="rect" id="Node000008" href="$group__init__public__apis.html#ga9dd0a7c46e371f86bc7da01337082e46" title="Initializes the RTC peripheral and sets a default calendar and time." alt="" coords="177,301,244,327"/>
+<area shape="poly" id="edge7_Node000001_Node000008" title=" " alt="" coords="77,272,165,298,163,303,76,277"/>
+<area shape="rect" id="Node000014" href="$group__stm32__usart__public__apis.html#ga68e802a1bf16ec5ee62fdb99fa28026f" title="Initializes the USART peripheral with the given configuration." alt="" coords="169,227,252,252"/>
+<area shape="poly" id="edge15_Node000001_Node000014" title=" " alt="" coords="76,257,155,245,156,250,77,262"/>
+<area shape="rect" id="Node000022" href="$group__stm32__usart__public__apis.html#ga7e6999fdc0061f4a72278ad6d378876a" title="Enables or disables the USART transmitter (TE bit)." alt="" coords="124,351,297,376"/>
+<area shape="poly" id="edge26_Node000001_Node000022" title=" " alt="" coords="55,276,85,307,125,337,139,343,136,348,123,342,81,311,51,280"/>
+<area shape="rect" id="Node000003" href="$group__stm32__gpio__internal__helpers.html#gab59f316737cdd9d0ca8c9b00efcc027c" title="Returns the IRQ number for the EXTI line corresponding to a GPIO pin." alt="" coords="355,5,490,31"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="230,102,281,71,344,40,362,33,364,38,346,44,284,76,233,106"/>
+<area shape="rect" id="Node000004" href="$group__stm32__gpio__internal__helpers.html#ga97fd11a2b2c1ebb87b9e3286bb804e6a" title="Returns the SYSCFG port code for a GPIO port instance." alt="" coords="357,55,488,80"/>
+<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="250,105,354,81,355,86,251,110"/>
+<area shape="rect" id="Node000005" href="$group__stm32__gpio__internal__helpers.html#gad6dac18a513bdb3c2e395b620b507d7c" title="Enables or disables the peripheral clock for a GPIO port." alt="" coords="367,104,478,129"/>
+<area shape="poly" id="edge4_Node000002_Node000005" title=" " alt="" coords="250,114,353,114,353,119,250,119"/>
+<area shape="rect" id="Node000007" href="$group__cortex__m4__nvic__public__apis.html#ga481ccd2a55bf1ae8969250a9610ff07f" title="Enables or disables an interrupt line in the NVIC." alt="" coords="353,153,492,179"/>
+<area shape="poly" id="edge6_Node000002_Node000007" title=" " alt="" coords="251,123,355,148,354,153,250,128"/>
+<area shape="rect" id="Node000006" href="$group__stm32__rcc__public__apis.html#ga4ce3489a40c02eaad0a9f3c398d3e6ba" title="Enables or disables the peripheral clock for an AHB1 peripheral." alt="" coords="567,104,708,129"/>
+<area shape="poly" id="edge5_Node000005_Node000006" title=" " alt="" coords="478,114,553,114,553,119,478,119"/>
+<area shape="rect" id="Node000009" href="$group__stm32__rtc__public__apis.html#gaf399478f2c8cde96eeb420bdf29d5bdd" title="Initializes the RTC peripheral." alt="" coords="389,301,456,327"/>
+<area shape="poly" id="edge8_Node000008_Node000009" title=" " alt="" coords="244,311,375,311,375,317,244,317"/>
+<area shape="rect" id="Node000012" href="$group__stm32__rtc__public__apis.html#ga5a3791404e50ce102f0d360633552781" title="Sets the RTC calendar (date and weekday)." alt="" coords="358,351,487,376"/>
+<area shape="poly" id="edge11_Node000008_Node000012" title=" " alt="" coords="245,319,355,345,354,350,244,324"/>
+<area shape="rect" id="Node000013" href="$group__stm32__rtc__public__apis.html#gad893df697daa6afe32e553299947f851" title="Sets the RTC time (hours, minutes, seconds)." alt="" coords="371,400,474,425"/>
+<area shape="poly" id="edge13_Node000008_Node000013" title=" " alt="" coords="245,317,272,325,299,337,314,350,324,362,332,375,347,386,360,393,357,398,344,391,329,378,319,365,310,353,296,342,270,330,244,322"/>
+<area shape="rect" id="Node000010" href="$group__stm32__rcc__public__apis.html#ga5cf8b9a2e93e5658766e20a00d6b7736" title="Enables or disables the peripheral clock for an APB1 peripheral." alt="" coords="567,301,708,327"/>
+<area shape="poly" id="edge9_Node000009_Node000010" title=" " alt="" coords="456,311,553,311,553,317,456,317"/>
+<area shape="rect" id="Node000011" href="$group__stm32__rtc__internal__helpers.html#ga42d873a65788a72c95b24183c28cecb2" title="Enables or disables write protection of the RTC registers." alt="" coords="548,351,727,376"/>
+<area shape="poly" id="edge10_Node000009_Node000011" title=" " alt="" coords="457,319,568,345,567,350,456,324"/>
+<area shape="poly" id="edge12_Node000012_Node000011" title=" " alt="" coords="488,361,534,361,534,366,488,366"/>
+<area shape="poly" id="edge14_Node000013_Node000011" title=" " alt="" coords="474,398,568,377,569,382,475,404"/>
+<area shape="poly" id="edge16_Node000014_Node000007" title=" " alt="" coords="244,224,344,187,366,180,368,185,346,193,246,229"/>
+<area shape="rect" id="Node000015" href="$group__stm32__usart__internal__helpers.html#ga094b122f2cdbe8470483dd387328195c" title="Computes and writes the BRR register for the configured baud rate." alt="" coords="345,203,500,228"/>
+<area shape="poly" id="edge17_Node000014_Node000015" title=" " alt="" coords="252,232,331,223,332,228,253,237"/>
+<area shape="rect" id="Node000020" href="$group__stm32__usart__internal__helpers.html#ga9a4adbf02026dd1cba510991603ec9d1" title="Enables or disables the peripheral clock for a USART instance." alt="" coords="365,252,481,277"/>
+<area shape="poly" id="edge23_Node000014_Node000020" title=" " alt="" coords="253,242,352,254,351,259,252,247"/>
+<area shape="rect" id="Node000016" href="$group__stm32__rcc__public__apis.html#ga74b6e6f0373eaae18d2d4e5b0af48020" title="Returns the current APB1 (low&#45;speed) peripheral bus clock frequency in Hz." alt="" coords="570,153,705,179"/>
+<area shape="poly" id="edge18_Node000015_Node000016" title=" " alt="" coords="478,200,567,179,568,184,479,205"/>
+<area shape="rect" id="Node000019" href="$group__stm32__rcc__public__apis.html#ga39d12f5557c1e27058371a38fc52c254" title="Returns the current APB2 (high&#45;speed) peripheral bus clock frequency in Hz." alt="" coords="570,203,705,228"/>
+<area shape="poly" id="edge21_Node000015_Node000019" title=" " alt="" coords="501,213,556,213,556,218,501,218"/>
+<area shape="rect" id="Node000017" href="$group__stm32__rcc__public__apis.html#gab6f0930f451e663135940ce6942e7e31" title="Returns the current AHB bus clock frequency in Hz." alt="" coords="775,179,901,204"/>
+<area shape="poly" id="edge19_Node000016_Node000017" title=" " alt="" coords="705,172,761,179,760,184,705,177"/>
+<area shape="rect" id="Node000018" href="$group__stm32__rcc__public__apis.html#ga72473ebd9ae1c1fd36054e538c4ca195" title="Returns the current system clock frequency in Hz." alt="" coords="949,179,1067,204"/>
+<area shape="poly" id="edge20_Node000017_Node000018" title=" " alt="" coords="902,189,936,189,936,194,902,194"/>
+<area shape="poly" id="edge22_Node000019_Node000017" title=" " alt="" coords="705,205,760,198,761,203,705,210"/>
+<area shape="poly" id="edge24_Node000020_Node000010" title=" " alt="" coords="479,275,568,296,567,301,478,280"/>
+<area shape="rect" id="Node000021" href="$group__stm32__rcc__public__apis.html#ga0cf8672c3f523ae19b591cbd670e0281" title="Enables or disables the peripheral clock for an APB2 peripheral." alt="" coords="567,252,708,277"/>
+<area shape="poly" id="edge25_Node000020_Node000021" title=" " alt="" coords="481,262,553,262,553,267,481,267"/>
+</map>

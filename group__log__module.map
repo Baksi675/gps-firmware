@@ -1,0 +1,6 @@
+<map id="Log Module" name="Log Module">
+<area shape="rect" id="Node000003" href="$group__log__api.html" title="Public functions to interact with the log subsystem." alt="" coords="151,5,264,31"/>
+<area shape="rect" id="Node000004" href="$group__log__macros.html" title="Compile&#45;time&#45;gated convenience macros for emitting log messages." alt="" coords="159,55,255,80"/>
+<area shape="rect" id="Node000001" title="USART&#45;based serial logging with severity filtering and RTC timestamps." alt="" coords="5,55,103,80"/>
+<area shape="rect" id="Node000002" href="$group__log__types.html" title="Data types used by the log module." alt="" coords="164,104,251,129"/>
+</map>

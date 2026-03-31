@@ -1,0 +1,9 @@
+<map id="ssd1309_update" name="ssd1309_update">
+<area shape="rect" id="Node000001" title="Flushes the internal framebuffer to the display over I2C." alt="" coords="5,55,133,80"/>
+<area shape="rect" id="Node000002" href="$group__stm32__i2c__public__apis.html#gacfae2fbf177c78fe3d58c54657dfed42" title="Blocking I2C master transmit. Sends a start condition, address, and data." alt="" coords="213,5,345,31"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="123,52,210,31,212,36,125,57"/>
+<area shape="rect" id="Node000003" href="$group__stm32__i2c__public__apis.html#ga7cdd7d119473b9b7a91fa0cad2a16d58" title="Continues a transmission started by i2c_master_send without a new START or address phase." alt="" coords="181,55,376,80"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="134,65,168,65,168,70,134,70"/>
+<area shape="rect" id="Node000004" href="$group__stm32__i2c__public__apis.html#ga94b6acb8f6c8a1e3d22cf8bb9bb51523" title="Enables or disables the I2C peripheral and controls bus ownership." alt="" coords="194,104,363,129"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="125,77,212,98,210,103,123,83"/>
+</map>

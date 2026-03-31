@@ -1,0 +1,4 @@
+<map id="Button Public API" name="Button Public API">
+<area shape="rect" id="Node000001" title="Public functions to interact with the button subsystem." alt="" coords="171,5,304,31"/>
+<area shape="rect" id="Node000002" href="$group__BUTTON__MODULE.html" title="Button driver/module providing debouncing and state detection." alt="" coords="5,5,123,31"/>
+</map>

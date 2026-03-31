@@ -1,0 +1,9 @@
+<map id="log_level_to_int" name="log_level_to_int">
+<area shape="rect" id="Node000001" title="Converts a log level name string to its LOG_LEVEL_te value." alt="" coords="424,5,549,31"/>
+<area shape="rect" id="Node000002" href="$group__cmd__public__apis.html#ga5ff882350722fedb7c072cccbf3b8f2c" title="Parses and executes a command from a console text string." alt="" coords="268,5,376,31"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="410,21,376,21,376,15,410,15"/>
+<area shape="rect" id="Node000003" href="$group__console__public__apis.html#ga5c89ef7779cd6223208d61c9913a964a" title="Runs the console state machine. Must be called periodically." alt="" coords="120,5,220,31"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="254,21,220,21,220,15,254,15"/>
+<area shape="rect" id="Node000004" href="$main_8c.html#a51cd9b9f6e3c15933fefc02c1bdc445f" title="Runs all subsystems for one iteration of the main loop." alt="" coords="5,5,72,31"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="106,21,72,21,72,15,106,15"/>
+</map>

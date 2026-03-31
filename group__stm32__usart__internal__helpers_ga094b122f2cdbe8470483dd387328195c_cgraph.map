@@ -1,0 +1,12 @@
+<map id="usart_set_baud_rate" name="usart_set_baud_rate">
+<area shape="rect" id="Node000001" title="Computes and writes the BRR register for the configured baud rate." alt="" coords="5,31,160,56"/>
+<area shape="rect" id="Node000002" href="$group__stm32__rcc__public__apis.html#ga74b6e6f0373eaae18d2d4e5b0af48020" title="Returns the current APB1 (low&#45;speed) peripheral bus clock frequency in Hz." alt="" coords="208,5,343,31"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="160,31,194,26,194,31,161,36"/>
+<area shape="rect" id="Node000005" href="$group__stm32__rcc__public__apis.html#ga39d12f5557c1e27058371a38fc52c254" title="Returns the current APB2 (high&#45;speed) peripheral bus clock frequency in Hz." alt="" coords="208,55,343,80"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="161,50,194,55,194,60,160,56"/>
+<area shape="rect" id="Node000003" href="$group__stm32__rcc__public__apis.html#gab6f0930f451e663135940ce6942e7e31" title="Returns the current AHB bus clock frequency in Hz." alt="" coords="391,31,517,56"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="343,25,377,30,377,35,342,30"/>
+<area shape="rect" id="Node000004" href="$group__stm32__rcc__public__apis.html#ga72473ebd9ae1c1fd36054e538c4ca195" title="Returns the current system clock frequency in Hz." alt="" coords="565,31,683,56"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="518,41,552,41,552,46,518,46"/>
+<area shape="poly" id="edge5_Node000005_Node000003" title=" " alt="" coords="342,56,377,51,377,56,343,61"/>
+</map>

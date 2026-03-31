@@ -1,0 +1,7 @@
+<map id="menu_scroll" name="menu_scroll">
+<area shape="rect" id="Node000001" title="Moves the menu selection cursor by one step in the given direction." alt="" coords="245,31,347,56"/>
+<area shape="rect" id="Node000002" href="$group__menu__command__handlers.html#ga25b9caa8d566ef0c40f70135dcd83ecb" title="CLI handler for the &quot;scroll&quot; command. Scrolls a named menu and re&#45;renders it." alt="" coords="5,5,197,31"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="231,38,197,33,198,28,232,32"/>
+<area shape="rect" id="Node000003" href="$main_8c.html#a51cd9b9f6e3c15933fefc02c1bdc445f" title="Runs all subsystems for one iteration of the main loop." alt="" coords="68,55,135,80"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="232,54,135,66,135,61,231,49"/>
+</map>

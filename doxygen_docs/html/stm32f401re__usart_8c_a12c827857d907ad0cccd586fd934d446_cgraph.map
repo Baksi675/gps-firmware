@@ -1,0 +1,5 @@
+<map id="USART6_IRQHandler" name="USART6_IRQHandler">
+<area shape="rect" id="Node000001" title="USART6 interrupt handler. Dispatches RXNE events to usart6_irq_data_recv_callback." alt="" coords="5,13,160,38"/>
+<area shape="rect" id="Node000002" href="$group__stm32__usart__api.html#ga52f20bb21f8ee4a506183c14073189be" title="Default weak implementation of usart6_irq_data_recv_callback." alt="" coords="208,5,367,45"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="160,23,194,23,194,28,160,28"/>
+</map>

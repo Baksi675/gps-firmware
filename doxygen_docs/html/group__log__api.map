@@ -1,0 +1,4 @@
+<map id="Log Public API" name="Log Public API">
+<area shape="rect" id="Node000001" title="Public functions to interact with the log subsystem." alt="" coords="151,5,264,31"/>
+<area shape="rect" id="Node000002" href="$group__log__module.html" title="USART&#45;based serial logging with severity filtering and RTC timestamps." alt="" coords="5,5,103,31"/>
+</map>

@@ -1,0 +1,7 @@
+<map id="i2c_init" name="i2c_init">
+<area shape="rect" id="Node000001" title="Initializes the I2C peripheral with the given configuration." alt="" coords="323,5,392,31"/>
+<area shape="rect" id="Node000002" href="$group__ssd1309__public__apis.html#ga5a145c2446dc84624fe042f99064f11b" title="Initializes the SSD1309 display and sends the full configuration sequence over I2C." alt="" coords="120,5,275,31"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="309,21,275,21,275,15,309,15"/>
+<area shape="rect" id="Node000003" href="$main_8c.html#a641e966759be26411c766208d8da6ed4" title="Initializes all subsystems and hardware peripherals." alt="" coords="5,5,72,31"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="106,21,72,21,72,15,106,15"/>
+</map>

@@ -1,0 +1,26 @@
+<map id="cbuf_len" name="cbuf_len">
+<area shape="rect" id="Node000001" title="Returns the number of bytes currently stored in the circular buffer." alt="" coords="553,51,631,77"/>
+<area shape="rect" id="Node000002" href="$group__cbuf__public__apis.html#ga64de2f616b0c9bf6e937e91a190ce444" title="Reads all available data from the circular buffer into an output buffer." alt="" coords="417,26,503,51"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="540,57,503,50,504,44,541,51"/>
+<area shape="rect" id="Node000003" href="$group__console__public__apis.html#ga5c89ef7779cd6223208d61c9913a964a" title="Runs the console state machine. Must be called periodically." alt="" coords="237,23,337,49"/>
+<area shape="poly" id="edge13_Node000001_Node000003" title=" " alt="" coords="562,45,535,28,505,16,458,9,411,10,366,17,329,26,328,21,365,12,410,5,459,3,506,11,538,24,565,41"/>
+<area shape="rect" id="Node000005" href="$group__neo6__public__apis.html#ga1ce70e74c8a92a791698716a7091aaa6" title="Processes received NMEA data. Must be called periodically." alt="" coords="246,73,329,98"/>
+<area shape="poly" id="edge14_Node000001_Node000005" title=" " alt="" coords="540,70,329,85,329,80,539,65"/>
+<area shape="rect" id="Node000006" href="$group__cbuf__public__apis.html#gad84e61f36ce6d989804033ab7729b680" title="Writes data from an input buffer into the circular buffer." alt="" coords="415,127,505,153"/>
+<area shape="poly" id="edge6_Node000001_Node000006" title=" " alt="" coords="559,86,484,130,482,125,556,81"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="403,40,337,39,337,34,403,35"/>
+<area shape="poly" id="edge4_Node000002_Node000005" title=" " alt="" coords="404,56,330,77,328,72,403,51"/>
+<area shape="rect" id="Node000004" href="$main_8c.html#a51cd9b9f6e3c15933fefc02c1bdc445f" title="Runs all subsystems for one iteration of the main loop." alt="" coords="49,49,116,74"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="224,46,116,60,116,55,224,41"/>
+<area shape="poly" id="edge5_Node000005_Node000004" title=" " alt="" coords="232,82,116,68,117,62,232,76"/>
+<area shape="poly" id="edge7_Node000006_Node000003" title=" " alt="" coords="435,119,404,89,365,62,336,50,338,45,368,58,407,85,439,115"/>
+<area shape="poly" id="edge8_Node000006_Node000005" title=" " alt="" coords="405,126,328,101,329,96,407,121"/>
+<area shape="rect" id="Node000007" href="$group__stm32__usart__api.html#gaba34e3f03e156a70056f62e0688882b9" title="RXNE callback for USART1. Called by USART1_IRQHandler on each received byte." alt="" coords="208,123,367,163"/>
+<area shape="poly" id="edge9_Node000006_Node000007" title=" " alt="" coords="401,144,367,144,367,139,401,138"/>
+<area shape="rect" id="Node000009" href="$group__stm32__usart__api.html#ga52f20bb21f8ee4a506183c14073189be" title="RXNE callback for USART6. Called by USART6_IRQHandler on each received byte." alt="" coords="208,187,367,227"/>
+<area shape="poly" id="edge11_Node000006_Node000009" title=" " alt="" coords="415,160,341,189,339,184,413,155"/>
+<area shape="rect" id="Node000008" href="$stm32f401re__usart_8c.html#a7139cd4baabbbcbab0c1fe6d7d4ae1cc" title="USART1 interrupt handler. Dispatches RXNE events to usart1_irq_data_recv_callback." alt="" coords="5,130,160,155"/>
+<area shape="poly" id="edge10_Node000007_Node000008" title=" " alt="" coords="194,145,161,145,161,140,194,140"/>
+<area shape="rect" id="Node000010" href="$stm32f401re__usart_8c.html#a12c827857d907ad0cccd586fd934d446" title="USART6 interrupt handler. Dispatches RXNE events to usart6_irq_data_recv_callback." alt="" coords="5,194,160,219"/>
+<area shape="poly" id="edge12_Node000009_Node000010" title=" " alt="" coords="194,209,161,209,161,204,194,204"/>
+</map>

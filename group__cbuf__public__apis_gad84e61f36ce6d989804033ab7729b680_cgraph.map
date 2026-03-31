@@ -1,0 +1,5 @@
+<map id="cbuf_write" name="cbuf_write">
+<area shape="rect" id="Node000001" title="Writes data from an input buffer into the circular buffer." alt="" coords="5,5,96,31"/>
+<area shape="rect" id="Node000002" href="$group__cbuf__public__apis.html#ga68105339f1401896a81f6b69675796d3" title="Returns the number of bytes currently stored in the circular buffer." alt="" coords="144,5,221,31"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="96,15,130,15,130,21,96,21"/>
+</map>

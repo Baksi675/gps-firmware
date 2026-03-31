@@ -1,0 +1,4 @@
+<map id="RTC Public API" name="RTC Public API">
+<area shape="rect" id="Node000002" href="$group__stm32__rtc.html" title="Calendar and time driver for the STM32F401RE RTC peripheral." alt="" coords="5,5,192,31"/>
+<area shape="rect" id="Node000001" title="Public functions to interact with the RTC peripheral." alt="" coords="240,5,355,31"/>
+</map>

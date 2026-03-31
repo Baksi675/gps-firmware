@@ -1,0 +1,4 @@
+<map id="Peripheral Base Addresses" name="Peripheral Base Addresses">
+<area shape="rect" id="Node000001" title="Memory&#45;mapped base addresses for all STM32F401RE peripherals." alt="" coords="236,13,431,38"/>
+<area shape="rect" id="Node000002" href="$group__stm32f401re__hal.html" title="Peripheral register definitions and bit positions for the STM32F401RE." alt="" coords="5,5,188,45"/>
+</map>

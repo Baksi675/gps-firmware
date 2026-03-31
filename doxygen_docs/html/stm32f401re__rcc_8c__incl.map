@@ -1,0 +1,15 @@
+<map id="drivers/src/stm32f401re_rcc.c" name="drivers/src/stm32f401re_rcc.c">
+<area shape="rect" id="Node000001" title="RCC driver implementation for STM32F401RE." alt="" coords="30,5,207,45"/>
+<area shape="rect" id="Node000002" href="$stm32f401re__rcc_8h.html" title="STM32F401RE RCC driver public API." alt="" coords="102,93,245,119"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="134,44,160,80,155,84,130,47"/>
+<area shape="rect" id="Node000003" href="$stm32f401re_8h.html" title="STM32F401RE MCU&#45;specific peripheral register definitions and bit position enumerations." alt="" coords="5,167,123,192"/>
+<area shape="poly" id="edge7_Node000001_Node000003" title=" " alt="" coords="113,47,93,94,74,154,69,152,88,92,108,45"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="157,121,95,161,92,157,154,116"/>
+<area shape="rect" id="Node000005" href="$common_8h.html" title="Common utility module public API." alt="" coords="147,167,237,192"/>
+<area shape="poly" id="edge4_Node000002_Node000005" title=" " alt="" coords="179,118,188,153,183,154,174,120"/>
+<area shape="rect" id="Node000004" title=" " alt="" coords="42,240,113,265"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="69,192,75,226,70,227,64,193"/>
+<area shape="poly" id="edge5_Node000005_Node000004" title=" " alt="" coords="175,194,109,235,106,230,172,190"/>
+<area shape="rect" id="Node000006" title=" " alt="" coords="151,240,233,265"/>
+<area shape="poly" id="edge6_Node000005_Node000006" title=" " alt="" coords="195,192,195,226,189,226,189,192"/>
+</map>

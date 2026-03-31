@@ -1,0 +1,12 @@
+<map id="sd_read_ocr" name="sd_read_ocr">
+<area shape="rect" id="Node000001" title="Reads the OCR register via CMD58 and stores power&#45;up status, addressing mode, and voltage range." alt="" coords="5,55,105,80"/>
+<area shape="rect" id="Node000002" href="$group__sd__internal__helpers.html#ga653572a0b7bbfad25f8cf91425a58f57" title="Transmits a single SPI&#45;mode SD command and receives the response." alt="" coords="153,55,264,80"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="106,65,139,65,139,70,106,70"/>
+<area shape="poly" id="edge2_Node000002_Node000002" title=" " alt="" coords="183,56,178,46,180,37,191,30,209,28,230,31,239,40,235,44,227,36,209,33,193,35,185,40,183,46,188,53"/>
+<area shape="rect" id="Node000003" href="$group__stm32__spi__public__apis.html#gad073bfcf995daaf341753e58fdc79762" title="Blocking SPI receive. Reads len bytes into rx_buffer." alt="" coords="325,5,421,31"/>
+<area shape="poly" id="edge3_Node000002_Node000003" title=" " alt="" coords="251,52,316,32,318,37,252,57"/>
+<area shape="rect" id="Node000004" href="$group__stm32__spi__public__apis.html#ga39d5cb38200e88203692e5f9e7145eaf" title="Blocking SPI transmit. Sends len bytes from tx_buffer." alt="" coords="334,55,413,80"/>
+<area shape="poly" id="edge4_Node000002_Node000004" title=" " alt="" coords="264,65,320,65,320,70,264,70"/>
+<area shape="rect" id="Node000005" href="$group__cortex__m4__systick__public__apis.html#gace47395205769718b2a463822269d777" title="Returns the number of milliseconds elapsed since SysTick was initialized." alt="" coords="312,104,435,129"/>
+<area shape="poly" id="edge5_Node000002_Node000005" title=" " alt="" coords="252,77,318,97,316,102,251,83"/>
+</map>

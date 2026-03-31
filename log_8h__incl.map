@@ -1,0 +1,25 @@
+<map id="core/inc/log.h" name="core/inc/log.h">
+<area shape="rect" id="Node000001" title="Log subsystem public API." alt="" coords="289,5,398,31"/>
+<area shape="rect" id="Node000002" href="$stm32f401re_8h.html" title="STM32F401RE MCU&#45;specific peripheral register definitions and bit position enumerations." alt="" coords="44,152,161,177"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="289,24,215,28,132,38,59,55,32,67,14,80,9,89,8,97,18,114,38,130,63,144,60,149,35,135,14,118,3,98,4,88,10,77,29,62,57,50,131,33,215,23,289,18"/>
+<area shape="rect" id="Node000004" href="$stm32f401re__usart_8h.html" title="STM32F401RE USART driver public API." alt="" coords="24,79,181,104"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="306,33,156,77,154,72,304,28"/>
+<area shape="rect" id="Node000007" href="$stm32f401re__gpio_8h.html" title="STM32F401RE GPIO driver public API." alt="" coords="205,79,357,104"/>
+<area shape="poly" id="edge8_Node000001_Node000007" title=" " alt="" coords="335,33,302,70,298,66,331,29"/>
+<area shape="rect" id="Node000008" href="$err_8h.html" title="System&#45;wide error code definitions." alt="" coords="381,79,432,104"/>
+<area shape="poly" id="edge11_Node000001_Node000008" title=" " alt="" coords="356,29,389,66,385,70,352,33"/>
+<area shape="rect" id="Node000009" title=" " alt="" coords="456,79,575,104"/>
+<area shape="poly" id="edge12_Node000001_Node000009" title=" " alt="" coords="372,28,476,71,474,76,370,33"/>
+<area shape="rect" id="Node000010" href="$modules_8h.html" title="System module identifier definitions." alt="" coords="600,79,690,104"/>
+<area shape="poly" id="edge13_Node000001_Node000010" title=" " alt="" coords="393,28,587,74,586,79,392,33"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="80,225,151,251"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="107,177,114,211,109,212,102,178"/>
+<area shape="poly" id="edge4_Node000004_Node000002" title=" " alt="" coords="105,104,105,138,100,138,100,104"/>
+<area shape="rect" id="Node000005" href="$common_8h.html" title="Common utility module public API." alt="" coords="185,152,276,177"/>
+<area shape="poly" id="edge5_Node000004_Node000005" title=" " alt="" coords="124,102,199,143,196,147,122,106"/>
+<area shape="poly" id="edge6_Node000005_Node000003" title=" " alt="" coords="213,180,147,220,145,216,211,175"/>
+<area shape="rect" id="Node000006" title=" " alt="" coords="189,225,272,251"/>
+<area shape="poly" id="edge7_Node000005_Node000006" title=" " alt="" coords="233,178,233,212,228,212,228,178"/>
+<area shape="poly" id="edge10_Node000007_Node000002" title=" " alt="" coords="253,107,145,149,143,144,251,102"/>
+<area shape="poly" id="edge9_Node000007_Node000005" title=" " alt="" coords="275,106,249,142,244,139,271,103"/>
+</map>

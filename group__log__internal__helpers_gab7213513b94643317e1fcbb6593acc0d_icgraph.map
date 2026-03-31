@@ -1,0 +1,5 @@
+<map id="log_print_prologue" name="log_print_prologue">
+<area shape="rect" id="Node000001" title="Prints the log message prologue: timestamp, severity, and subsystem name." alt="" coords="132,5,275,31"/>
+<area shape="rect" id="Node000002" href="$group__log__public__apis.html#gae82dcc89628d6a624d3f6870e40240d0" title="Prints a formatted message to the serial terminal if the severity threshold is met." alt="" coords="5,5,84,31"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="118,21,84,21,84,15,118,15"/>
+</map>

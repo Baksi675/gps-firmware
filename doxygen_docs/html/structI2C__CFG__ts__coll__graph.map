@@ -1,0 +1,5 @@
+<map id="I2C_CFG_ts" name="I2C_CFG_ts">
+<area shape="rect" id="Node000001" title="Configuration structure for initializing an I2C peripheral." alt="" coords="19,101,115,127"/>
+<area shape="rect" id="Node000002" href="$structI2C__REGDEF__ts.html" title="I2C peripheral register map." alt="" coords="5,5,128,31"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="69,45,69,101,64,101,64,45"/>
+</map>

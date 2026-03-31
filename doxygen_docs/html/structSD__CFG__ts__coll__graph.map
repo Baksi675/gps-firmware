@@ -1,0 +1,7 @@
+<map id="SD_CFG_ts" name="SD_CFG_ts">
+<area shape="rect" id="Node000001" title="Configuration structure for initializing an SD card handle." alt="" coords="95,161,189,187"/>
+<area shape="rect" id="Node000002" href="$structSPI__REGDEF__ts.html" title="SPI peripheral register map." alt="" coords="5,5,127,31"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="71,44,81,89,90,113,101,136,125,159,122,163,97,139,85,115,76,90,66,45"/>
+<area shape="rect" id="Node000003" href="$structGPIO__REGDEF__ts.html" title="GPIO peripheral register map." alt="" coords="151,5,285,31"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="219,45,211,90,203,115,191,139,179,153,165,163,162,159,175,149,186,136,198,113,206,89,214,44"/>
+</map>

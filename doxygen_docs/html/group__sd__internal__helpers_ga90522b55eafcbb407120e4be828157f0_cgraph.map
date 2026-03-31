@@ -1,0 +1,12 @@
+<map id="sd_go_idle_state" name="sd_go_idle_state">
+<area shape="rect" id="Node000001" title="Issues CMD0 to reset the SD card into idle (SPI) mode." alt="" coords="5,55,136,80"/>
+<area shape="rect" id="Node000002" href="$group__sd__internal__helpers.html#ga653572a0b7bbfad25f8cf91425a58f57" title="Transmits a single SPI&#45;mode SD command and receives the response." alt="" coords="184,55,295,80"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="136,65,170,65,170,70,136,70"/>
+<area shape="poly" id="edge2_Node000002_Node000002" title=" " alt="" coords="212,56,206,46,209,37,221,30,239,28,262,31,271,40,268,44,259,36,239,33,222,35,213,40,212,46,217,53"/>
+<area shape="rect" id="Node000003" href="$group__stm32__spi__public__apis.html#gad073bfcf995daaf341753e58fdc79762" title="Blocking SPI receive. Reads len bytes into rx_buffer." alt="" coords="356,5,452,31"/>
+<area shape="poly" id="edge3_Node000002_Node000003" title=" " alt="" coords="282,52,347,32,348,37,283,57"/>
+<area shape="rect" id="Node000004" href="$group__stm32__spi__public__apis.html#ga39d5cb38200e88203692e5f9e7145eaf" title="Blocking SPI transmit. Sends len bytes from tx_buffer." alt="" coords="365,55,443,80"/>
+<area shape="poly" id="edge4_Node000002_Node000004" title=" " alt="" coords="295,65,351,65,351,70,295,70"/>
+<area shape="rect" id="Node000005" href="$group__cortex__m4__systick__public__apis.html#gace47395205769718b2a463822269d777" title="Returns the number of milliseconds elapsed since SysTick was initialized." alt="" coords="343,104,465,129"/>
+<area shape="poly" id="edge5_Node000002_Node000005" title=" " alt="" coords="283,77,348,97,347,102,282,83"/>
+</map>

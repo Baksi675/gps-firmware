@@ -1,0 +1,5 @@
+<map id="usart_get_name" name="usart_get_name">
+<area shape="rect" id="Node000001" title="Returns the name string of a USART peripheral instance." alt="" coords="5,5,132,31"/>
+<area shape="rect" id="Node000002" href="$group__common__public__apis.html#ga798f9165c3390657a08f031b640020b3" title="Returns the length of a string, excluding the null terminator." alt="" coords="180,5,275,31"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="132,15,167,15,167,21,132,21"/>
+</map>

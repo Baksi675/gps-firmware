@@ -1,0 +1,7 @@
+<map id="decode_csd_v2" name="decode_csd_v2">
+<area shape="rect" id="Node000001" title="Decodes a CSD v2.0 register (SDHC/SDXC cards) into a SD_CSD_INFO_ts structure." alt="" coords="320,5,441,31"/>
+<area shape="rect" id="Node000002" href="$group__sd__internal__helpers.html#gae13f8d8f05ade1c3283dfaeedadf48a2" title="Issues CMD9 to read the CSD register and stores capacity information in the handle." alt="" coords="169,5,272,31"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="306,21,272,21,272,15,306,15"/>
+<area shape="rect" id="Node000003" href="$group__sd__public__apis.html#ga7550bc6000fa7ed68f02c0015b2bc5fe" title="Initializes an SD card handle and performs the full SPI&#45;mode power&#45;up sequence." alt="" coords="5,5,121,31"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="156,21,122,21,122,15,156,15"/>
+</map>

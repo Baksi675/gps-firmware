@@ -1,0 +1,11 @@
+<map id="menu_selectable_run" name="menu_selectable_run">
+<area shape="rect" id="Node000001" title="Renders a MENU_TYPE_SELECTABLE menu to the display." alt="" coords="432,55,593,80"/>
+<area shape="rect" id="Node000002" href="$group__menu__public__apis.html#ga7517f192cd8e1db5f6b7ec3c1cfddb44" title="Renders a single menu to the display." alt="" coords="245,55,384,80"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="418,70,384,70,384,65,418,65"/>
+<area shape="rect" id="Node000003" href="$group__menu__command__handlers.html#ga25b9caa8d566ef0c40f70135dcd83ecb" title="CLI handler for the &quot;scroll&quot; command. Scrolls a named menu and re&#45;renders it." alt="" coords="5,5,197,31"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="245,54,156,33,158,28,246,49"/>
+<area shape="rect" id="Node000004" href="$group__menu__public__apis.html#gafccf13e6466b43a835e92596ff4fed51" title="Renders all registered menus to the display." alt="" coords="21,55,182,80"/>
+<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="232,70,182,70,182,65,232,65"/>
+<area shape="rect" id="Node000005" href="$main_8c.html#a51cd9b9f6e3c15933fefc02c1bdc445f" title="Runs all subsystems for one iteration of the main loop." alt="" coords="68,104,135,129"/>
+<area shape="poly" id="edge4_Node000002_Node000005" title=" " alt="" coords="246,86,136,112,134,106,245,81"/>
+</map>

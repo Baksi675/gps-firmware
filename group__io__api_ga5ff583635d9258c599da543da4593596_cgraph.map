@@ -1,0 +1,5 @@
+<map id="io_write" name="io_write">
+<area shape="rect" id="Node000001" title="Writes a logic level to an IO pin." alt="" coords="5,5,80,31"/>
+<area shape="rect" id="Node000002" href="$group__stm32__gpio__public__apis.html#ga149cee41beb6f902a946750bd3b8ddd1" title="Drives a GPIO output pin high or low." alt="" coords="128,5,219,31"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="80,15,114,15,114,21,80,21"/>
+</map>

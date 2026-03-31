@@ -1,0 +1,11 @@
+<map id="sd_deinit_handle" name="sd_deinit_handle">
+<area shape="rect" id="Node000001" title="Deinitializes an SD card handle and resets the SPI peripheral." alt="" coords="355,55,487,80"/>
+<area shape="rect" id="Node000002" href="$group__sd__internal__helpers.html#ga334584c0af12a66e5bee9a1a3bc0c00e" title="Raises CS, sends two dummy bytes, and disables SPI. Optionally deinitializes the handle." alt="" coords="169,55,307,80"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="341,70,307,70,307,65,341,65"/>
+<area shape="rect" id="Node000003" href="$group__sd__public__apis.html#ga7550bc6000fa7ed68f02c0015b2bc5fe" title="Initializes an SD card handle and performs the full SPI&#45;mode power&#45;up sequence." alt="" coords="5,5,121,31"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="179,53,109,33,110,28,180,48"/>
+<area shape="rect" id="Node000004" href="$group__sd__public__apis.html#ga5fbd9b0b984070a99c3addf991f38018" title="Reads one or more sectors from the SD card." alt="" coords="27,55,100,80"/>
+<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="156,70,100,70,100,65,156,65"/>
+<area shape="rect" id="Node000005" href="$group__sd__public__apis.html#ga6ffe386d7b21e397b8257e5b10b85dbf" title="Writes one or more sectors to the SD card." alt="" coords="25,104,102,129"/>
+<area shape="poly" id="edge4_Node000002_Node000005" title=" " alt="" coords="180,86,103,108,102,103,179,81"/>
+</map>

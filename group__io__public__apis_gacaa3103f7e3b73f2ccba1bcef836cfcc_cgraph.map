@@ -1,0 +1,5 @@
+<map id="io_read" name="io_read">
+<area shape="rect" id="Node000001" title="Reads the current logic level of an IO pin." alt="" coords="5,5,76,31"/>
+<area shape="rect" id="Node000002" href="$group__stm32__gpio__public__apis.html#ga0f9c28f58629a335e6f6769f91100a9e" title="Reads the current logic level of a GPIO input pin." alt="" coords="124,5,211,31"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="77,15,110,15,110,21,77,21"/>
+</map>

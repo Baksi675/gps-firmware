@@ -1,0 +1,19 @@
+<map id="drivers/src/stm32f401re_spi.c" name="drivers/src/stm32f401re_spi.c">
+<area shape="rect" id="Node000001" title="SPI driver implementation for STM32F401RE." alt="" coords="5,5,183,45"/>
+<area shape="rect" id="Node000002" href="$stm32f401re__spi_8h.html" title="STM32F401RE SPI driver public API." alt="" coords="189,93,332,119"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="135,43,225,85,223,90,133,48"/>
+<area shape="rect" id="Node000003" href="$stm32f401re_8h.html" title="STM32F401RE MCU&#45;specific peripheral register definitions and bit position enumerations." alt="" coords="35,167,153,192"/>
+<area shape="poly" id="edge7_Node000001_Node000003" title=" " alt="" coords="58,48,37,62,20,79,11,98,14,118,32,141,56,158,53,162,29,145,9,120,6,97,16,76,34,58,55,43"/>
+<area shape="rect" id="Node000007" href="$stm32f401re__rcc_8h.html" title="STM32F401RE RCC driver public API." alt="" coords="23,93,165,119"/>
+<area shape="poly" id="edge8_Node000001_Node000007" title=" " alt="" coords="97,46,97,79,91,79,91,46"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="235,121,135,164,133,159,233,116"/>
+<area shape="rect" id="Node000005" href="$common_8h.html" title="Common utility module public API." alt="" coords="177,167,267,192"/>
+<area shape="poly" id="edge4_Node000002_Node000005" title=" " alt="" coords="257,120,237,156,232,153,252,118"/>
+<area shape="rect" id="Node000004" title=" " alt="" coords="72,240,143,265"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="99,192,105,226,100,227,94,193"/>
+<area shape="poly" id="edge5_Node000005_Node000004" title=" " alt="" coords="205,194,139,235,136,230,202,190"/>
+<area shape="rect" id="Node000006" title=" " alt="" coords="181,240,263,265"/>
+<area shape="poly" id="edge6_Node000005_Node000006" title=" " alt="" coords="225,192,225,226,219,226,219,192"/>
+<area shape="poly" id="edge9_Node000007_Node000003" title=" " alt="" coords="97,119,97,153,91,153,91,119"/>
+<area shape="poly" id="edge10_Node000007_Node000005" title=" " alt="" coords="116,116,190,157,188,162,113,121"/>
+</map>

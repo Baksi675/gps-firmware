@@ -1,0 +1,5 @@
+<map id="ssd1309_clear_line" name="ssd1309_clear_line">
+<area shape="rect" id="Node000001" title="Clears a single display line in the framebuffer (sets all pixels off)." alt="" coords="228,13,375,38"/>
+<area shape="rect" id="Node000002" href="$group__ssd1309__command__handlers.html#ga152e0bd2c78684e63415042b6f678268" title="CLI handler for the &quot;clearline&quot; command. Clears a line and updates the display." alt="" coords="5,5,180,45"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="214,28,180,28,180,23,214,23"/>
+</map>

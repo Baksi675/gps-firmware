@@ -1,0 +1,10 @@
+<map id="neo6_init_subsys" name="neo6_init_subsys">
+<area shape="rect" id="Node000001" title="Initializes the NEO&#45;6 subsystem." alt="" coords="449,5,584,31"/>
+<area shape="rect" id="Node000002" href="$main_8c.html#a641e966759be26411c766208d8da6ed4" title="Initializes all subsystems and hardware peripherals." alt="" coords="5,5,72,31"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="435,21,72,21,72,15,435,15"/>
+<area shape="rect" id="Node000003" href="$group__init__public__apis.html#ga6f65da3052b2987110e7868f73603a21" title="Initializes the NEO&#45;6 GPS module." alt="" coords="319,31,401,56"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="436,34,402,39,401,34,435,28"/>
+<area shape="rect" id="Node000004" href="$group__datalog__public__apis.html#gaf2e0571a2c63a98562ae92284cae186e" title="Initializes the data log subsystem." alt="" coords="120,31,271,56"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="305,46,271,46,271,41,305,41"/>
+<area shape="poly" id="edge4_Node000004_Node000002" title=" " alt="" coords="106,32,72,26,73,21,107,26"/>
+</map>

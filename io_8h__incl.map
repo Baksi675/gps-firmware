@@ -1,0 +1,18 @@
+<map id="core/inc/io.h" name="core/inc/io.h">
+<area shape="rect" id="Node000001" title="Digital IO module public API." alt="" coords="105,5,207,31"/>
+<area shape="rect" id="Node000002" href="$err_8h.html" title="System&#45;wide error code definitions." alt="" coords="5,79,56,104"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="137,33,64,74,62,69,135,28"/>
+<area shape="rect" id="Node000003" href="$stm32f401re__gpio_8h.html" title="STM32F401RE GPIO driver public API." alt="" coords="80,79,232,104"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="159,31,159,65,153,65,153,31"/>
+<area shape="rect" id="Node000008" title=" " alt="" coords="257,79,375,104"/>
+<area shape="poly" id="edge8_Node000001_Node000008" title=" " alt="" coords="183,28,278,71,276,75,181,33"/>
+<area shape="rect" id="Node000004" href="$common_8h.html" title="Common utility module public API." alt="" coords="175,152,265,177"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="169,103,203,140,199,144,165,106"/>
+<area shape="rect" id="Node000007" href="$stm32f401re_8h.html" title="STM32F401RE MCU&#45;specific peripheral register definitions and bit position enumerations." alt="" coords="33,152,151,177"/>
+<area shape="poly" id="edge6_Node000003_Node000007" title=" " alt="" coords="147,106,113,144,109,140,143,103"/>
+<area shape="rect" id="Node000005" title=" " alt="" coords="70,225,141,251"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="203,180,137,220,134,216,200,175"/>
+<area shape="rect" id="Node000006" title=" " alt="" coords="179,225,261,251"/>
+<area shape="poly" id="edge5_Node000004_Node000006" title=" " alt="" coords="223,178,223,212,217,212,217,178"/>
+<area shape="poly" id="edge7_Node000007_Node000005" title=" " alt="" coords="97,177,103,211,98,212,92,178"/>
+</map>

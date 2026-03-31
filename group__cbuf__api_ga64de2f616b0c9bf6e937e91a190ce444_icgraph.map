@@ -1,0 +1,10 @@
+<map id="cbuf_read" name="cbuf_read">
+<area shape="rect" id="Node000001" title="Reads all available data from the circular buffer into an output buffer." alt="" coords="268,31,355,56"/>
+<area shape="rect" id="Node000002" href="$group__console__public__apis.html#ga5c89ef7779cd6223208d61c9913a964a" title="Runs the console state machine. Must be called periodically." alt="" coords="120,5,220,31"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="254,36,220,30,221,24,255,31"/>
+<area shape="rect" id="Node000004" href="$group__neo6__public__apis.html#ga1ce70e74c8a92a791698716a7091aaa6" title="Processes received NMEA data. Must be called periodically." alt="" coords="129,55,211,80"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="255,56,212,63,211,58,254,50"/>
+<area shape="rect" id="Node000003" href="$main_8c.html#a51cd9b9f6e3c15933fefc02c1bdc445f" title="Runs all subsystems for one iteration of the main loop." alt="" coords="5,31,72,56"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="107,33,73,40,72,34,106,28"/>
+<area shape="poly" id="edge4_Node000004_Node000003" title=" " alt="" coords="115,60,72,52,73,47,116,55"/>
+</map>

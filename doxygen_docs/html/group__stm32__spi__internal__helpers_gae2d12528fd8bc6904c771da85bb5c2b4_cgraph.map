@@ -1,0 +1,7 @@
+<map id="spi_set_pclk" name="spi_set_pclk">
+<area shape="rect" id="Node000001" title="Enables or disables the peripheral clock for an SPI instance." alt="" coords="5,31,108,56"/>
+<area shape="rect" id="Node000002" href="$group__stm32__rcc__public__apis.html#ga5cf8b9a2e93e5658766e20a00d6b7736" title="Enables or disables the peripheral clock for an APB1 peripheral." alt="" coords="156,5,297,31"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="108,33,142,28,143,33,109,38"/>
+<area shape="rect" id="Node000003" href="$group__stm32__rcc__public__apis.html#ga0cf8672c3f523ae19b591cbd670e0281" title="Enables or disables the peripheral clock for an APB2 peripheral." alt="" coords="156,55,297,80"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="109,48,143,53,142,58,108,53"/>
+</map>

@@ -1,0 +1,5 @@
+<map id="Command Module" name="Command Module">
+<area shape="rect" id="Node000003" href="$group__cmd__api.html" title="Public functions to interact with the command subsystem." alt="" coords="195,5,352,31"/>
+<area shape="rect" id="Node000001" title="Text&#45;based command dispatch system for registered subsystem clients." alt="" coords="5,31,147,56"/>
+<area shape="rect" id="Node000002" href="$group__cmd__types.html" title="Data types used by the command subsystem." alt="" coords="208,55,339,80"/>
+</map>

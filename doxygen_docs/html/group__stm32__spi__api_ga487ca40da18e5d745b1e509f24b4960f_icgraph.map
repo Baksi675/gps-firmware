@@ -1,0 +1,39 @@
+<map id="spi_send" name="spi_send">
+<area shape="rect" id="Node000001" title="Blocking SPI transmit. Sends len bytes from tx_buffer." alt="" coords="569,308,648,334"/>
+<area shape="rect" id="Node000002" href="$group__sd__internal__helpers.html#ga334584c0af12a66e5bee9a1a3bc0c00e" title="Raises CS, sends two dummy bytes, and disables SPI. Optionally deinitializes the handle." alt="" coords="384,407,521,432"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="577,344,475,409,473,405,575,339"/>
+<area shape="rect" id="Node000003" href="$group__sd__public__apis.html#ga7550bc6000fa7ed68f02c0015b2bc5fe" title="Initializes an SD card handle and performs the full SPI&#45;mode power&#45;up sequence." alt="" coords="5,191,121,216"/>
+<area shape="poly" id="edge5_Node000001_Node000003" title=" " alt="" coords="592,298,555,239,499,164,464,126,424,89,381,58,335,33,290,15,251,8,214,14,171,33,149,48,130,68,100,113,81,158,70,192,65,190,76,156,96,110,126,64,145,44,168,28,212,8,251,3,291,10,337,28,384,53,428,85,467,122,503,161,560,236,596,295"/>
+<area shape="rect" id="Node000005" href="$group__sd__public__apis.html#ga6ffe386d7b21e397b8257e5b10b85dbf" title="Writes one or more sectors to the SD card." alt="" coords="214,388,291,414"/>
+<area shape="poly" id="edge24_Node000001_Node000005" title=" " alt="" coords="557,335,292,395,291,390,555,330"/>
+<area shape="rect" id="Node000006" href="$group__sd__internal__helpers.html#ga653572a0b7bbfad25f8cf91425a58f57" title="Transmits a single SPI&#45;mode SD command and receives the response." alt="" coords="397,271,508,296"/>
+<area shape="poly" id="edge6_Node000001_Node000006" title=" " alt="" coords="555,311,506,299,507,294,557,306"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="422,442,370,469,305,493,269,499,234,500,200,494,168,478,137,450,113,417,94,379,81,340,67,268,62,217,68,216,72,267,86,339,99,377,117,414,141,447,171,474,201,489,234,495,269,494,303,488,368,464,420,437"/>
+<area shape="rect" id="Node000004" href="$group__sd__public__apis.html#ga5fbd9b0b984070a99c3addf991f38018" title="Reads one or more sectors from the SD card." alt="" coords="216,438,289,463"/>
+<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="371,435,290,448,289,442,370,430"/>
+<area shape="poly" id="edge4_Node000002_Node000005" title=" " alt="" coords="370,415,291,407,292,402,371,410"/>
+<area shape="poly" id="edge11_Node000006_Node000004" title=" " alt="" coords="440,310,399,369,371,401,337,429,314,440,290,448,289,442,312,435,335,424,367,398,395,366,436,307"/>
+<area shape="poly" id="edge23_Node000006_Node000005" title=" " alt="" coords="419,306,386,330,363,356,353,367,337,379,315,390,292,397,291,392,313,385,335,375,349,364,359,352,382,326,416,302"/>
+<area shape="poly" id="edge16_Node000006_Node000006" title=" " alt="" coords="479,260,472,253,453,250,437,252,428,256,426,262,431,270,427,272,421,263,424,253,435,247,453,244,474,248,483,256"/>
+<area shape="rect" id="Node000007" href="$group__sd__internal__helpers.html#ga63fd62f98860c1e0c5ad4213f099de21" title="Issues ACMD41 to initiate SD card initialization (SD Ver.2 and Ver.1)." alt="" coords="169,92,336,118"/>
+<area shape="poly" id="edge7_Node000006_Node000007" title=" " alt="" coords="437,260,397,195,368,161,334,131,313,120,316,115,338,127,372,157,401,192,441,257"/>
+<area shape="rect" id="Node000008" href="$group__sd__internal__helpers.html#ga90522b55eafcbb407120e4be828157f0" title="Issues CMD0 to reset the SD card into idle (SPI) mode." alt="" coords="187,142,318,167"/>
+<area shape="poly" id="edge9_Node000006_Node000008" title=" " alt="" coords="429,262,388,221,335,182,306,170,308,165,337,178,392,217,433,259"/>
+<area shape="rect" id="Node000009" href="$group__sd__internal__helpers.html#gae13f8d8f05ade1c3283dfaeedadf48a2" title="Issues CMD9 to read the CSD register and stores capacity information in the handle." alt="" coords="201,191,304,216"/>
+<area shape="poly" id="edge12_Node000006_Node000009" title=" " alt="" coords="414,267,335,232,299,219,300,214,337,227,416,262"/>
+<area shape="rect" id="Node000010" href="$group__sd__internal__helpers.html#ga6436793fd745a27ff5b5d980ef2bc0ed" title="Reads the OCR register via CMD58 and stores power&#45;up status, addressing mode, and voltage range." alt="" coords="203,240,303,266"/>
+<area shape="poly" id="edge14_Node000006_Node000010" title=" " alt="" coords="383,276,302,263,303,258,384,271"/>
+<area shape="rect" id="Node000011" href="$group__sd__internal__helpers.html#gaf9fa43a747e7509ed9d8e25d93cd16ea" title="Issues CMD8 to determine whether the card is SD Ver.2 or older." alt="" coords="188,290,317,315"/>
+<area shape="poly" id="edge17_Node000006_Node000011" title=" " alt="" coords="383,293,318,299,317,294,383,288"/>
+<area shape="rect" id="Node000012" href="$group__sd__internal__helpers.html#gabad05aa1f65422527bee45b0dbd40187" title="Issues CMD1 to initiate MMC Ver.3 card initialization." alt="" coords="185,339,321,364"/>
+<area shape="poly" id="edge19_Node000006_Node000012" title=" " alt="" coords="408,304,337,330,301,342,299,337,335,325,406,299"/>
+<area shape="rect" id="Node000013" href="$group__sd__internal__helpers.html#gad8cb7566ca01b5587270acb322f1036a" title="Issues CMD16 to set the block length to 512 bytes for byte&#45;addressed cards." alt="" coords="189,43,316,68"/>
+<area shape="poly" id="edge21_Node000006_Node000013" title=" " alt="" coords="441,259,427,220,405,172,374,123,334,82,315,71,317,66,338,78,378,120,410,169,432,218,446,257"/>
+<area shape="poly" id="edge8_Node000007_Node000003" title=" " alt="" coords="186,125,171,132,120,162,81,193,78,189,117,158,168,127,184,120"/>
+<area shape="poly" id="edge10_Node000008_Node000003" title=" " alt="" coords="191,173,114,194,113,188,190,168"/>
+<area shape="poly" id="edge13_Node000009_Node000003" title=" " alt="" coords="188,206,121,206,121,201,188,201"/>
+<area shape="poly" id="edge15_Node000010_Node000003" title=" " alt="" coords="190,240,113,219,114,214,191,234"/>
+<area shape="poly" id="edge18_Node000011_Node000003" title=" " alt="" coords="184,288,168,281,117,250,78,219,81,215,120,245,171,276,186,283"/>
+<area shape="poly" id="edge20_Node000012_Node000003" title=" " alt="" coords="178,336,168,330,135,303,107,272,70,218,74,215,111,269,139,300,171,326,181,331"/>
+<area shape="poly" id="edge22_Node000013_Node000003" title=" " alt="" coords="181,76,171,82,139,108,111,139,74,192,70,189,107,135,135,104,168,78,178,72"/>
+</map>
