@@ -1,6 +1,6 @@
 # GPS Tracking Device — Firmware
 
-Bare-metal firmware for a GPS tracking device built around the **STM32F401RE** Cortex-M4 microcontroller. Written entirely in C with no HAL or RTOS — all peripheral drivers and application subsystems are implemented from scratch.
+Bare-metal firmware for a GPS tracking device built around the **STM32F401RE** Cortex-M4 microcontroller. Written entirely in C with custom HAL. All MCU peripheral drivers, external peripheral drivers and application subsystems are implemented from scratch.
 
 For the hardware repository visit gps-hardware: https://github.com/Baksi675/gps-hardware
 
